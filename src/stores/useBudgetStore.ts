@@ -6,7 +6,32 @@ export const useBudgetStore = create<BudgetStore>()(
   persist(
     (set) => ({
       totalBudget: 12000,
-      expenses: [],
+      expenses: [
+        {
+          id: "1",
+          estimatedCost: 2500,
+          actualCost: 2000,
+          category: "Food",
+          name: "Ăn tối ở quán Trần",
+          paymentStatus: "Paid",
+        },
+        {
+          id: "2",
+          estimatedCost: 1000,
+          actualCost: 500,
+          category: "Food",
+          name: "Cafe dừa Cộng",
+          paymentStatus: "Paid",
+        },
+        {
+          id: "3",
+          estimatedCost: 1400,
+          actualCost: 1500,
+          category: "Transport",
+          name: "Grab đi Hội An",
+          paymentStatus: "Paid",
+        },
+      ],
       addExpense: (expense: Expense) =>
         set((state) => ({ expenses: [...state.expenses, expense] })),
       updateExpense: (id, updatedFields) =>
