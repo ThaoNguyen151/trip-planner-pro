@@ -1,5 +1,10 @@
 import { useBudgetStore } from "@/stores";
-import { ExpenseTable, BudgetHeader, BudgetToolbar } from "@/components/budget";
+import {
+  ExpenseTable,
+  BudgetHeader,
+  BudgetToolbar,
+  BudgetSummaryCards,
+} from "@/components/budget";
 import React from "react";
 
 export default function BudgetPage() {
@@ -15,6 +20,8 @@ export default function BudgetPage() {
     <div className="container mx-auto py-10 px-4">
       {/* Header */}
       <BudgetHeader totalBudget={totalBudget} />
+      {/* Summary cards */}
+      <BudgetSummaryCards />
       {/* Title, filter bar and add expense button */}
       <BudgetToolbar />
       {/* Expense table */}

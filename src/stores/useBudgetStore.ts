@@ -10,10 +10,10 @@ export const useBudgetStore = create<BudgetStore>()(
         {
           id: "1",
           estimatedCost: 2500,
-          actualCost: 0,
+          actualCost: 25000,
           category: "Food",
           name: "Dinner",
-          paymentStatus: "Unpaid",
+          paymentStatus: "Paid",
         },
         {
           id: "2",
