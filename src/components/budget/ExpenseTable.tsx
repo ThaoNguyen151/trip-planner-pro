@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { ActionMenu } from "@/components/shared/ActionMenu";
 import { budgetUtils } from "@/lib/utils";
+import { useState } from "react";
+import { DeleteExpenseModal } from "./DeleteExpenseModal";
 
 {
   /* Map icon by category */
@@ -31,6 +33,12 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const handleDeleteClick = (id: string) => {
+    setSelectedId(id);
+    setIsDeleteModalOpen(true);
+  };
   return (
     <div className="rounded-md border bg-white shadow-sm overflow-hidden">
       <div className="max-h-[250px] overflow-auto custom-scrollbar">
@@ -130,7 +138,11 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
 
                     {/* Edit and delete actions */}
                     <TableCell>
-                      <ActionMenu />
+                      <ActionMenu
+                        onDelete={() => {
+                          handleDeleteClick(expense.id);
+                        }}
+                      />
                     </TableCell>
                   </TableRow>
                 );
@@ -148,6 +160,11 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
           </TableBody>
         </Table>
       </div>
+      <DeleteExpenseModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        expenseId={selectedId}
+      />
     </div>
   );
 }
