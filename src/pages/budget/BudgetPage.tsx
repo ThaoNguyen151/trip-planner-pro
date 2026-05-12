@@ -1,7 +1,5 @@
 import { useBudgetStore } from "@/stores";
-import { ExpenseTable } from "./components/ExpenseTable";
-import { BudgetHeader } from "./components/BudgetHeader";
-import { BudgetToolbar } from "./components/BudgetToolbar";
+import { ExpenseTable, BudgetHeader, BudgetToolbar } from "@/components/budget";
 
 export default function BudgetPage() {
   const totalBudget = useBudgetStore((state) => state.totalBudget);
