@@ -8,19 +8,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { Plus } from "lucide-react";
+import { useBudgetStore } from "@/stores";
+import type { BudgetStore } from "@/types";
 
 export function BudgetToolbar() {
+  const filters = useBudgetStore((state) => state.filters);
+  const setFilters = useBudgetStore((state) => state.setFilters);
   return (
     <div className="mb-6 flex flex-col gap-4">
       <h2 className="text-xl font-bold text-slate-900">Expense Breakdown</h2>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <FilterBar>
+        <FilterBar
+          onClear={() => setFilters({ category: "All", status: "All" })}
+        >
           {/* Filter category */}
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">
               Category
             </label>
-            <Select>
+            <Select
+              value={filters.category}
+              onValueChange={(val) =>
+                setFilters({
+                  category: val as BudgetStore["filters"]["category"],
+                })
+              }
+            >
               <SelectTrigger className="w-[180px] bg-slate-50 border-none shadow-none focus:ring-0 font-medium text-slate-700">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
@@ -41,7 +54,12 @@ export function BudgetToolbar() {
             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">
               Status
             </label>
-            <Select>
+            <Select
+              value={filters.status}
+              onValueChange={(val) =>
+                setFilters({ status: val as BudgetStore["filters"]["status"] })
+              }
+            >
               <SelectTrigger className="w-[180px] bg-slate-50 border-none shadow-none focus:ring-0 font-medium text-slate-700">
                 <SelectValue placeholder="All Status" />
               </SelectTrigger>

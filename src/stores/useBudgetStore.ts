@@ -4,7 +4,7 @@ import type { BudgetStore, Expense } from "@/types/budget";
 
 export const useBudgetStore = create<BudgetStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       totalBudget: 12000,
       expenses: [
         {
@@ -12,7 +12,7 @@ export const useBudgetStore = create<BudgetStore>()(
           estimatedCost: 2500,
           actualCost: 0,
           category: "Food",
-          name: "Ăn tối ở quán Trần",
+          name: "Dinner",
           paymentStatus: "Unpaid",
         },
         {
@@ -20,7 +20,7 @@ export const useBudgetStore = create<BudgetStore>()(
           estimatedCost: 1000,
           actualCost: 500,
           category: "Food",
-          name: "Cafe dừa Cộng",
+          name: "Cafe",
           paymentStatus: "Paid",
         },
         {
@@ -28,7 +28,7 @@ export const useBudgetStore = create<BudgetStore>()(
           estimatedCost: 1400,
           actualCost: 1500,
           category: "Transport",
-          name: "Grab đi Hội An",
+          name: "Grab",
           paymentStatus: "Paid",
         },
       ],
@@ -45,7 +45,29 @@ export const useBudgetStore = create<BudgetStore>()(
           expenses: state.expenses.filter((exp) => exp.id !== id),
         })),
       setTotalBudget: (amount) => set({ totalBudget: amount }),
+      filters: {
+        category: "All",
+        status: "All",
+      },
+      setFilters: (newFilters) =>
+        set((state) => ({ filters: { ...state.filters, ...newFilters } })),
+      getFilteredExpenses: () => {
+        const { expenses, filters } = get();
+        return expenses.filter((exp) => {
+          const matchCategory =
+            filters.category === "All" || exp.category === filters.category;
+          const matchStatus =
+            filters.status === "All" || exp.paymentStatus === filters.status;
+          return matchCategory && matchStatus;
+        });
+      },
     }),
-    { name: "budget-storage" },
+    {
+      name: "budget-storage",
+      partialize: (state) => ({
+        expenses: state.expenses,
+        totalBudget: state.totalBudget,
+      }),
+    },
   ),
 );

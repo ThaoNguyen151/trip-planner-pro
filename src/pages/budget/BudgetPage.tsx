@@ -1,9 +1,16 @@
 import { useBudgetStore } from "@/stores";
 import { ExpenseTable, BudgetHeader, BudgetToolbar } from "@/components/budget";
+import React from "react";
 
 export default function BudgetPage() {
   const totalBudget = useBudgetStore((state) => state.totalBudget);
-  const expenses = useBudgetStore((state) => state.expenses);
+  const getFilteredExpenses = useBudgetStore(
+    (state) => state.getFilteredExpenses,
+  );
+  const filters = useBudgetStore((state) => state.filters);
+  const displayExpenses = React.useMemo(() => {
+    return getFilteredExpenses();
+  }, [filters, getFilteredExpenses]);
   return (
     <div className="container mx-auto py-10 px-4">
       {/* Header */}
@@ -11,7 +18,7 @@ export default function BudgetPage() {
       {/* Title, filter bar and add expense button */}
       <BudgetToolbar />
       {/* Expense table */}
-      <ExpenseTable expenses={expenses} />
+      <ExpenseTable expenses={displayExpenses} />
     </div>
   );
 }
