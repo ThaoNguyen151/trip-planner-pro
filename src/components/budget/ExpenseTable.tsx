@@ -16,6 +16,7 @@ import {
   CircleEllipsis,
 } from "lucide-react";
 import { ActionMenu } from "@/components/shared/ActionMenu";
+import { budgetUtils } from "@/lib/utils";
 
 {
   /* Map icon by category */
@@ -32,7 +33,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
   return (
     <div className="rounded-md border bg-white shadow-sm overflow-hidden">
-      <div className="max-h-[280px] overflow-auto custom-scrollbar">
+      <div className="max-h-[250px] overflow-auto custom-scrollbar">
         <Table className="border-separate border-spacing-0">
           <TableHeader className="relative z-10">
             <TableRow className="bg-slate-100">
@@ -88,10 +89,7 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
 
                     {/* Expense estimated cost */}
                     <TableCell className="font-medium">
-                      $
-                      {expense.estimatedCost.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}
+                      {budgetUtils.formatMoney(expense.estimatedCost)}
                     </TableCell>
 
                     {/* Expense actual cost: switch to red if above estimated cost */}
@@ -102,10 +100,7 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
                           : "font-medium"
                       }
                     >
-                      $
-                      {expense.actualCost.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}
+                      {budgetUtils.formatMoney(expense.actualCost)}
                     </TableCell>
 
                     {/* Expense difference: blue if positive, red if negative, - if unpaid */}
@@ -118,10 +113,8 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
                             isOverEstimated ? "text-red-700" : "text-blue-700"
                           }
                         >
-                          {isOverEstimated ? "-" : "+"}$
-                          {Math.abs(diff).toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                          })}
+                          {isOverEstimated ? "-" : "+"}
+                          {budgetUtils.formatMoney(Math.abs(diff))}
                         </span>
                       )}
                     </TableCell>
