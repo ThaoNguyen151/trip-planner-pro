@@ -10,17 +10,17 @@ export const useBudgetStore = create<BudgetStore>()(
         {
           id: "1",
           estimatedCost: 2500,
-          actualCost: 0,
+          actualCost: 1400,
           category: "Food",
-          name: "Ăn tối ở quán Trần",
-          paymentStatus: "Unpaid",
+          name: "Dinner",
+          paymentStatus: "Paid",
         },
         {
           id: "2",
           estimatedCost: 1000,
           actualCost: 500,
           category: "Food",
-          name: "Cafe dừa Cộng",
+          name: "Cafe",
           paymentStatus: "Paid",
         },
         {
@@ -28,7 +28,23 @@ export const useBudgetStore = create<BudgetStore>()(
           estimatedCost: 1400,
           actualCost: 1500,
           category: "Transport",
-          name: "Grab đi Hội An",
+          name: "Grab",
+          paymentStatus: "Paid",
+        },
+        {
+          id: "4",
+          estimatedCost: 2400,
+          actualCost: 3500,
+          category: "Shopping",
+          name: "Buy Gucci jacket",
+          paymentStatus: "Paid",
+        },
+        {
+          id: "5",
+          estimatedCost: 3400,
+          actualCost: 3000,
+          category: "Activity",
+          name: "Skydiving",
           paymentStatus: "Paid",
         },
       ],
@@ -45,7 +61,19 @@ export const useBudgetStore = create<BudgetStore>()(
           expenses: state.expenses.filter((exp) => exp.id !== id),
         })),
       setTotalBudget: (amount) => set({ totalBudget: amount }),
+      filters: {
+        category: "All",
+        status: "All",
+      },
+      setFilters: (newFilters) =>
+        set((state) => ({ filters: { ...state.filters, ...newFilters } })),
     }),
-    { name: "budget-storage" },
+    {
+      name: "budget-storage",
+      partialize: (state) => ({
+        expenses: state.expenses,
+        totalBudget: state.totalBudget,
+      }),
+    },
   ),
 );
