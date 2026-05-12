@@ -4,9 +4,10 @@ import {
   BudgetHeader,
   BudgetToolbar,
   BudgetSummaryCards,
+  BudgetUtilization,
+  ExpensePieChart,
 } from "@/components/budget";
 import React, { useState } from "react";
-import { BudgetUtilization } from "@/components/budget/BudgetUtilization";
 
 export default function BudgetPage() {
   const totalBudget = useBudgetStore((state) => state.totalBudget);
@@ -41,6 +42,12 @@ export default function BudgetPage() {
           onCategoryClick={(cat) =>
             setSelectedCategory(cat === selectedCategory ? null : cat)
           }
+        />
+
+        <ExpensePieChart
+          expenses={expenses}
+          selectedCategory={selectedCategory}
+          onReset={() => setSelectedCategory(null)}
         />
       </div>
     </div>

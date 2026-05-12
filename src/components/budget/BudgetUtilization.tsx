@@ -31,7 +31,7 @@ export function BudgetUtilization({
     });
   }, [expenses]);
   return (
-    <div className="space-y-1 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar">
+    <div className="space-y-1 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar shadow-sm rounded-xl">
       <h2 className="text-xl font-bold text-slate-900">Budget Utilization</h2>
       {utilizationData.length > 0 ? (
         utilizationData.map((item) => (

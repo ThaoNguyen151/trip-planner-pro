@@ -28,3 +28,4 @@ export const budgetUtils = {
     }).format(amount);
   },
 };
+
