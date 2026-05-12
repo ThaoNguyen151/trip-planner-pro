@@ -38,12 +38,21 @@ export function BudgetUtilization({
           <div
             key={item.name}
             onClick={() => onCategoryClick(item.name)}
-            className={`group cursor-pointer p-3 roundex-xl transition-all duration-200 border ${selectedCategory === item.name ? "bg-blue-50 border-blue-200 shadow-sm" : "bg-transparent border-transparent hover:bg-gray-50"}`}
+            className={`group cursor-pointer p-3 rounded-xl transition-all duration-200 border ${selectedCategory === item.name ? "bg-blue-50 border-blue-200 shadow-sm" : "bg-transparent border-transparent hover:bg-gray-50"}`}
           >
             <div className="flex justify-between items-end mb-2">
-              <span className="text-sm font-bold text-gray-700 uppercase">
-                {item.name}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-gray-700 uppercase">
+                  {item.name}
+                </span>
+
+                {/* Tooltip */}
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-md text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${budgetUtils.getBarColor(item.percent)}`}
+                >
+                  {item.percent.toFixed(0)}%
+                </span>
+              </div>
               <div className="text-right">
                 <span
                   className={`text-sm font-bold ${budgetUtils.getStatusColor(item.percent)}`}
