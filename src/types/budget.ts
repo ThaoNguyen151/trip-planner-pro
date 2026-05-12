@@ -31,5 +31,4 @@ export interface BudgetStore {
   setTotalBudget: (amount: number) => void;
   filters: BudgetFilters;
   setFilters: (filters: Partial<BudgetFilters>) => void;
-  getFilteredExpenses: () => Expense[];
 }

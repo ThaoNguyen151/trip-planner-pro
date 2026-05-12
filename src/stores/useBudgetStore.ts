@@ -4,7 +4,7 @@ import type { BudgetStore, Expense } from "@/types/budget";
 
 export const useBudgetStore = create<BudgetStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       totalBudget: 12000,
       expenses: [
         {
@@ -32,35 +32,19 @@ export const useBudgetStore = create<BudgetStore>()(
           paymentStatus: "Paid",
         },
         {
-          id: "3",
-          estimatedCost: 1400,
-          actualCost: 1500,
-          category: "Transport",
-          name: "Grab",
+          id: "4",
+          estimatedCost: 2400,
+          actualCost: 3500,
+          category: "Shopping",
+          name: "Buy Gucci jacket",
           paymentStatus: "Paid",
         },
         {
-          id: "3",
-          estimatedCost: 1400,
-          actualCost: 1500,
-          category: "Transport",
-          name: "Grab",
-          paymentStatus: "Paid",
-        },
-        {
-          id: "3",
-          estimatedCost: 1400,
-          actualCost: 1500,
-          category: "Transport",
-          name: "Grab",
-          paymentStatus: "Paid",
-        },
-        {
-          id: "3",
-          estimatedCost: 1400,
-          actualCost: 1500,
-          category: "Transport",
-          name: "Grab",
+          id: "5",
+          estimatedCost: 3400,
+          actualCost: 3000,
+          category: "Activity",
+          name: "Skydiving",
           paymentStatus: "Paid",
         },
       ],
@@ -83,16 +67,6 @@ export const useBudgetStore = create<BudgetStore>()(
       },
       setFilters: (newFilters) =>
         set((state) => ({ filters: { ...state.filters, ...newFilters } })),
-      getFilteredExpenses: () => {
-        const { expenses, filters } = get();
-        return expenses.filter((exp) => {
-          const matchCategory =
-            filters.category === "All" || exp.category === filters.category;
-          const matchStatus =
-            filters.status === "All" || exp.paymentStatus === filters.status;
-          return matchCategory && matchStatus;
-        });
-      },
     }),
     {
       name: "budget-storage",
