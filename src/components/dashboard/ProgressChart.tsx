@@ -23,8 +23,8 @@ export function ProgressChart() {
     const sumItems = chartData.reduce((acc, curr) => acc + curr.items, 0)
 
     return (
-        <div>
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-62.5">
+
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-20 w-20">
           <PieChart>
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie data={chartData} dataKey="items" nameKey="status" innerRadius={20} strokeWidth={5} outerRadius={30}><Label
@@ -40,6 +40,6 @@ export function ProgressChart() {
               /></Pie>
             </PieChart>
         </ChartContainer>
-        </div>
+
     )
 }
