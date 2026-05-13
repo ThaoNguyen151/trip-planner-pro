@@ -16,7 +16,7 @@ export function ProgressChart() {
 
         standby: {
             label: "standby",
-            color: "var(--accent)"
+            color: "#B2BEB5"
         }
     } satisfies ChartConfig
 
