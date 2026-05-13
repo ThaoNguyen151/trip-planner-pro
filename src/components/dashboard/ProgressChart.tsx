@@ -2,10 +2,15 @@ import { type ChartConfig } from "@/components/ui/chart"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Pie, PieChart, Label } from "recharts"
 
-export function ProgressChart() {
+type ChartProps = {
+    pastC: number,
+    totalC: number
+}
+
+export function ProgressChart(props: ChartProps) {
     const chartData = [
-        {status: "past", items: 4, fill: "var(--color-past)"},
-        {status: "standby", items: 12, fill: "var(--color-standby)"},
+        {status: "past", items: props.pastC, fill: "var(--color-past)"},
+        {status: "standby", items: props.totalC - props.pastC, fill: "var(--color-standby)"},
     ]
 
     const chartConfig = {
