@@ -47,13 +47,13 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
   };
   return (
     <div className="rounded-md border bg-white shadow-sm overflow-hidden">
-      <div className="max-h-[250px] overflow-auto custom-scrollbar">
+      <div className="max-h-[400px] md:max-h-[250px] overflow-auto custom-scrollbar">
         <Table className="border-separate border-spacing-0">
           <TableHeader className="relative z-10">
             <TableRow className="bg-slate-100">
               <TableHead className="font-bold text-slate-900 sticky top-0 bg-slate-100 z-20">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 shrink-0" />
+                  <div className="w-8 md:w-10 shrink-0" />
                   <span>Item</span>
                 </div>
               </TableHead>

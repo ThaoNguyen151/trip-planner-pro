@@ -36,7 +36,7 @@ export default function BudgetPage() {
       <BudgetToolbar onAddClick={() => setIsAddModalOpen(true)} />
       {/* Expense table */}
       <ExpenseTable expenses={displayExpenses} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
         {/* Budget utilization chart */}
         <BudgetUtilization
           expenses={expenses}

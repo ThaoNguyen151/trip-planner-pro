@@ -33,6 +33,7 @@ import type { Expense, CategoryType } from "@/types";
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, X } from "lucide-react";
+import { useEffect } from "react";
 
 // Zod validation schema
 const expenseItemSchema = z.object({
@@ -82,6 +83,22 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
     },
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        items: [
+          {
+            category: "",
+            name: "",
+            estimatedCost: 0,
+            actualCost: 0,
+            paymentStatus: "Paid",
+          },
+        ],
+      });
+    }
+  }, [isOpen, form]);
+
   const { fields, append, remove } = useFieldArray({
     name: "items",
     control: form.control,
@@ -115,7 +132,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
   };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto p-0 rounded-[24px] border-none shadow-2xl bg-white">
+      <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto no-scrollbar p-0 rounded-[24px] border-none shadow-2xl bg-white">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

@@ -197,7 +197,7 @@ export function EditExpenseModal({
               type="button"
               variant="ghost"
               onClick={onClose}
-              className="flex-1 h-12 font-bold text-slate-500 hover:bg-slate-100 rounded-xl"
+              className="flex-1 h-12 font-bold text-slate-500 hover:bg-slate-100 hover:text-slate-500 rounded-xl"
             >
               Cancel
             </Button>
