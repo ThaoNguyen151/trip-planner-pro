@@ -9,12 +9,12 @@ import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
 
 interface ActionMenuProps {
-  // onEdit?: () => void;
+  onEdit?: () => void;
   onDelete: () => void;
   children?: ReactNode;
 }
 
-export function ActionMenu({ onDelete }: ActionMenuProps) {
+export function ActionMenu({ onEdit, onDelete }: ActionMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,7 +24,7 @@ export function ActionMenu({ onDelete }: ActionMenuProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={onEdit}>
           <span>Edit</span>
         </DropdownMenuItem>
 

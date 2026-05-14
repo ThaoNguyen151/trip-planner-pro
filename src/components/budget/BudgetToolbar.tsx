@@ -11,7 +11,11 @@ import { Plus } from "lucide-react";
 import { useBudgetStore } from "@/stores";
 import type { BudgetStore } from "@/types";
 
-export function BudgetToolbar() {
+interface BudgetToolbarProps {
+  onAddClick: () => void;
+}
+
+export function BudgetToolbar({ onAddClick }: BudgetToolbarProps) {
   const filters = useBudgetStore((state) => state.filters);
   const setFilters = useBudgetStore((state) => state.setFilters);
   return (
@@ -74,7 +78,10 @@ export function BudgetToolbar() {
 
         {/* Add Expense button */}
         <div>
-          <Button className="bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 h-10 shadow-sm flex gap-2">
+          <Button
+            onClick={onAddClick}
+            className="bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 h-10 shadow-sm flex gap-2"
+          >
             <Plus className="h-4 w-4" />
             Add Expense
           </Button>
