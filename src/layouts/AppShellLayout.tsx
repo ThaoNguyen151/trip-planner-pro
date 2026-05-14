@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from "react-router-dom";
 import {
   Bell,
   Calendar,
@@ -9,34 +9,34 @@ import {
   Settings,
   UserCircle,
   Wallet,
-} from 'lucide-react'
+} from "lucide-react";
 
-import { Button } from '@/components/ui/button'
-import { ROUTES } from '@/constants/routes'
-import { cn } from '@/lib/utils'
+import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
+import { cn } from "@/lib/utils";
 
 const nav = [
-  { to: ROUTES.dashboard, label: 'Dashboard', icon: LayoutDashboard },
-  { to: ROUTES.itinerary, label: 'Itinerary', icon: Map },
-  { to: ROUTES.calendar, label: 'Calendar', icon: Calendar },
-  { to: ROUTES.packing, label: 'Packing', icon: Package },
-  { to: ROUTES.budget, label: 'Budget', icon: Wallet },
-  { to: ROUTES.settings, label: 'Settings', icon: Settings },
-] as const
+  { to: ROUTES.dashboard, label: "Dashboard", icon: LayoutDashboard },
+  { to: ROUTES.itinerary, label: "Itinerary", icon: Map },
+  { to: ROUTES.calendar, label: "Calendar", icon: Calendar },
+  { to: ROUTES.packing, label: "Packing", icon: Package },
+  { to: ROUTES.budget, label: "Budget", icon: Wallet },
+  { to: ROUTES.settings, label: "Settings", icon: Settings },
+] as const;
 
-function navLinkClass(isActive: boolean, variant: 'sidebar' | 'dock') {
-  if (variant === 'dock') {
+function navLinkClass(isActive: boolean, variant: "sidebar" | "dock") {
+  if (variant === "dock") {
     return cn(
-      'flex min-w-0 flex-1 items-center justify-center rounded-lg py-2 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50',
-      isActive ? 'text-sky-700' : 'text-slate-500 active:text-slate-700',
-    )
+      "flex min-w-0 flex-1 items-center justify-center rounded-lg py-2 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50",
+      isActive ? "text-sky-700" : "text-slate-500 active:text-slate-700",
+    );
   }
   return cn(
-    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
     isActive
-      ? 'bg-sky-50 text-sky-700 shadow-sm'
-      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
-  )
+      ? "bg-sky-50 text-sky-700 shadow-sm"
+      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+  );
 }
 
 export function AppShellLayout() {
@@ -56,7 +56,11 @@ export function AppShellLayout() {
         </div>
         <nav className="flex flex-1 flex-col gap-1 p-3">
           {nav.map(({ to, label, icon: Icon }) => (
-            <NavLink key={to} to={to} className={({ isActive }) => navLinkClass(isActive, 'sidebar')}>
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) => navLinkClass(isActive, "sidebar")}
+            >
               <Icon className="size-[18px] shrink-0" aria-hidden />
               {label}
             </NavLink>
@@ -88,10 +92,20 @@ export function AppShellLayout() {
               />
             </div>
             <div className="flex shrink-0 items-center gap-1">
-              <Button type="button" variant="ghost" size="icon" aria-label="Notifications">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Notifications"
+              >
                 <Bell className="size-5 text-slate-600" />
               </Button>
-              <Button type="button" variant="ghost" size="icon" aria-label="Account">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Account"
+              >
                 <UserCircle className="size-5 text-slate-600" />
               </Button>
             </div>
@@ -113,12 +127,12 @@ export function AppShellLayout() {
             to={to}
             aria-label={label}
             title={label}
-            className={({ isActive }) => navLinkClass(isActive, 'dock')}
+            className={({ isActive }) => navLinkClass(isActive, "dock")}
           >
             <Icon className="size-6 shrink-0" aria-hidden />
           </NavLink>
         ))}
       </nav>
     </div>
-  )
+  );
 }
