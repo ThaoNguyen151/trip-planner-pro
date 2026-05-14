@@ -1,0 +1,324 @@
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import type { ItineraryDay, ItineraryStore } from "@/types/itinerary"
+
+let nextId = 1
+const genId = () => `act-${nextId++}`
+
+function createInitialDays(): ItineraryDay[] {
+  nextId = 1
+  return [
+        {
+          day: 10,
+          date: "Wednesday, June 10, 2026",
+          collapsed: false,
+          activities: [
+            {
+              id: genId(),
+              title: "Arrival at DAD Airport",
+              location: "Da Nang International Airport (SGN-DAD)",
+              startTime: "14:30",
+              endTime: "15:30",
+              category: "Transport",
+              priority: "High",
+              status: "Planned",
+              overdue: true,
+            },
+            {
+              id: genId(),
+              title: "Check-in: InterContinental Sun Peninsula",
+              location: "Son Tra Peninsula, Da Nang",
+              startTime: "16:00",
+              endTime: "17:00",
+              category: "Lodging",
+              priority: "Medium",
+              status: "Confirmed",
+            },
+            {
+              id: genId(),
+              title: "Seafood Lunch at My Khe Beach",
+              location: "Be Man Restaurant",
+              startTime: "12:30",
+              endTime: "14:00",
+              category: "Dining",
+              priority: "Low",
+              status: "Planned",
+            },
+          ],
+        },
+        {
+          day: 11,
+          date: "Thursday, June 11, 2026",
+          collapsed: true,
+          activities: [
+            {
+              id: genId(),
+              title: "Bana Hills & Golden Bridge Tour",
+              location: "Sun World Bana Hills",
+              startTime: "09:00",
+              endTime: "17:00",
+              category: "Sightseeing",
+              priority: "High",
+              status: "Planned",
+            },
+          ],
+        },
+        {
+          day: 12,
+          date: "Friday, June 12, 2026",
+          collapsed: false,
+          activities: [
+            {
+              id: genId(),
+              title: "Morning at My Khe Beach",
+              location: "My Khe Beach",
+              startTime: "06:00",
+              endTime: "08:30",
+              category: "Sightseeing",
+              priority: "Medium",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Breakfast at The Tropical Garden",
+              location: "Vo Nguyen Giap Street",
+              startTime: "08:30",
+              endTime: "09:30",
+              category: "Dining",
+              priority: "Low",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Marble Mountains Tour",
+              location: "Hoa Hai, Ngu Hanh Son",
+              startTime: "10:00",
+              endTime: "13:00",
+              category: "Sightseeing",
+              priority: "High",
+              status: "Confirmed",
+            },
+            {
+              id: genId(),
+              title: "Lunch at Moc Quan",
+              location: "Near Marble Mountains",
+              startTime: "13:00",
+              endTime: "14:00",
+              category: "Dining",
+              priority: "Low",
+              status: "Planned",
+            },
+          ],
+        },
+        {
+          day: 13,
+          date: "Saturday, June 13, 2026",
+          collapsed: false,
+          activities: [
+            {
+              id: genId(),
+              title: "Son Tra Peninsula Exploration",
+              location: "Son Tra Mountain",
+              startTime: "08:00",
+              endTime: "12:00",
+              category: "Sightseeing",
+              priority: "High",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Linh Ung Pagoda Visit",
+              location: "Son Tra Peninsula",
+              startTime: "10:00",
+              endTime: "11:30",
+              category: "Sightseeing",
+              priority: "Medium",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Seafood Dinner at Thoi Co",
+              location: "Truong Sa Street, Ngu Hanh Son",
+              startTime: "18:00",
+              endTime: "20:00",
+              category: "Dining",
+              priority: "Medium",
+              status: "Confirmed",
+            },
+          ],
+        },
+        {
+          day: 14,
+          date: "Sunday, June 14, 2026",
+          collapsed: false,
+          activities: [
+            {
+              id: genId(),
+              title: "Day Trip to Hoi An Ancient Town",
+              location: "Hoi An (30km from Da Nang)",
+              startTime: "08:00",
+              endTime: "17:00",
+              category: "Sightseeing",
+              priority: "High",
+              status: "Confirmed",
+            },
+            {
+              id: genId(),
+              title: "Lantern Making Workshop",
+              location: "Old Town, Hoi An",
+              startTime: "14:00",
+              endTime: "15:30",
+              category: "Sightseeing",
+              priority: "Low",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Dinner at Cao Lau Restaurant",
+              location: "Hoi An Ancient Town",
+              startTime: "18:30",
+              endTime: "20:00",
+              category: "Dining",
+              priority: "Medium",
+              status: "Confirmed",
+            },
+          ],
+        },
+        {
+          day: 15,
+          date: "Monday, June 15, 2026",
+          collapsed: false,
+          activities: [
+            {
+              id: genId(),
+              title: "Transfer to Hue via Hai Van Pass",
+              location: "Hai Van Pass",
+              startTime: "07:00",
+              endTime: "09:30",
+              category: "Transport",
+              priority: "High",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Visit Hue Imperial City",
+              location: "Hue Citadel",
+              startTime: "10:00",
+              endTime: "13:00",
+              category: "Sightseeing",
+              priority: "High",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Lunch at Huong River Restaurant",
+              location: "Le Loi Street, Hue",
+              startTime: "13:00",
+              endTime: "14:30",
+              category: "Dining",
+              priority: "Low",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Return to Da Nang",
+              location: "Da Nang City",
+              startTime: "15:00",
+              endTime: "17:00",
+              category: "Transport",
+              priority: "Medium",
+              status: "Planned",
+            },
+          ],
+        },
+        {
+          day: 16,
+          date: "Tuesday, June 16, 2026",
+          collapsed: false,
+          activities: [
+            {
+              id: genId(),
+              title: "Shopping at Han Market",
+              location: "Han Market, Da Nang",
+              startTime: "09:00",
+              endTime: "11:00",
+              category: "Sightseeing",
+              priority: "Medium",
+              status: "Planned",
+            },
+            {
+              id: genId(),
+              title: "Last Lunch at Madame Lan",
+              location: "Bach Dang Street, Da Nang",
+              startTime: "11:30",
+              endTime: "13:00",
+              category: "Dining",
+              priority: "Medium",
+              status: "Confirmed",
+            },
+            {
+              id: genId(),
+              title: "Departure from Da Nang",
+              location: "Da Nang International Airport (DAD-SGN)",
+              startTime: "15:00",
+              endTime: "16:00",
+              category: "Transport",
+              priority: "High",
+              status: "Planned",
+            },
+          ],
+        },
+  ]
+}
+
+export const useItineraryStore = create<ItineraryStore>()(
+  persist(
+    (set) => ({
+      days: createInitialDays(),
+
+      addActivity: (day, activity) =>
+        set((state) => ({
+          days: state.days.map((d) =>
+            d.day === day
+              ? { ...d, activities: [...d.activities, { id: genId(), ...activity }] }
+              : d,
+          ),
+        })),
+
+      updateActivity: (day, activityId, updates) =>
+        set((state) => ({
+          days: state.days.map((d) =>
+            d.day === day
+              ? {
+                  ...d,
+                  activities: d.activities.map((a) =>
+                    a.id === activityId ? { ...a, ...updates } : a,
+                  ),
+                }
+              : d,
+          ),
+        })),
+
+      deleteActivity: (day, activityId) =>
+        set((state) => ({
+          days: state.days.map((d) =>
+            d.day === day
+              ? { ...d, activities: d.activities.filter((a) => a.id !== activityId) }
+              : d,
+          ),
+        })),
+
+      toggleCollapse: (day) =>
+        set((state) => ({
+          days: state.days.map((d) =>
+            d.day === day ? { ...d, collapsed: !d.collapsed } : d,
+          ),
+        })),
+    }),
+    {
+      name: "itinerary-storage",
+      version: 1,
+      migrate: () => ({ days: createInitialDays() }),
+    },
+  ),
+)
