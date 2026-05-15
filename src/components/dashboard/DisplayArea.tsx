@@ -1,3 +1,4 @@
+import BudgetPreviewCard from "./BudgetPreviewCard";
 import DashboardItinPreviewArea from "./DashboardItinPreviewArea";
 import { ProgressCard } from "./ProgressCard";
 
@@ -16,8 +17,15 @@ export function DisplayArea() {
                     <ProgressCard name="budget" past={4200} total={12000}></ProgressCard>
                 </div>
             </div>
-            <div className="min-[850px]:h-7/10">
-                <DashboardItinPreviewArea></DashboardItinPreviewArea>
+            <div className="min-[850px]:h-7/10 lg:gap-[5%] flex flex-col lg:flex-row w-full gap-5">
+                <div className="lg:w-[65%] w-full">
+                    <DashboardItinPreviewArea></DashboardItinPreviewArea>
+                </div>
+                <div className="lg:w-3/10">
+                    <div>
+                        <BudgetPreviewCard></BudgetPreviewCard>
+                    </div>
+                </div>
             </div>
         </div>
     )
