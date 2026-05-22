@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 
 interface ActionMenuProps {
   onEdit?: () => void;
-  onDelete: () => void;
+  onDelete?: () => void;
   children?: ReactNode;
 }
 

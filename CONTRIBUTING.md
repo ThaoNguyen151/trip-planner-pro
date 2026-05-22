@@ -55,7 +55,7 @@ trip-planner-pro/
 Trong code ưu tiên import theo alias:
 
 ```ts
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 ```
 
 Alias `@/*` trỏ tới thư mục `src/` (cấu hình trong `tsconfig` và `vite.config.ts`).
@@ -64,13 +64,13 @@ Alias `@/*` trỏ tới thư mục `src/` (cấu hình trong `tsconfig` và `vit
 
 ## Lệnh thường dùng
 
-| Lệnh | Mô tả |
-|------|--------|
-| `npm run dev` | Chạy dev server (Vite + HMR) |
-| `npm run build` | Kiểm tra TypeScript + build production ra `dist/` |
-| `npm run lint` | Chạy ESLint toàn project |
-| `npm run preview` | Xem thử bản build bằng `vite preview` |
-| `npm start` | Phục vụ thư mục `dist/` bằng Node (`server/static.mjs`) — cần `npm run build` trước |
+| Lệnh              | Mô tả                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `npm run dev`     | Chạy dev server (Vite + HMR)                                                        |
+| `npm run build`   | Kiểm tra TypeScript + build production ra `dist/`                                   |
+| `npm run lint`    | Chạy ESLint toàn project                                                            |
+| `npm run preview` | Xem thử bản build bằng `vite preview`                                               |
+| `npm start`       | Phục vụ thư mục `dist/` bằng Node (`server/static.mjs`) — cần `npm run build` trước |
 
 ---
 
@@ -101,19 +101,19 @@ Nội dung commit phải theo dạng:
 
 **Một số `type` thường dùng**
 
-| type | Khi nào dùng |
-|------|----------------|
-| `feat` | Thêm tính năng |
-| `fix` | Sửa lỗi |
-| `docs` | Chỉ tài liệu |
-| `style` | Format, UI không đổi logic |
+| type       | Khi nào dùng                |
+| ---------- | --------------------------- |
+| `feat`     | Thêm tính năng              |
+| `fix`      | Sửa lỗi                     |
+| `docs`     | Chỉ tài liệu                |
+| `style`    | Format, UI không đổi logic  |
 | `refactor` | Refactor, không đổi hành vi |
-| `test` | Thêm/sửa test |
-| `chore` | Công cụ, config, dependency |
-| `perf` | Cải thiện hiệu năng |
-| `build` | Build, bundler |
-| `ci` | CI/CD |
-| `revert` | Revert commit trước |
+| `test`     | Thêm/sửa test               |
+| `chore`    | Công cụ, config, dependency |
+| `perf`     | Cải thiện hiệu năng         |
+| `build`    | Build, bundler              |
+| `ci`       | CI/CD                       |
+| `revert`   | Revert commit trước         |
 
 **Ví dụ hợp lệ**
 
