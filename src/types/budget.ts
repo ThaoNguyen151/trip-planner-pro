@@ -25,7 +25,7 @@ export interface BudgetFilters {
 export interface BudgetStore {
   totalBudget: number;
   expenses: Expense[];
-  addExpense: (expense: Expense) => void;
+  addExpenses: (newExpenses: Expense[]) => void;
   updateExpense: (id: string, expense: Partial<Expense>) => void;
   deleteExpense: (id: string) => void;
   setTotalBudget: (amount: number) => void;

@@ -35,7 +35,7 @@ export function DeleteExpenseModal({
       <DialogContent className="max-w-100 p-6 flex flex-col items-center text-center">
         <DialogHeader className="flex flex-col items-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-            <div className="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+            <div className="w-10 h-10  rounded-full flex items-center justify-center ">
               <Trash2 className="w-4 h-4 text-red-600 stroke-3" />
             </div>
           </div>

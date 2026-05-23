@@ -8,6 +8,7 @@ import {
   ExpensePieChart,
 } from "@/components/budget";
 import React, { useState } from "react";
+import { AddExpenseModal } from "@/components/budget/AddExpenseModal";
 
 export default function BudgetPage() {
   const totalBudget = useBudgetStore((state) => state.totalBudget);
@@ -24,6 +25,7 @@ export default function BudgetPage() {
     });
   }, [filters, expenses]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   return (
     <div className="container mx-auto py-10 px-4">
       {/* Header */}
@@ -31,10 +33,10 @@ export default function BudgetPage() {
       {/* Summary cards */}
       <BudgetSummaryCards />
       {/* Title, filter bar and add expense button */}
-      <BudgetToolbar />
+      <BudgetToolbar onAddClick={() => setIsAddModalOpen(true)} />
       {/* Expense table */}
       <ExpenseTable expenses={displayExpenses} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
         {/* Budget utilization chart */}
         <BudgetUtilization
           expenses={expenses}
@@ -50,6 +52,10 @@ export default function BudgetPage() {
           onReset={() => setSelectedCategory(null)}
         />
       </div>
+      <AddExpenseModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
     </div>
   );
 }
