@@ -2,14 +2,18 @@ import BudgetPreviewCard from "./BudgetPreviewCard";
 import DashboardItinPreviewArea from "./DashboardItinPreviewArea";
 import { ProgressCard } from "./ProgressCard";
 import TaskAlertCard from "./TaskAlertCard";
-
+import { useItineraryStore } from "@/stores";
 
 export function DisplayArea() {
+    const itinInfo = useItineraryStore((state) => state.days);
+    const allItin = itinInfo.map((days) => days.activities).flat();
+    const completedItin = allItin.filter((itin) => itin.status === "Completed")
+    
     return (
         <div>
             <div className="lg:gap-[5%] flex min-[450px]:flex-row flex-col pt-5 pb-5 w-full flex-wrap gap-10 items-center justify-center">
                 <div className="lg:w-3/10 w-50">
-                    <ProgressCard name="itinerary" past={4} total={16}></ProgressCard>
+                    <ProgressCard name="itinerary" past={completedItin.length} total={allItin.length}></ProgressCard>
                 </div>
                 <div className="lg:w-3/10 w-50">
                     <ProgressCard name="packing" past={68} total={100}></ProgressCard>

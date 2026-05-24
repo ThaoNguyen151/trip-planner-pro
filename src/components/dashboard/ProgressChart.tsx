@@ -36,7 +36,7 @@ export function ProgressChart(props: ChartProps) {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
                       <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle"fontWeight={"bold"} color="muted-foreground">
-                          {(chartData[0].items / sumItems * 100).toLocaleString()}%
+                          {(Math.round(chartData[0].items / sumItems * 100)).toLocaleString()}%
                       </text>
                     )
                   }

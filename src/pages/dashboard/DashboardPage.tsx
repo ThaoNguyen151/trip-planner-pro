@@ -4,7 +4,7 @@ import { useTripStore } from "@/stores";
 // import { ProgressCard } from "@/components/dashboard/ProgressCard";
 /** Dashboard — nội dung sẽ bổ sung sau. */
 export default function DashboardPage() {
-  const allTrips = useTripStore.getState().trips;
+  const allTrips = useTripStore((state) => state.trips);
   const handleAddTrip = useTripStore.getState().addTrip;
   if (allTrips.length === 0) {
     return (
