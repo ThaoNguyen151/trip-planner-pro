@@ -3,7 +3,7 @@ import { CirclePlus } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { CreateTripDialog } from "./components/CreateTripModal";
+import { CreateTripDialog } from "@/components/overview/CreateTripModal";
 
 export default function OverviewPage() {
   const [open, setOpen] = useState(false);
