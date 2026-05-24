@@ -9,47 +9,23 @@ export const useBudgetStore = create<BudgetStore>()(
       expenses: [
         {
           id: "1",
-          estimatedCost: 2500,
-          actualCost: 1400,
-          category: "Food",
-          name: "Dinner",
+          category: "Shopping",
+          name: "Buy Gucci bag",
+          estimatedCost: 1500,
+          actualCost: 1200,
           paymentStatus: "Paid",
         },
         {
           id: "2",
-          estimatedCost: 1000,
-          actualCost: 500,
           category: "Food",
-          name: "Cafe",
-          paymentStatus: "Paid",
-        },
-        {
-          id: "3",
-          estimatedCost: 1400,
-          actualCost: 1500,
-          category: "Transport",
-          name: "Grab",
-          paymentStatus: "Paid",
-        },
-        {
-          id: "4",
-          estimatedCost: 2400,
-          actualCost: 3500,
-          category: "Shopping",
-          name: "Buy Gucci jacket",
-          paymentStatus: "Paid",
-        },
-        {
-          id: "5",
-          estimatedCost: 3400,
-          actualCost: 3000,
-          category: "Activity",
-          name: "Skydiving",
+          name: "Matcha",
+          estimatedCost: 1500,
+          actualCost: 1200,
           paymentStatus: "Paid",
         },
       ],
-      addExpense: (expense: Expense) =>
-        set((state) => ({ expenses: [...state.expenses, expense] })),
+      addExpenses: (newExpenses: Expense[]) =>
+        set((state) => ({ expenses: [...state.expenses, ...newExpenses] })),
       updateExpense: (id, updatedFields) =>
         set((state) => ({
           expenses: state.expenses.map((exp) =>
@@ -70,6 +46,7 @@ export const useBudgetStore = create<BudgetStore>()(
     }),
     {
       name: "budget-storage",
+      version: 1,
       partialize: (state) => ({
         expenses: state.expenses,
         totalBudget: state.totalBudget,
