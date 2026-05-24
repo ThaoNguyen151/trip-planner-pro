@@ -1,5 +1,5 @@
 import { type ChartConfig } from "@/components/ui/chart"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { ChartContainer } from "@/components/ui/chart"
 import { Pie, PieChart, Label } from "recharts"
 
 type ChartProps = {
@@ -31,7 +31,6 @@ export function ProgressChart(props: ChartProps) {
 
         <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-20 w-20">
           <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie data={chartData} dataKey="items" nameKey="status" innerRadius={20} strokeWidth={5} outerRadius={30}><Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
