@@ -35,6 +35,7 @@ const renderCustomizedLabel = (props: PieLabelRenderProps) => {
   ) {
     return null;
   }
+  if (typeof window !== "undefined" && window.innerWidth < 1024) return null;
   const RADIAN = Math.PI / 180;
   const radius = outerRadius * 1.2;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -84,9 +85,9 @@ export function ExpensePieChart({
   }, [expenses, selectedCategory]);
   const totalActual = chartData.reduce((sum, item) => sum + item.value, 0);
   return (
-    <div className="rounded-xl border shadow-sm h-full flex flex-col">
+    <div className="rounded-xl border shadow-sm h-full flex flex-col p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-slate-900">
+        <h2 className="text-lg md:text-xl font-bold text-slate-900">
           {selectedCategory
             ? `${selectedCategory} Breakdown`
             : "Total Spending Structure"}
@@ -94,57 +95,93 @@ export function ExpensePieChart({
         {selectedCategory && (
           <Button
             onClick={onReset}
-            className="text-xs text-blue-600 hover:underline"
+            variant="ghost"
+            className="text-[10px] md:text-xs text-blue-600 hover:underline h-8 px-2"
           >
             View All
           </Button>
         )}
       </div>
 
-      <div className="flex-1 min-h-[250px]">
+      <div className="flex-1 w-full min-h-[280px] md:min-h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
-              dataKey="value"
-              label={renderCustomizedLabel}
-              labelLine={{ stroke: "#cbd5e1", strokeWidth: 1 }}
-            >
-              {chartData.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <text
-              x="50%"
-              y="45%"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              className="pointer-events-none"
-            >
-              <tspan
-                x="50%"
-                dy="-0.5em"
-                className="fill-gray-400 text-[10px] font-medium uppercase tracking-widest"
+          {chartData.length > 0 ? (
+            <PieChart>
+              <Pie
+                data={chartData}
+                cx="50%"
+                cy="50%"
+                innerRadius="60%"
+                outerRadius="80%"
+                dataKey="value"
+                label={renderCustomizedLabel}
+                labelLine={{ stroke: "#cbd5e1", strokeWidth: 1 }}
               >
-                Total Actual
-              </tspan>
-              <tspan
+                {chartData.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <text
                 x="50%"
-                dy="1.5em"
-                className="fill-slate-400 text-sm font-bold"
+                y="45%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="pointer-events-none"
               >
-                {budgetUtils.formatMoney(totalActual)}
-              </tspan>
-            </text>
-            <Legend verticalAlign="bottom" height={36} />
-          </PieChart>
+                <tspan
+                  x="50%"
+                  dy="-0.5em"
+                  className="fill-gray-400 text-[10px] font-medium uppercase tracking-widest"
+                >
+                  Total Actual
+                </tspan>
+                <tspan
+                  x="50%"
+                  dy="1.5em"
+                  className="fill-slate-400 text-sm font-bold"
+                >
+                  {budgetUtils.formatMoney(totalActual)}
+                </tspan>
+              </text>
+              <Legend
+                verticalAlign="bottom"
+                align="center"
+                layout="horizontal"
+                iconType="circle"
+                iconSize={8}
+                formatter={(value) => (
+                  <span className="text-[11px] text-slate-600 font-medium">
+                    {value.length > 12 ? `${value.substring(0, 12)}...` : value}
+                  </span>
+                )}
+                wrapperStyle={{
+                  paddingTop: "20px",
+                  position: "relative",
+                  bottom: 0,
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                  gap: "4px",
+                }}
+              />
+            </PieChart>
+          ) : (
+            <PieChart>
+              <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="fill-slate-400 text-sm italic"
+              >
+                No paid expenses to track spending structure.
+              </text>
+            </PieChart>
+          )}
         </ResponsiveContainer>
       </div>
     </div>
