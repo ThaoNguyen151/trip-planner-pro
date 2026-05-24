@@ -66,9 +66,26 @@ export default function AddItemModal({
                 >
                   −
                 </button>
-                <span className="flex-1 text-center text-xs text-slate-700">
-                  {form.quantity}
-                </span>
+                 <input
+                  type="number"
+                  min={1}
+                  value={form.quantity}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10);
+                    if (!isNaN(val) && val >= 1) {
+                      setForm((f) => ({ ...f, quantity: val }));
+                    } else if (e.target.value === "") {
+                      setForm((f) => ({ ...f, quantity: "" as unknown as number }));
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!form.quantity || (form.quantity as unknown as string) === "") {
+                      setForm((f) => ({ ...f, quantity: 1 }));
+                    }
+                  }}
+                  className="flex-1 w-0 text-center text-xs text-slate-700 outline-none appearance-none [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden [-moz-appearance:textfield]"
+                />
+                  
                 <button
                   onClick={() =>
                     setForm((f) => ({ ...f, quantity: f.quantity + 1 }))
