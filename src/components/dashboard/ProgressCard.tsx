@@ -12,13 +12,17 @@ export function ProgressCard(props: ChartCardProps) {
     <div className='max-w-full max-h-full'>
         <Card className='overflow-visible min-w-fit'>
             <CardContent>
-                <div className='flex flex-row items-center justify-between min-w-fit'>
-                    {props.total > 0 
-                    ? <p className='text-foreground font-bold text-transform: uppercase'>{props.name}</p> : <p className='text-foreground italic'>No {props.name} yet</p>}
+                {props.total > 0 
+                ? <div className='flex flex-row items-center justify-between min-w-fit'>
+                    <p className='text-foreground font-bold text-transform: uppercase'>{props.name}</p>
                     
-                    {props.total > 0 && <div className='h-full'><ProgressChart pastC={props.past} totalC={props.total}></ProgressChart></div>}
+                    <div className='h-full'><ProgressChart pastC={props.past} totalC={props.total}></ProgressChart></div>
                     
-                </div>
+                </div> 
+                : <div className='flex flex-row items-center justify-center min-w-fit'>
+                    <p className='text-foreground italic'>No {props.name} yet</p>
+                </div>}
+        
             </CardContent>
         </Card>
     </div>
