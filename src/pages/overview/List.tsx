@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
-import { CreateTripDialog } from "@/pages/overview/components/CreateTripModal";
-import { TripCard, type Trip } from "@/pages/overview/components/TripCard";
+import { CreateTripDialog } from "@/components/overview/CreateTripModal";
+import { TripCard, type Trip } from "@/components/overview/TripCard";
 import { ROUTES } from "@/constants/routes";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
