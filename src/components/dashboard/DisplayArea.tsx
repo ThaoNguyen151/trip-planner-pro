@@ -2,12 +2,15 @@ import BudgetPreviewCard from "./BudgetPreviewCard";
 import DashboardItinPreviewArea from "./DashboardItinPreviewArea";
 import { ProgressCard } from "./ProgressCard";
 import TaskAlertCard from "./TaskAlertCard";
-import { useItineraryStore } from "@/stores";
+import { useBudgetStore, useItineraryStore } from "@/stores";
 
 export function DisplayArea() {
     const itinInfo = useItineraryStore((state) => state.days);
     const allItin = itinInfo.map((days) => days.activities).flat();
     const completedItin = allItin.filter((itin) => itin.status === "Completed")
+
+    const expenses = useBudgetStore((state) => state.expenses).map((expense) => expense.actualCost === null ? 0 : expense.actualCost)
+    const totalExpenses = expenses.reduce((acc, cur) => acc + cur, 0)
     
     return (
         <div>
@@ -19,7 +22,7 @@ export function DisplayArea() {
                     <ProgressCard name="packing" past={68} total={100}></ProgressCard>
                 </div>
                 <div className="lg:w-3/10 w-50">
-                    <ProgressCard name="budget" past={4200} total={12000}></ProgressCard>
+                    <ProgressCard name="budget" past={totalExpenses} total={12000}></ProgressCard>
                 </div>
             </div>
             <div className="lg:gap-[5%] flex flex-col lg:flex-row w-full gap-5">
