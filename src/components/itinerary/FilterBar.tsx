@@ -29,12 +29,12 @@ function FilterSelect({
   options: string[]
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex shrink-0 flex-col gap-1">
       <label className="ml-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
         {label}
       </label>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="w-40 border-border bg-muted/40 font-medium text-foreground">
+        <SelectTrigger className="min-w-32.5 w-full border-border bg-muted/40 font-medium text-foreground">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -51,7 +51,7 @@ function FilterSelect({
 
 export function FilterBar({ filters, dateOptions, onFilterChange, onClear, hasActiveFilters }: FilterBarProps) {
   return (
-    <Card className="flex-row flex-wrap items-end gap-4 p-4">
+    <Card className="flex flex-row flex-nowrap items-end gap-3 overflow-x-auto p-3 md:flex-wrap md:gap-4 md:p-4">
       <FilterSelect
         label="Date"
         value={filters.date}
@@ -82,9 +82,9 @@ export function FilterBar({ filters, dateOptions, onFilterChange, onClear, hasAc
       <button
         onClick={onClear}
         className={cn(
-          "inline-flex items-center gap-1 self-end rounded-lg border px-2 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors",
+          "inline-flex shrink-0 items-center gap-1 self-end rounded-lg border px-2 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors",
           hasActiveFilters
-            ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+            ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
             : "border-transparent text-muted-foreground hover:bg-muted",
         )}
       >

@@ -15,7 +15,7 @@ export function FilterBar({ children, onClear }: FilterBarProps) {
       <Button
         variant="ghost"
         onClick={onClear}
-        className="text-blue-700 hover:text-blue-800 hover:bg-blue-50 font-bold text-xs h-10 px-4 mt-auto uppercase tracking-wider flex gap-2"
+        className="text-primary hover:text-primary hover:bg-primary/10 font-bold text-xs h-10 px-4 mt-auto uppercase tracking-wider flex gap-2"
       >
         <FilterX className="h-4 w-4" />
         Clear Filters

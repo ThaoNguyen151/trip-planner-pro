@@ -48,7 +48,7 @@ export function ActivityCard({
 }: ActivityCardProps) {
   return (
     <div className="relative">
-      <div className="absolute -left-9.25 top-1/2 -translate-y-1/2 z-10 size-3 rounded-full border-2 border-white bg-blue-500" />
+      <div className="absolute -left-9.25 top-1/2 -translate-y-1/2 z-10 size-3 rounded-full border-2 border-white bg-primary" />
       <Card className="gap-3 p-4">
         {activity.overdue && (
           <div className="flex items-center gap-3">
@@ -62,25 +62,25 @@ export function ActivityCard({
           </div>
         )}
 
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2.5">
-            <h4 className="text-base font-bold text-foreground">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-start justify-between gap-3">
+            <h4 className="min-w-0 text-base font-bold text-foreground">
               {activity.title}
             </h4>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <MapPin className="size-4 text-slate-400" />
-                {activity.location}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="size-4 text-slate-400" />
-                {activity.startTime} - {activity.endTime}
-              </span>
-            </div>
+            <ActionMenu onEdit={onEdit} onDelete={onDelete} />
           </div>
-
-          <div className="flex shrink-0 items-center gap-2">
-            <Badge className="border-blue-100 bg-blue-50 text-blue-600">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <MapPin className="size-4 shrink-0 text-slate-400" />
+              <span className="truncate">{activity.location}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="size-4 shrink-0 text-slate-400" />
+              {activity.startTime} - {activity.endTime}
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge className="border-primary/20 bg-primary/10 text-primary">
               {activity.category}
             </Badge>
             <Badge className={priorityColors[activity.priority]}>
@@ -89,7 +89,6 @@ export function ActivityCard({
             <Badge className={statusColors[activity.status]}>
               {activity.status}
             </Badge>
-            <ActionMenu onEdit={onEdit} onDelete={onDelete} />
           </div>
         </div>
       </Card>
