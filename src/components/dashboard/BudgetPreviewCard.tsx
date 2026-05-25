@@ -24,7 +24,7 @@ export default function BudgetPreviewCard() {
           </p>
         </div>
 
-        <div>
+        <div className="pt-2.5">
           <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden mb-5 mt-1">
             <div
               className="h-full rounded-full bg-primary"
