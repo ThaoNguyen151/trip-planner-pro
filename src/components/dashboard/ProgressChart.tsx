@@ -1,5 +1,5 @@
 import { type ChartConfig } from "@/components/ui/chart"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { ChartContainer } from "@/components/ui/chart"
 import { Pie, PieChart, Label } from "recharts"
 
 type ChartProps = {
@@ -16,12 +16,12 @@ export function ProgressChart(props: ChartProps) {
     const chartConfig = {
         past: {
             label: "past",
-            color: "#2563eb"     //Change to accent color once theme is finalized
+            color: "var(--color-primary)"     //Change to accent color once theme is finalized
         },
 
         standby: {
             label: "standby",
-            color: "#B2BEB5"
+            color: "var(--color-muted)"
         }
     } satisfies ChartConfig
 
@@ -31,13 +31,12 @@ export function ProgressChart(props: ChartProps) {
 
         <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-20 w-20">
           <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie data={chartData} dataKey="items" nameKey="status" innerRadius={20} strokeWidth={5} outerRadius={30}><Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle"fontWeight={"bold"} color="muted-foreground">
-                          {(chartData[0].items / sumItems * 100).toLocaleString()}%
+                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle"fontWeight={"bold"} color="foreground">
+                          {(Math.round(chartData[0].items / sumItems * 100)).toLocaleString()}%
                       </text>
                     )
                   }

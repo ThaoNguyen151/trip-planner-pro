@@ -48,7 +48,7 @@ export function ActiveTripHeader({
   if (variant === "dashboard") {
     return (
       <div className={className}>
-        <h1 className="text-foreground text-3xl font-semibold">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-4xl">{title}</h1>
         {dateRange ? (
           <div className="flex flex-row items-center space-x-1.5 pt-0.5">
             <Calendar className="w-3 h-3" aria-hidden />
