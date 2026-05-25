@@ -39,22 +39,32 @@ import { Plus, X } from "lucide-react";
 import { useEffect } from "react";
 
 // Zod validation schema
-const expenseItemSchema = z.object({
-  category: z.string().min(1, "Category is required"),
-  name: z.string().min(3, "Item name is required"),
-  estimatedCost: z
-    .union([z.string(), z.number()])
-    .transform((val) => Number(val))
-    .pipe(z.number().min(0, "Cost must be larger than 0")),
-  actualCost: z
-    .union([z.string(), z.number()])
-    .transform((val) =>
-      val === "" || val === undefined || val === null ? 0 : Number(val),
-    )
-    .pipe(z.number().min(0))
-    .default(0),
-  paymentStatus: z.enum(["Unpaid", "Paid"]).default("Paid"),
-});
+const expenseItemSchema = z
+  .object({
+    category: z.string().min(1, "Category is required"),
+    name: z.string().min(3, "Item name is required"),
+    estimatedCost: z
+      .union([z.string(), z.number()])
+      .transform((val) =>
+        val === "" || val === undefined || val === null ? 0 : Number(val),
+      )
+      .pipe(z.number().min(1000, "Estimated cost is required")),
+    actualCost: z
+      .union([z.string(), z.number()])
+      .transform((val) =>
+        val === "" || val === undefined || val === null ? 0 : Number(val),
+      ),
+    paymentStatus: z.enum(["Unpaid", "Paid"]).default("Paid"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.paymentStatus === "Paid" && data.actualCost < 1000) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Actual cost is required",
+        path: ["actualCost"],
+      });
+    }
+  });
 
 const formSchema = z.object({
   items: z.array(expenseItemSchema),
@@ -267,8 +277,11 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                                 placeholder="0đ"
                                 className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                                 {...field}
+                                value={field.value ?? ""}
+                                onChange={(e) => field.onChange(e.target.value)}
                               />
                             </FormControl>
+                            <FormMessage />
                           </FormItem>
                         )}
                       />
