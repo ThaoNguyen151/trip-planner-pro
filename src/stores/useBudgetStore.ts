@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useTripStore } from "@/stores/useTripStore";
 import type { BudgetStore, Expense } from "@/types/budget";
 
 export const useBudgetStore = create<BudgetStore>()((set) => ({
@@ -33,7 +34,17 @@ export const useBudgetStore = create<BudgetStore>()((set) => ({
         set((state) => ({
           expenses: state.expenses.filter((exp) => exp.id !== id),
         })),
-      setTotalBudget: (amount) => set({ totalBudget: amount }),
+      setTotalBudget: (amount) => {
+        set({ totalBudget: amount });
+        const tripId = useTripStore.getState().activeTripId;
+        if (tripId) {
+          useTripStore.setState((s) => ({
+            trips: s.trips.map((t) =>
+              t.id === tripId ? { ...t, budget: amount } : t,
+            ),
+          }));
+        }
+      },
       filters: {
         category: "All",
         status: "All",
