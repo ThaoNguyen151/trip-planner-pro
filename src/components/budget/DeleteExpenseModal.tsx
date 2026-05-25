@@ -32,34 +32,34 @@ export function DeleteExpenseModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-100 p-6 flex flex-col items-center text-center">
+      <DialogContent className="max-w-[280px] rounded-2xl py-7 px-5 text-center shadow-2xl [&>button]:hidden">
         <DialogHeader className="flex flex-col items-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-            <div className="w-10 h-10  rounded-full flex items-center justify-center ">
-              <Trash2 className="w-4 h-4 text-red-600 stroke-3" />
-            </div>
+          <div className="mx-auto w-9 h-9 bg-red-100 rounded-full flex items-center justify-center">
+            <Trash2 className="size-5 text-red-500" />
           </div>
 
-          <DialogTitle className="text-2xl font-bold text-slate-900">
+          <DialogTitle className="text-sm font-semibold text-slate-800">
             Delete Item?
           </DialogTitle>
-          <DialogDescription className="text-slate-500 text-base py-2">
-            Are you sure you want to delete this item? This action cannot be
-            undone.
+          <DialogDescription className="text-slate-400 text-xs max-w-[250px]">
+            Are you sure you want to delete this item?
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="flex w-full gap-3 mt-4 sm:justify-center">
+        <DialogFooter className="flex flex-row gap-2 items-center justify-center sm:justify-center border-t-0 bg-white">
           <Button
             variant="outline"
             onClick={onClose}
-            className="flex-1 h-12 rounded-xl border-slate-200 bg-slate-50 text-slate-600 font-semibold"
+            className="flex-1 max-w-[150px]"
+            size="sm"
           >
             Cancel
           </Button>
           <Button
+            variant="destructive"
+            size="sm"
             onClick={handleDelete}
-            className="flex-1 h-12 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold flex items-center justify-center gap-2"
+            className="flex-1 max-w-[150px] bg-red-500 text-white hover:bg-red-600"
           >
             Delete
           </Button>

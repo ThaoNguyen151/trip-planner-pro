@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { FilterBar, DaySection, AddItemModal } from "@/components/itinerary";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { ActiveTripHeader } from "@/components/shared/ActiveTripHeader";
+import { useActiveTripMeta } from "@/hooks/useActiveTripMeta";
 import { useItineraryFilters } from "@/hooks/useItineraryFilters";
 import { useItineraryStore } from "@/stores";
 import type { ItineraryActivity } from "@/types";
 
 export default function ItineraryPage() {
+  const { startDate, endDate } = useActiveTripMeta();
   const [addOpen, setAddOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<{
     activity: ItineraryActivity;
@@ -50,25 +53,20 @@ export default function ItineraryPage() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 rounded-xl bg-slate-100 px-2 py-6 sm:px-4 md:px-6">
-      {/* Header */}
-      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Da Nang Family Trip
-          </h2>
-          <p className="mt-1 text-base text-muted-foreground">
-            June 10 - June 17, 2026
-          </p>
-        </div>
-        <button
-          onClick={() => setAddOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-800"
-        >
-          <Plus className="size-4" />
-          Add Item
-        </button>
-      </section>
+    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 rounded-xl bg-slate-100 px-2 py-4 sm:px-4 sm:gap-5 md:px-6 md:py-6 md:gap-6">
+      <ActiveTripHeader
+        variant="page"
+        action={
+          <button
+            type="button"
+            onClick={() => setAddOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 self-start md:self-auto"
+          >
+            <Plus className="size-4" />
+            Add Item
+          </button>
+        }
+      />
 
       {/* Filter bar */}
       <FilterBar
@@ -80,12 +78,15 @@ export default function ItineraryPage() {
       />
 
       {/* Timeline */}
-      <div className="relative pl-14">
-        <div className="absolute bottom-0 left-5.75 top-0 w-0.5 bg-border/40" />
+      <div className="relative pl-12 md:pl-14">
+        <div className="absolute bottom-0 left-[1.1875rem] top-0 w-0.5 bg-border/40 md:left-5.75" />
         {filteredDays.map((day) => (
           <DaySection
             key={day.day}
-            {...day}
+            day={day.day}
+            date={day.date}
+            activities={day.activities}
+            forceExpand={hasActiveFilters}
             onEditActivity={handleEditActivity}
             onDeleteActivity={handleDeleteActivity}
           />
@@ -108,11 +109,15 @@ export default function ItineraryPage() {
         onOpenChange={handleModalClose}
         editingActivity={editingItem?.activity}
         editingDay={editingItem?.day}
+        minDate={startDate || undefined}
+        maxDate={endDate || undefined}
       />
 
       <ConfirmDialog
         open={!!deleteTarget}
-        onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
         title="Delete Item?"
         description="Are you sure you want to delete this item?"
         confirmLabel="Delete"

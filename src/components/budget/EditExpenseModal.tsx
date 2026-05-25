@@ -1,3 +1,5 @@
+"use client";
+
 import { useBudgetStore } from "@/stores";
 import type { CategoryType, Expense, PaymentStatus } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +11,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,17 +23,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle, Plus } from "lucide-react";
+import { getBudgetAlertStatus } from "@/stores";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const editSchema = z.object({
-  name: z.string().min(1, "Item name is required"),
-  category: z.string().min(3, "Category is required"),
-  estimatedCost: z.coerce.number().min(0, "Cost must be larger than 0"),
-  actualCost: z.coerce.number().min(0),
-  paymentStatus: z.enum(["Paid", "Unpaid"]),
-});
+const editSchema = z
+  .object({
+    name: z.string().min(1, "Item name is required"),
+    category: z.string().min(3, "Category is required"),
+    estimatedCost: z
+      .union([z.string(), z.number()])
+      .transform((val) =>
+        val === "" || val === undefined || val === null ? 0 : Number(val),
+      )
+      .pipe(z.number().min(1000, "Estimated cost is required")),
+    actualCost: z
+      .union([z.string(), z.number()])
+      .transform((val) =>
+        val === "" || val === undefined || val === null ? 0 : Number(val),
+      ),
+    paymentStatus: z.enum(["Paid", "Unpaid"]),
+  })
+  .superRefine((data, ctx) => {
+    if (data.paymentStatus === "Paid" && data.actualCost < 1000) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Actual cost is required",
+        path: ["actualCost"],
+      });
+    }
+  });
 
 type EditInput = z.input<typeof editSchema>;
+type EditOutput = z.output<typeof editSchema>;
 
 interface EditExpenseModalProps {
   isOpen: boolean;
@@ -43,15 +69,22 @@ export function EditExpenseModal({
   onClose,
   expenseId,
 }: EditExpenseModalProps) {
+  const storeState = useBudgetStore();
   const expense = useBudgetStore((state) =>
     state.expenses.find((e) => e.id === expenseId),
   );
   const updateExpense = useBudgetStore((state) => state.updateExpense);
-  const { register, handleSubmit, reset, setValue, watch } = useForm<EditInput>(
-    {
-      resolver: zodResolver(editSchema),
-    },
-  );
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<EditInput>({
+    resolver: zodResolver(editSchema),
+  });
 
   useEffect(() => {
     if (expense && isOpen) {
@@ -66,36 +99,64 @@ export function EditExpenseModal({
   }, [expense, isOpen, reset]);
 
   const onSubmit: SubmitHandler<EditInput> = (values) => {
+    const data = values as EditOutput;
     if (expenseId) {
       updateExpense(expenseId, {
-        name: values.name,
-        category: values.category as CategoryType,
-        estimatedCost: values.estimatedCost,
-        actualCost: values.actualCost,
-        paymentSTatus: values.paymentStatus,
+        name: data.name,
+        category: data.category as CategoryType,
+        estimatedCost: data.estimatedCost,
+        actualCost: data.actualCost,
+        paymentStatus: data.paymentStatus,
       } as Partial<Expense>);
       onClose();
     }
   };
+
   if (!expense) return null;
+
+  const watchedEstimated = watch("estimatedCost");
+  const watchedActual = watch("actualCost");
+
+  const {
+    isOverBudget,
+    isEstimatedOver,
+    isActualOver,
+    estimatedPercent,
+    actualPercent,
+  } = getBudgetAlertStatus(
+    storeState,
+    {
+      newEstimated:
+        watchedEstimated === "" || watchedEstimated === undefined
+          ? 0
+          : Number(watchedEstimated),
+      newActual:
+        watchedActual === "" || watchedActual === undefined
+          ? 0
+          : Number(watchedActual),
+    },
+    expenseId,
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-white border-none shadow-lg">
+      <DialogContent className="sm:max-w-[425px] bg-white border-none shadow-lg pl-6 [&>button]:hidden">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-slate-900">
-            Edit Expense Item
+          <DialogTitle className="text-2xl font-semibold tracking-tight text-primary">
+            Edit Item
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-4">
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-slate-700">
+            <Label className="text-sm font-semibold text-primary">
               Category
             </Label>
             <Select
               value={watch("category")}
-              onValueChange={(val) => setValue("category", val)}
+              onValueChange={(val) =>
+                setValue("category", val, { shouldValidate: true })
+              }
             >
               <SelectTrigger className="border-slate-200 text-slate-900">
                 <SelectValue placeholder="Select Category" />
@@ -115,51 +176,81 @@ export function EditExpenseModal({
                 ))}
               </SelectContent>
             </Select>
+            {errors.category && (
+              <p className="text-sm font-medium text-destructive">
+                {errors.category.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-slate-700">
+            <Label className="text-sm font-semibold text-primary">
               Item Name
             </Label>
             <Input
               {...register("name")}
-              className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 text-slate-900"
+              className="border-slate-200 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1 text-slate-900"
             />
+            {errors.name && (
+              <p className="text-sm font-medium text-destructive">
+                {errors.name.message}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-sm font-semibold text-slate-700">
+              <Label className="text-sm font-semibold text-primary">
                 Estimated Cost
               </Label>
               <Input
                 type="number"
-                step="0.01"
+                step="1000"
                 {...register("estimatedCost")}
-                className="border-slate-200 text-slate-900"
+                onChange={(e) =>
+                  setValue("estimatedCost", e.target.value, {
+                    shouldValidate: true,
+                  })
+                }
+                className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
+              {errors.estimatedCost && (
+                <p className="text-sm font-medium text-destructive">
+                  {errors.estimatedCost.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label className="text-sm font-semibold text-slate-700">
+              <Label className="text-sm font-semibold text-primary">
                 Actual Cost
               </Label>
               <Input
                 type="number"
-                step="0.01"
+                step="1000"
                 {...register("actualCost")}
-                className="border-slate-200 text-slate-900"
+                onChange={(e) =>
+                  setValue("actualCost", e.target.value, {
+                    shouldValidate: true,
+                  })
+                }
+                className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
+              {errors.actualCost && (
+                <p className="text-sm font-medium text-destructive">
+                  {errors.actualCost.message}
+                </p>
+              )}
             </div>
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-slate-700">
+            <Label className="text-sm font-semibold text-primary">
               Payment Status
             </Label>
             <RadioGroup
               value={watch("paymentStatus")}
               onValueChange={(val: PaymentStatus) =>
-                setValue("paymentStatus", val)
+                setValue("paymentStatus", val, { shouldValidate: true })
               }
               className="flex gap-20"
             >
@@ -192,22 +283,45 @@ export function EditExpenseModal({
             </RadioGroup>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          {isOverBudget && (
+            <Alert
+              variant="destructive"
+              className="bg-red-50 border-red-200 text-red-950 animate-in fade-in-50"
+            >
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <AlertTitle className="font-bold text-destructive">
+                Critical Alert!
+              </AlertTitle>
+              <AlertDescription className="text-xs text-red-800 font-medium space-y-1">
+                {isEstimatedOver && (
+                  <p>
+                    • Total estimated cost is {estimatedPercent}% over budget.
+                  </p>
+                )}
+                {isActualOver && (
+                  <p>• Total actual cost is {actualPercent}% over budget.</p>
+                )}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <DialogFooter className="bg-transparent px-4 pb-5 pt-0 border-t-0 sm:px-6 sm:pb-6">
             <Button
               type="button"
               variant="ghost"
               onClick={onClose}
-              className="flex-1 h-12 font-bold text-slate-500 hover:bg-slate-100 hover:text-slate-500 rounded-xl"
+              className="text-muted-foreground"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 h-12 font-bold bg-blue-600 hover:bg-blue-900 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-all"
+              className="font-bold bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5 transition-all"
             >
-              Save Expense
+              <Plus className="size-4" />
+              Save Changes
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

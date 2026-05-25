@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Bell,
   Calendar,
+  ArrowLeft,
   LayoutDashboard,
   Map,
   Package,
@@ -17,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
+import { useTripStore } from "@/stores/useTripStore";
 
 const nav = [
   { to: ROUTES.dashboard, label: "Dashboard", icon: LayoutDashboard },
@@ -49,6 +51,12 @@ function navLinkClass(
 
 export function AppShellLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleBackToList = () => {
+    useTripStore.getState().setActiveTripId(null);
+    navigate(ROUTES.list);
+  };
 
   return (
     <div className="flex h-svh min-h-0 w-full flex-col overflow-hidden bg-slate-50 text-foreground md:flex-row">
@@ -91,7 +99,7 @@ export function AppShellLayout() {
             )}
           </Button>
         </div>
-        <nav className="flex flex-1 flex-col gap-1 p-3">
+        <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-3">
           {nav.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
@@ -109,6 +117,23 @@ export function AppShellLayout() {
             </NavLink>
           ))}
         </nav>
+        <div className="shrink-0 border-t border-slate-200/80 p-3">
+          <button
+            type="button"
+            onClick={handleBackToList}
+            aria-label="Back to trip list"
+            title={sidebarCollapsed ? "Back to trip list" : undefined}
+            className={cn(
+              "flex w-full items-center rounded-lg py-2.5 text-sm font-medium transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+              sidebarCollapsed ? "justify-center px-2" : "gap-3 px-3",
+            )}
+          >
+            <ArrowLeft className="size-[18px] shrink-0" aria-hidden />
+            {!sidebarCollapsed && (
+              <span className="truncate">Back to trips list</span>
+            )}
+          </button>
+        </div>
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -176,6 +201,7 @@ export function AppShellLayout() {
           </NavLink>
         ))}
       </nav>
+      
     </div>
   );
 }

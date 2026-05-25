@@ -1,7 +1,5 @@
 import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { STORAGE_KEYS } from '@/constants/storage-keys'
 import { seedCalendarEvents } from '@/lib/calendar-seed'
 import type { CalendarEvent, CalendarEventKind } from '@/types/calendar'
 import { colorForCalendarKind } from '@/types/calendar'
@@ -28,9 +26,7 @@ function newEventId(): string {
   return `cal-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
 }
 
-export const useCalendarEventsStore = create<CalendarEventsState>()(
-  persist(
-    (set) => ({
+export const useCalendarEventsStore = create<CalendarEventsState>()((set) => ({
       events: seedCalendarEvents(),
       addEvent: (input) => {
         const title = input.title.trim()
@@ -64,11 +60,4 @@ export const useCalendarEventsStore = create<CalendarEventsState>()(
         })),
       removeEvent: (id) =>
         set((s) => ({ events: s.events.filter((x) => x.id !== id) })),
-    }),
-    {
-      name: STORAGE_KEYS.CALENDAR_EVENTS,
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ events: state.events }),
-    },
-  ),
-)
+}))

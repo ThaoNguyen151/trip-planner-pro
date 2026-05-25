@@ -5,4 +5,6 @@ export const ROUTES = {
   packing: '/packing',
   budget: '/budget',
   settings: '/settings',
+  overview: "/overview",
+  list: "/list",
 } as const
