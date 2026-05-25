@@ -17,30 +17,8 @@ interface DashboardItinPreviewAreaProps {
 }
 
 export default function DashboardItinPreviewArea(props: DashboardItinPreviewAreaProps) {
-    // const tempData = [{
-    //     name: "Family Trip to Da Nang",
-    //     location: "Da nang International Airport",
-    //     category: "Transport",
-    //     time: "14:00 PM",
-    //     priority: "High",
-    // },
-    // {
-    //     name: "Hotel Check-in",
-    //     location: "International DaNang Sun Peninsula",
-    //     category: "Hotel",
-    //     time: "18:00 PM",
-    //     priority: "Medium",
-    // },
-    // {
-    //     name: "Visit My Khe Beach",
-    //     location: "My Khe Beach, Da Nang",
-    //     category: "Sightseeing",
-    //     time: "19:00 PM",
-    //     priority: "Low",
-    // }] as const;
-    
     return (
-        <div>
+        <div className = "flex flex-col gap-2">
             <div className="pb-5 pl-3.5 flex flex-row items-center space-x-1.5">
                 <Clock className="w-5 h-5"/>
                 <p className="text-foreground font-bold text-lg">Today is {props.today.getDate()}/{props.today.getMonth() + 1}/{props.today.getFullYear()} </p>
