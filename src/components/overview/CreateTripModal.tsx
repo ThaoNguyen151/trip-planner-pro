@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { formatMoneyInput } from "@/lib/money-input";
 import { cn } from "@/lib/utils";
 
 export interface TripFormValues {
@@ -73,9 +74,12 @@ export function CreateTripDialog({
             <Label htmlFor="tripBudget">Trip Budget</Label>
             <Input
               id="tripBudget"
+              inputMode="numeric"
               placeholder="e.g., 10.000.000"
               value={tripBudget}
-              onChange={(e) => setTripBudget(e.target.value)}
+              onChange={(e) =>
+                setTripBudget(formatMoneyInput(e.target.value))
+              }
             />
           </div>
 
