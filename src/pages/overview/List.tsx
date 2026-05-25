@@ -7,12 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { tripPath } from "@/constants/routes";
 import { createTripFromForm } from "@/lib/create-trip-from-form";
-import {
-  formatTripDateRange,
-  getTripListProgress,
-} from "@/lib/trip-display";
+import { formatTripDateRange, getTripListProgress } from "@/lib/trip-display";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
 import { useTripStore } from "@/stores/useTripStore";
+import { Plus } from "lucide-react";
 
 export default function ListPage() {
   const [open, setOpen] = useState(false);
@@ -68,7 +66,8 @@ export default function ListPage() {
             className="h-11 w-full gap-2 sm:h-12 sm:w-auto sm:px-6"
             onClick={() => setOpen(true)}
           >
-            Add trip
+            <Plus className="h-4 w-4" />
+            Add Trip
           </Button>
         </div>
       </div>
@@ -78,9 +77,9 @@ export default function ListPage() {
           <p className="text-base font-medium text-slate-900 sm:text-lg">
             No trips yet
           </p>
-          <p className="mt-2 max-w-md text-sm text-slate-600 sm:text-base">
-            Create your first trip to start planning itinerary, budget, calendar,
-            and packing in one place.
+          <p className="mt-2 max-w-md text-muted-foreground">
+            Create your first trip to start planning itinerary, budget,
+            calendar, and packing in one place.
           </p>
           <Button className="mt-6 w-full sm:w-auto" onClick={() => setOpen(true)}>
             Create trip

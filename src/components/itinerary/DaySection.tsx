@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ActivityCard } from "@/components/itinerary/ActivityCard";
@@ -13,7 +13,7 @@ function DayDot({ day, active }: { day: number; active: boolean }) {
           active ? "bg-primary" : "bg-primary/40",
         )}
       >
-        {day}
+        {day % 100}
       </div>
     </div>
   );
@@ -28,7 +28,7 @@ interface DaySectionProps {
   onDeleteActivity?: (day: number, activityId: string) => void;
 }
 
-export function DaySection({
+export const DaySection = memo(function DaySection({
   day,
   date,
   activities,
@@ -76,4 +76,4 @@ export function DaySection({
       )}
     </div>
   );
-}
+});

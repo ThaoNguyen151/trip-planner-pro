@@ -123,7 +123,7 @@ export function AddItemModal({
 
   const onSubmit: SubmitHandler<FormValues> = (values) => {
     const [y, m, d] = values.date.split("-").map(Number);
-    const day = d;
+    const day = y * 10000 + m * 100 + d;
     const dateObj = new Date(y, m - 1, d);
     const displayDate = dateObj.toLocaleDateString("en-US", {
       weekday: "long",
