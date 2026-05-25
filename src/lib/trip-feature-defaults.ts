@@ -36,8 +36,8 @@ export function createDefaultPackingCategories(): PackingCategory[] {
       iconName: "Shirt",
       color: "#10b981",
       items: [
-        { id: 'c1', name: 'Linen Shirts (x2)', quantity: 2, unit: 'pcs', required: true, packed: true },
-        { id: 'c2', name: 'Swimwear', quantity: 2, unit: 'pcs', required: false, packed: true },
+        { id: 'c1', name: 'Linen Shirts (x2)', quantity: 2, unit: 'pcs', required: true, packed: false },
+        { id: 'c2', name: 'Swimwear', quantity: 2, unit: 'pcs', required: false, packed: false },
         { id: 'c3', name: 'Walking Shoes', quantity: 1, unit: 'pair', required: true, packed: false },
       ],
     },

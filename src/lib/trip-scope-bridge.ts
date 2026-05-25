@@ -153,6 +153,24 @@ export function initializeTripFeatureData(tripId: string): void {
   setTripFeatureData(tripId, createEmptyTripFeatureData(trip));
 }
 
+/** Clears itinerary, budget expenses, calendar, and packing for one trip (keeps trip card). */
+export function resetTripFeatureData(tripId: string): void {
+  const trip = useTripStore.getState().trips.find((t) => t.id === tripId);
+  if (!trip) return;
+
+  const empty = createEmptyTripFeatureData(trip);
+  setTripFeatureData(tripId, empty);
+
+  if (useTripStore.getState().activeTripId === tripId) {
+    isSwitching = true;
+    try {
+      applyFeatureState(empty);
+    } finally {
+      isSwitching = false;
+    }
+  }
+}
+
 export function loadTripIntoStores(tripId: string): void {
   const trip = useTripStore.getState().trips.find((t) => t.id === tripId);
   if (!trip) return;
