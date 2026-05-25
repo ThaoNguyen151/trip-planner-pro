@@ -21,6 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
+import { getBudgetAlertStatus } from "@/stores";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Plus } from "lucide-react";
 
@@ -45,6 +48,7 @@ export function EditExpenseModal({
   onClose,
   expenseId,
 }: EditExpenseModalProps) {
+  const storeState = useBudgetStore();
   const expense = useBudgetStore((state) =>
     state.expenses.find((e) => e.id === expenseId),
   );
@@ -80,6 +84,22 @@ export function EditExpenseModal({
     }
   };
   if (!expense) return null;
+  const watchedEstimated = watch("estimatedCost") || 0;
+  const watchedActual = watch("actualCost") || 0;
+  const {
+    isOverBudget,
+    isEstimatedOver,
+    isActualOver,
+    estimatedPercent,
+    actualPercent,
+  } = getBudgetAlertStatus(
+    storeState,
+    {
+      newEstimated: Number(watchedEstimated),
+      newActual: Number(watchedActual),
+    },
+    expenseId,
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -193,6 +213,29 @@ export function EditExpenseModal({
               </div>
             </RadioGroup>
           </div>
+
+          {/* Alert */}
+          {isOverBudget && (
+            <Alert
+              variant="destructive"
+              className="bg-red-50 border-red-200 text-red-950 animate-in fade-in-50"
+            >
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <AlertTitle className="font-bold text-destructive">
+                Critical Alert!
+              </AlertTitle>
+              <AlertDescription className="text-xs text-red-800 font-medium space-y-1">
+                {isEstimatedOver && (
+                  <p>
+                    • Total estimated cost is {estimatedPercent}% over budget.
+                  </p>
+                )}
+                {isActualOver && (
+                  <p>• Total actual cost is {actualPercent}% over budget.</p>
+                )}
+              </AlertDescription>
+            </Alert>
+          )}
 
           <DialogFooter className="bg-transparent px-4 pb-5 pt-0 border-t-0 sm:px-6 sm:pb-6">
             <Button
