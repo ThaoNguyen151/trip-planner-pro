@@ -8,15 +8,15 @@ export default function DashboardPage() {
   const handleAddTrip = useTripStore.getState().addTrip;
   if (allTrips.length === 0) {
     return (
-      <div>
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 rounded-xl bg-slate-100 px-2 py-4 sm:px-4 sm:gap-5 md:px-6 md:py-6 md:gap-6">
         <h1>No trips found</h1>
         <p>No trip details to display</p>
-        <button className="bg-amber-500" onClick={() => handleAddTrip("Da Nang Family Trip")}>Add Trip</button>
+        <button className="bg-amber-500" onClick={() => handleAddTrip("Da Nang Family Trip", "August 15th, 2024", "August 22nd, 2024")}>Add Trip</button>
       </div>
     )
   } else {
     return (
-    <div>
+    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 rounded-xl bg-slate-100 px-2 py-4 sm:px-4 sm:gap-5 md:px-6 md:py-6 md:gap-6">
       <DashboardHeader></DashboardHeader>
       <DisplayArea></DisplayArea>
     </div>)
