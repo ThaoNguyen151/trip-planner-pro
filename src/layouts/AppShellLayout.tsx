@@ -199,7 +199,7 @@ export function AppShellLayout() {
                 type="search"
                 name="q"
                 readOnly
-                placeholder="Search itineraries..."
+                placeholder="Search..."
                 aria-label="Search itineraries"
                 className="h-10 w-full rounded-full border border-border bg-muted/50 pl-10 pr-4 text-left text-sm text-foreground placeholder:text-muted-foreground outline-none ring-ring/30 focus-visible:ring-2"
               />
