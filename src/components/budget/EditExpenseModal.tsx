@@ -28,32 +28,53 @@ import { AlertTriangle, Plus } from "lucide-react";
 import { getBudgetAlertStatus } from "@/stores";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+const formatDisplayMoney = (value: string | number | undefined): string => {
+  if (value === undefined || value === null || value === "") return "";
+  const numericString = String(value).replace(/\D/g, "");
+  if (!numericString) return "";
+  return new Intl.NumberFormat("de-DE").format(Number(numericString));
+};
+
+const parseDisplayMoney = (value: string): number => {
+  const rawValue = value.replace(/\./g, "");
+  return rawValue === "" ? 0 : Number(rawValue);
+};
+
 const editSchema = z
   .object({
     name: z.string().min(1, "Item name is required"),
     category: z.string().min(3, "Category is required"),
     estimatedCost: z
       .union([z.string(), z.number()])
-      .transform((val) =>
-        val === "" || val === undefined || val === null ? 0 : Number(val),
+      .transform((val: string | number) =>
+        val === "" || val === undefined || val === null
+          ? 0
+          : Number(String(val).replace(/\./g, "")),
       )
       .pipe(z.number().min(1000, "Estimated cost is required")),
     actualCost: z
       .union([z.string(), z.number()])
-      .transform((val) =>
-        val === "" || val === undefined || val === null ? 0 : Number(val),
+      .transform((val: string | number) =>
+        val === "" || val === undefined || val === null
+          ? 0
+          : Number(String(val).replace(/\./g, "")),
       ),
     paymentStatus: z.enum(["Paid", "Unpaid"]),
   })
-  .superRefine((data, ctx) => {
-    if (data.paymentStatus === "Paid" && data.actualCost < 1000) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Actual cost is required",
-        path: ["actualCost"],
-      });
-    }
-  });
+  .superRefine(
+    (
+      data: { paymentStatus: "Paid" | "Unpaid"; actualCost: number },
+      ctx: z.RefinementCtx,
+    ) => {
+      if (data.paymentStatus === "Paid" && data.actualCost < 1000) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Actual cost is required",
+          path: ["actualCost"],
+        });
+      }
+    },
+  );
 
 type EditInput = z.input<typeof editSchema>;
 type EditOutput = z.output<typeof editSchema>;
@@ -117,6 +138,16 @@ export function EditExpenseModal({
   const watchedEstimated = watch("estimatedCost");
   const watchedActual = watch("actualCost");
 
+  const incomingEstimated =
+    typeof watchedEstimated === "string"
+      ? parseDisplayMoney(watchedEstimated)
+      : Number(watchedEstimated || 0);
+
+  const incomingActual =
+    typeof watchedActual === "string"
+      ? parseDisplayMoney(watchedActual)
+      : Number(watchedActual || 0);
+
   const {
     isOverBudget,
     isEstimatedOver,
@@ -126,14 +157,8 @@ export function EditExpenseModal({
   } = getBudgetAlertStatus(
     storeState,
     {
-      newEstimated:
-        watchedEstimated === "" || watchedEstimated === undefined
-          ? 0
-          : Number(watchedEstimated),
-      newActual:
-        watchedActual === "" || watchedActual === undefined
-          ? 0
-          : Number(watchedActual),
+      newEstimated: incomingEstimated,
+      newActual: incomingActual,
     },
     expenseId,
   );
@@ -204,14 +229,15 @@ export function EditExpenseModal({
                 Estimated Cost
               </Label>
               <Input
-                type="number"
-                step="1000"
-                {...register("estimatedCost")}
-                onChange={(e) =>
-                  setValue("estimatedCost", e.target.value, {
+                type="text"
+                placeholder="0đ"
+                value={formatDisplayMoney(watchedEstimated)}
+                onChange={(e) => {
+                  const raw = parseDisplayMoney(e.target.value);
+                  setValue("estimatedCost", raw === 0 ? "" : raw, {
                     shouldValidate: true,
-                  })
-                }
+                  });
+                }}
                 className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
               {errors.estimatedCost && (
@@ -225,14 +251,15 @@ export function EditExpenseModal({
                 Actual Cost
               </Label>
               <Input
-                type="number"
-                step="1000"
-                {...register("actualCost")}
-                onChange={(e) =>
-                  setValue("actualCost", e.target.value, {
+                type="text"
+                placeholder="0đ"
+                value={formatDisplayMoney(watchedActual)}
+                onChange={(e) => {
+                  const raw = parseDisplayMoney(e.target.value);
+                  setValue("actualCost", raw === 0 ? "" : raw, {
                     shouldValidate: true,
-                  })
-                }
+                  });
+                }}
                 className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
               {errors.actualCost && (

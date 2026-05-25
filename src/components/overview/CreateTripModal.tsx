@@ -75,7 +75,7 @@ export function CreateTripDialog({
             <Label htmlFor="tripBudget">Trip Budget</Label>
             <Input
               id="tripBudget"
-              placeholder="e.g., 5000"
+              placeholder="e.g., 10.000.000"
               value={tripBudget}
               onChange={(e) => setTripBudget(e.target.value)}
             />
