@@ -67,7 +67,7 @@ export default function ItineraryPage() {
           <button
             type="button"
             onClick={() => setAddOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 self-start md:self-auto"
+            className="inline-flex items-center justify-center gap-1.5 self-start rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:self-auto"
           >
             <Plus className="size-4" />
             Add Item

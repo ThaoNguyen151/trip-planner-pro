@@ -61,20 +61,19 @@ const editSchema = z
       ),
     paymentStatus: z.enum(["Paid", "Unpaid"]),
   })
-  .superRefine(
-    (
-      data: { paymentStatus: "Paid" | "Unpaid"; actualCost: number },
-      ctx: z.RefinementCtx,
-    ) => {
-      if (data.paymentStatus === "Paid" && data.actualCost < 1000) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Actual cost is required",
-          path: ["actualCost"],
-        });
-      }
-    },
-  );
+  .superRefine((data, ctx) => {
+    const actualCost =
+      data.actualCost === undefined || data.actualCost === null
+        ? 0
+        : Number(String(data.actualCost).replace(/\./g, ""));
+    if (data.paymentStatus === "Paid" && actualCost < 1000) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Actual cost is required",
+        path: ["actualCost"],
+      });
+    }
+  });
 
 type EditInput = z.input<typeof editSchema>;
 type EditOutput = z.output<typeof editSchema>;
@@ -84,7 +83,7 @@ interface EditExpenseModalProps {
   onClose: () => void;
   expenseId: string | null;
 }
-
+  
 export function EditExpenseModal({
   isOpen,
   onClose,
