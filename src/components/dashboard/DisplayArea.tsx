@@ -6,13 +6,18 @@ import { useBudgetStore, useItineraryStore } from "@/stores";
 
 export function DisplayArea() {
     const itinInfo = useItineraryStore((state) => state.days);
+    const todayDate = new Date();
+
     const allItin = itinInfo.map((days) => days.activities).flat();
     const completedItin = allItin.filter((itin) => itin.status === "Completed")
-
-    const expenses = useBudgetStore((state) => state.expenses).map((expense) => expense.actualCost === null ? 0 : expense.actualCost)
-    const totalExpenses = expenses.reduce((acc, cur) => acc + cur, 0)
-    const todayDate = new Date();
+    const overdueItin = allItin.filter((itin) => itin.overdue && itin.overdue === true)
     const potentialTodayActivity = itinInfo.filter((days) => `${todayDate.getMonth()} ${todayDate.getDate()}, ${todayDate.getFullYear()}` === days.date)
+
+    const allExpenseItems = useBudgetStore((state) => state.expenses)
+    const paidItems = allExpenseItems.filter((item) => item.paymentStatus === "Paid")
+    const expenses = paidItems.map((expense) => expense.actualCost ? expense.actualCost : 0)
+    const totalExpenses = expenses.reduce((acc, cur) => acc + cur, 0)
+    const unpaidItems = allExpenseItems.filter((expense) => expense.paymentStatus === "Unpaid")
 
     return (
         <div>
@@ -34,7 +39,7 @@ export function DisplayArea() {
                 <div className="lg:w-3/10">
                     <div className="flex flex-col gap-5">
                         <BudgetPreviewCard></BudgetPreviewCard>
-                        <TaskAlertCard></TaskAlertCard>
+                        <TaskAlertCard numOverdue={overdueItin.length} numUnpaid={unpaidItems.length}></TaskAlertCard>
                     </div>
                 </div>
             </div>
