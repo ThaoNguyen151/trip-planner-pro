@@ -10,10 +10,17 @@ export interface PackingItem {
 export interface PackingCategory {
   id: string
   name: string
-  iconName: string
+  iconName: PackingIconName
   color: string
   items: PackingItem[]
 }
+export type PackingIconName =
+  | "FileText"
+  | "Shirt"
+  | "Zap"
+  | "Pill"
+  | "SprayCan"
+  | "Package"
 
 export interface PackingFilters {
   category: string
@@ -38,5 +45,3 @@ export interface PackingStore {
   deleteItem: (categoryId: string, itemId: string) => void
   unpackAll: () => void
 }
-
-
