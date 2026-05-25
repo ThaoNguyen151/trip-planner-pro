@@ -11,7 +11,9 @@ export function DisplayArea() {
 
     const expenses = useBudgetStore((state) => state.expenses).map((expense) => expense.actualCost === null ? 0 : expense.actualCost)
     const totalExpenses = expenses.reduce((acc, cur) => acc + cur, 0)
-    
+    const todayDate = new Date();
+    const potentialTodayActivity = itinInfo.filter((days) => `${todayDate.getMonth()} ${todayDate.getDate()}, ${todayDate.getFullYear()}` === days.date)
+
     return (
         <div>
             <div className="lg:gap-[5%] flex min-[450px]:flex-row flex-col pt-5 pb-5 w-full flex-wrap gap-10 items-center justify-center">
@@ -27,7 +29,7 @@ export function DisplayArea() {
             </div>
             <div className="lg:gap-[5%] flex flex-col lg:flex-row w-full gap-5">
                 <div className="lg:w-[65%] w-full">
-                    <DashboardItinPreviewArea></DashboardItinPreviewArea>
+                    <DashboardItinPreviewArea today={todayDate} itinToday={potentialTodayActivity.length > 0 ? potentialTodayActivity[0].activities : []}></DashboardItinPreviewArea>
                 </div>
                 <div className="lg:w-3/10">
                     <div className="flex flex-col gap-5">

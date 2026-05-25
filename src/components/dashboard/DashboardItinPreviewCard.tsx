@@ -1,11 +1,12 @@
 import { Card, CardContent } from "../ui/card"
 import { MapPin, AlarmClock } from "lucide-react"
 import { Badge } from "../ui/badge"
+import type { ActivityCategory } from "@/types";
 
 interface ItinPreviewCardProps {
   name: string;
   location: string;
-  category: "Transport" | "Food" | "Sightseeing" | "Shopping"| "Hotel" | "Other";
+  category: ActivityCategory;
   time: string;
   priority: "Low" | "Medium" | "High";
   icon: React.ReactNode;
