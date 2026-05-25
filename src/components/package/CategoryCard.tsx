@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, Plus, Trash2 } from "lucide-react";
 import AddItemModal from "./AddItemModal";
 import DeleteModal from "../ui/DeleteItemModal";
-import { usePackingStore } from "@/stores/usePackingStore"
+import { PackingCategoryIcon } from "@/lib/packing-icons";
+import { usePackingStore } from "@/stores/usePackingStore";
 import type { PackingCategory } from "@/types/package";
 
-
 export default function CategoryCard({ category }: { category: PackingCategory }) {
-  const Icon = category.icon 
   const togglePacked = usePackingStore((s) => s.togglePacked)
   const [addOpen, setAddOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<{ categoryId: string; itemId: string } | null>(null)
@@ -28,7 +27,11 @@ export default function CategoryCard({ category }: { category: PackingCategory }
           onClick={() => setExpanded((e) => !e)}
         >
           <div className="flex items-center gap-2">
-            <Icon size={18} color={category.color} />
+            <PackingCategoryIcon
+              iconName={category.iconName}
+              size={18}
+              color={category.color}
+            />
             <span className="text-sm font-semibold text-slate-700">{category.name}</span>
             {total > 0 && (
               <span className="text-xs text-slate-400">
