@@ -163,15 +163,20 @@ export function AddItemModal({
     });
 
     if (isEditing && editingActivity) {
-      updateActivity(day, editingActivity.id, {
-        title: values.title.trim(),
-        location: values.location.trim(),
-        startTime: values.startTime,
-        endTime: values.endTime ?? "",
-        category: values.category as ActivityCategory,
-        priority: values.priority as ActivityPriority,
-        status: values.status as ActivityStatus,
-      }, displayDate);
+      updateActivity(
+        day,
+        editingActivity.id,
+        {
+          title: values.title.trim(),
+          location: values.location.trim(),
+          startTime: values.startTime,
+          endTime: values.endTime ?? "",
+          category: values.category as ActivityCategory,
+          priority: values.priority as ActivityPriority,
+          status: values.status as ActivityStatus,
+        },
+        displayDate,
+      );
     } else {
       addActivity(day, displayDate, {
         title: values.title.trim(),
@@ -197,9 +202,13 @@ export function AddItemModal({
       <DialogContent
         className="max-w-[640px] p-0 gap-0"
         showCloseButton={false}
+        aria-describedby={undefined}
       >
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col"
+          >
             {/* Header */}
             <DialogHeader className="px-4 pt-5 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
               <div className="flex items-center justify-between">
@@ -225,7 +234,7 @@ export function AddItemModal({
                       <input
                         {...field}
                         placeholder="e.g., Flight to Da Nang"
-                        className="h-11 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="h-11 w-full rounded-lg border border-input bg-card px-4 text-sm outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary"
                       />
                     </FormControl>
                     <FormMessage />
@@ -248,7 +257,7 @@ export function AddItemModal({
                         value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="h-11 w-full border-input bg-white text-sm">
+                          <SelectTrigger className="h-11 w-full border-input bg-card text-sm">
                             <SelectValue />
                           </SelectTrigger>
                         </FormControl>
@@ -277,7 +286,7 @@ export function AddItemModal({
                         value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="h-11 w-full border-input bg-white text-sm">
+                          <SelectTrigger className="h-11 w-full border-input bg-card text-sm">
                             <SelectValue />
                           </SelectTrigger>
                         </FormControl>
@@ -310,7 +319,7 @@ export function AddItemModal({
                         {...field}
                         min={minDate}
                         max={maxDate}
-                        className="h-11 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                        className="h-11 w-full rounded-lg border border-input bg-card px-4 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                       />
                     </FormControl>
                     <FormMessage />
@@ -330,7 +339,7 @@ export function AddItemModal({
                         <input
                           type="time"
                           {...field}
-                          className="h-11 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
+                          className="h-11 w-full rounded-lg border border-input bg-card px-4 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
                         />
                       </FormControl>
                       <FormMessage />
@@ -349,7 +358,7 @@ export function AddItemModal({
                         <input
                           type="time"
                           {...field}
-                          className="h-11 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
+                          className="h-11 w-full rounded-lg border border-input bg-card px-4 text-sm outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
                         />
                       </FormControl>
                       <FormMessage />
@@ -378,13 +387,13 @@ export function AddItemModal({
                               setLocationError(null);
                             }}
                             placeholder="Enter address"
-                            className="h-11 w-full rounded-lg border border-input bg-white pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary"
+                            className="h-11 w-full rounded-lg border border-input bg-card pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary"
                           />
                         </div>
                         <Button
                           type="button"
                           variant="outline"
-                          className="h-11 shrink-0 gap-1.5 px-3"
+                          className="h-11 shrink-0 gap-1.5 px-3 bg-muted-foreground/20"
                           disabled={locating}
                           aria-label="Use current location"
                           title="Use current location"
@@ -439,11 +448,12 @@ export function AddItemModal({
                                   "border border-green-200 bg-green-50 text-green-700",
                                 selected &&
                                   p === "Medium" &&
-                                  "border border-primary/30 bg-primary/10 text-primary",
+                                  "border border-secondary/30 bg-blue-50 text-secondary",
                                 selected &&
                                   p === "High" &&
                                   "border border-red-200 bg-red-50 text-red-700",
-                                !selected && "text-muted-foreground hover:bg-white/60",
+                                !selected &&
+                                  "text-muted-foreground hover:bg-white/60",
                               )}
                             >
                               {p}
@@ -459,7 +469,7 @@ export function AddItemModal({
             </div>
 
             {/* Footer */}
-            <DialogFooter className="px-4 pb-5 pt-0 border-t-0 bg-transparent sm:px-6 sm:pb-6">
+            <DialogFooter className="px-4 pb-5 pt-0 border-t-0 bg-transparent sm:px-6 sm:pb-10">
               <DialogClose asChild>
                 <Button variant="ghost" className="text-muted-foreground">
                   Cancel

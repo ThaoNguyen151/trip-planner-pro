@@ -102,7 +102,7 @@ export function AppShellLayout() {
           {!sidebarCollapsed && tripId ? (
             <NavLink
               to={tripPath(tripId, "dashboard")}
-              className="min-w-0 truncate text-lg font-semibold tracking-tight text-slate-900"
+              className="min-w-0 truncate text-2xl font-semibold tracking-tight text-primary"
             >
               Trip Planner Pro
             </NavLink>
