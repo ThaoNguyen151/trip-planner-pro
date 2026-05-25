@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { CreateTripDialog } from "@/components/overview/CreateTripModal";
 import { TripCard } from "@/components/overview/TripCard";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { tripPath } from "@/constants/routes";
@@ -14,8 +15,12 @@ import { Plus } from "lucide-react";
 
 export default function ListPage() {
   const [open, setOpen] = useState(false);
+  const [resetTargetId, setResetTargetId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { trips, setActiveTripId, setTripImage } = useTripPlanner();
+  const { trips, setActiveTripId, setTripImage, resetTripData } =
+    useTripPlanner();
+
+  const resetTargetTrip = trips.find((t) => t.id === resetTargetId);
 
   useEffect(() => {
     useTripStore.getState().setActiveTripId(null);
@@ -95,6 +100,7 @@ export default function ListPage() {
               progress={getTripListProgress(trip)}
               onOpen={handleOpenTrip}
               onImageChange={(id, image) => setTripImage(id, image)}
+              onResetData={setResetTargetId}
             />
           ))}
         </div>
@@ -105,6 +111,24 @@ export default function ListPage() {
         onOpenChange={setOpen}
         onSubmit={(values) => {
           createTripFromForm(values);
+        }}
+      />
+
+      <ConfirmDialog
+        open={!!resetTargetId}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) setResetTargetId(null);
+        }}
+        title="Reset trip data?"
+        description={
+          resetTargetTrip
+            ? `All itinerary, budget, calendar, and packing data for "${resetTargetTrip.title}" will be cleared. The trip will stay in your list.`
+            : "All planning data for this trip will be cleared."
+        }
+        confirmLabel="Reset"
+        onConfirm={() => {
+          if (resetTargetId) resetTripData(resetTargetId);
+          setResetTargetId(null);
         }}
       />
     </div>
