@@ -9,9 +9,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useTheme } from "@/hooks/useTheme";
+import { ItineraryExportActions } from "@/components/itinerary";
+import { useActiveTripMeta } from "@/hooks";
+import { useItineraryStore } from "@/stores";
 
 export default function SettingsPage() {
   const { theme, toggleTheme } = useTheme();
+  const { title, dateRange } = useActiveTripMeta();
+  const days = useItineraryStore((s) => s.days);
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 rounded-xl bg-muted/40 px-2 py-4 sm:px-4 sm:gap-5 md:px-6 md:py-6 md:gap-6">
@@ -42,6 +47,24 @@ export default function SettingsPage() {
             <Button variant="outline" size="sm" onClick={toggleTheme}>
               Switch to {theme === "dark" ? "light" : "dark"} mode
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Data Sharing</CardTitle>
+          <CardDescription>
+            Export the trip's itinerary to share with your buddies.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-end">
+            <ItineraryExportActions
+              tripTitle={title}
+              dateRange={dateRange}
+              days={days}
+            />
           </div>
         </CardContent>
       </Card>

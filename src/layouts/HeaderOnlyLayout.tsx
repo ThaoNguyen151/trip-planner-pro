@@ -1,10 +1,12 @@
 // src/layouts/HeaderOnlyLayout.tsx
-import { Bell, Search, UserCircle } from "lucide-react";
+import { Bell, Moon, Search, Sun, UserCircle } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/useTheme";
 
 export function HeaderOnlyLayout() {
+  const { theme, toggleTheme } = useTheme();
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col">
       <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border bg-card px-3 sm:px-6">
@@ -36,6 +38,19 @@ export function HeaderOnlyLayout() {
             aria-label="Notifications"
           >
             <Bell className="size-5 text-muted-foreground" />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
+          >
+            {theme === "dark" ? (
+              <Sun className="size-5 text-muted-foreground" />
+            ) : (
+              <Moon className="size-5 text-muted-foreground" />
+            )}
           </Button>
           <Button
             type="button"

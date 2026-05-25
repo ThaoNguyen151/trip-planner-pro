@@ -8,9 +8,11 @@ import {
   ArrowLeft,
   LayoutDashboard,
   Map,
+  Moon,
   Package,
   Search,
   Settings,
+  Sun,
   UserCircle,
   Wallet,
 } from "lucide-react";
@@ -22,6 +24,7 @@ import { ROUTES, tripPath, type TripSection } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 
 import { useTripStore } from "@/stores/useTripStore";
+import { useTheme } from "@/hooks/useTheme";
 
 const nav: {
   section: TripSection;
@@ -74,6 +77,7 @@ export function AppShellLayout() {
   const navigate = useNavigate();
 
   const { tripId = "" } = useParams<{ tripId: string }>();
+  const { theme, toggleTheme } = useTheme();
 
   const handleBackToTrips = () => {
     useTripStore.getState().setActiveTripId(null);
@@ -153,7 +157,7 @@ export function AppShellLayout() {
             aria-label="Back to trips"
             title={sidebarCollapsed ? "Back to trips" : undefined}
             className={cn(
-              "flex w-full items-center rounded-lg py-2.5 text-sm font-medium transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+              "flex w-full items-center rounded-lg py-2.5 text-sm font-medium transition-colors text-primary hover:bg-primary/10",
 
               sidebarCollapsed ? "justify-center px-2" : "gap-3 px-3",
             )}
@@ -205,6 +209,20 @@ export function AppShellLayout() {
                 aria-label="Notifications"
               >
                 <Bell className="size-5 text-muted-foreground" />
+              </Button>
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Toggle theme"
+                onClick={toggleTheme}
+              >
+                {theme === "dark" ? (
+                  <Sun className="size-5 text-muted-foreground" />
+                ) : (
+                  <Moon className="size-5 text-muted-foreground" />
+                )}
               </Button>
 
               <Button
