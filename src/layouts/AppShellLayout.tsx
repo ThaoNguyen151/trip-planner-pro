@@ -119,19 +119,11 @@ export function AppShellLayout() {
               sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
             }
           >
-            {sidebarCollapsed ? (
-              <img
-                src="/public/paper-plane-dark-left.png"
-                className="size-5"
-                aria-hidden
-              />
-            ) : (
-              <img
-                src="/public/paper-plane-dark-right.png"
-                className="size-5"
-                aria-hidden
-              />
-            )}
+            <img
+              src="/paper-plane-dark-right.png"
+              className="size-5"
+              aria-hidden
+            />
           </Button>
         </div>
 

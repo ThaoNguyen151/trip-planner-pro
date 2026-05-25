@@ -7,12 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { tripPath } from "@/constants/routes";
 import { createTripFromForm } from "@/lib/create-trip-from-form";
-import {
-  formatTripDateRange,
-  getTripListProgress,
-} from "@/lib/trip-display";
+import { formatTripDateRange, getTripListProgress } from "@/lib/trip-display";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
 import { useTripStore } from "@/stores/useTripStore";
+import { Plus } from "lucide-react";
 
 export function ToggleGroupSpacing() {
   return (
@@ -94,7 +92,8 @@ export default function ListPage() {
             className=" h-12 px-8 text-base gap-2 bg-primary-foreground"
             onClick={() => setOpen(true)}
           >
-            Add Item
+            <Plus className="h-4 w-4" />
+            Add Trip
           </Button>
         </div>
       </div>
@@ -105,8 +104,8 @@ export default function ListPage() {
             No trips yet
           </p>
           <p className="mt-2 max-w-md text-muted-foreground">
-            Create your first trip to start planning itinerary, budget, calendar,
-            and packing in one place.
+            Create your first trip to start planning itinerary, budget,
+            calendar, and packing in one place.
           </p>
           <Button className="mt-6" onClick={() => setOpen(true)}>
             Create trip

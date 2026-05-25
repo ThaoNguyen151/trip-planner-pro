@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -55,9 +55,7 @@ export function CreateTripDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
-            Create New Trip
-          </DialogTitle>
+          <DialogTitle className="text-xl font-bold">Add New Trip</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 mt-2">
@@ -141,7 +139,10 @@ export function CreateTripDialog({
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleCreate}>Create Trip</Button>
+          <Button onClick={handleCreate}>
+            <Plus className="h-4 w-4" />
+            Add Trip
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
