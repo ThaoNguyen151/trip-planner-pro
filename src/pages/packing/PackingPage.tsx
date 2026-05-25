@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import FilterDropdown from "../../components/package/FilterDropdown";
 import CategoryCard from "../../components/package/CategoryCard";
 import { usePackingStore } from "@/stores/usePackingStore";
+import { ActiveTripHeader } from "@/components/shared/ActiveTripHeader";
 
 export default function PackingPage() {
   const { categories, filters, setFilter, unpackAll } = usePackingStore()
