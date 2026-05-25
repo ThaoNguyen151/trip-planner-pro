@@ -29,12 +29,14 @@ export default function DashboardItinPreviewArea() {
         time: "19:00 PM",
         priority: "Low",
     }] as const;
+
+    const today = new Date();
     
     return (
         <div>
             <div className="pb-5 pl-3.5 flex flex-row items-center space-x-1.5">
-                <Clock className="w-5"/>
-                <p className="text-foreground font-bold text-lg">Today is 15/05/2024</p>
+                <Clock className="w-5 h-5"/>
+                <p className="text-foreground font-bold text-lg">Today is {today.getDate()}/{today.getMonth() + 1}/{today.getFullYear()} </p>
             </div>
             
             <div className="space-y-5">
