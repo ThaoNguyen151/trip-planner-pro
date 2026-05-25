@@ -16,12 +16,12 @@ export function ProgressChart(props: ChartProps) {
     const chartConfig = {
         past: {
             label: "past",
-            color: "#2563eb"     //Change to accent color once theme is finalized
+            color: "var(--color-primary)"     //Change to accent color once theme is finalized
         },
 
         standby: {
             label: "standby",
-            color: "#B2BEB5"
+            color: "var(--color-muted)"
         }
     } satisfies ChartConfig
 
@@ -35,7 +35,7 @@ export function ProgressChart(props: ChartProps) {
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle"fontWeight={"bold"} color="muted-foreground">
+                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle"fontWeight={"bold"} color="foreground">
                           {(Math.round(chartData[0].items / sumItems * 100)).toLocaleString()}%
                       </text>
                     )
