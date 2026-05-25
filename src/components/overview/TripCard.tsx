@@ -28,17 +28,20 @@ interface TripCardProps {
   trip: Trip;
   dateRange: string;
   progress: number;
+  title?: string;
   onOpen?: (id: string) => void;
   onImageChange?: (id: string, image: string) => void;
 }
 
 export function TripCard({
   trip,
+  title,
   dateRange,
   progress,
   onOpen,
   onImageChange,
 }: TripCardProps) {
+  const displayTitle = (title ?? trip.title).trim() || "Untitled trip";
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const handleSelectImage = (url: string) => {
@@ -54,7 +57,7 @@ export function TripCard({
         className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow text-left w-full"
       >
         <div
-          className="relative group w-full h-40 cursor-pointer"
+          className="relative group h-36 w-full cursor-pointer sm:h-40 md:h-44"
           onClick={(e) => {
             e.stopPropagation();
             setPickerOpen(true);
@@ -62,7 +65,7 @@ export function TripCard({
         >
           <img
             src={trip.image ?? DEFAULT_IMAGE}
-            alt={trip.title}
+            alt={displayTitle}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -74,26 +77,26 @@ export function TripCard({
         </div>
 
         <div className="p-4">
-          <h2 className="font-semibold text-primary-foreground">{trip.title}</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">{dateRange}</p>
+          <h2 className="text-base font-semibold text-slate-900">{displayTitle}</h2>
+          <p className="text-sm text-slate-500 mt-0.5">{dateRange}</p>
           <div className="mt-4">
-            <p className="text-sm text-primary-foreground font-medium mb-1.5">
+            <p className="text-sm font-medium text-slate-700 mb-1.5">
               {progress}% planned
             </p>
             <Progress
               value={progress}
-              className="h-1.5 bg-muted-foreground [&>div]:bg-primary-foreground"
+              className="h-1.5 bg-slate-200 [&>div]:bg-violet-600"
             />
           </div>
         </div>
       </button>
 
       <Dialog open={pickerOpen} onOpenChange={setPickerOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="max-h-[90dvh] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Choose a photo</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-4 gap-2 mt-2">
+          <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
             {STOCK_IMAGES.map((url) => (
               <button
                 key={url}

@@ -7,14 +7,12 @@ import { Button } from "@/components/ui/button";
 export function HeaderOnlyLayout() {
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-      <header className="flex h-14 shrink-0 items-center border-b border-border bg-card px-4 sm:px-6 gap-2">
-        {/* title */}
-        <h1 className="hidden sm:flex flex-1 text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+      <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border bg-card px-3 sm:px-6">
+        <h1 className="min-w-0 flex-1 truncate text-base font-semibold tracking-tight text-foreground sm:text-xl md:text-2xl">
           Trip Planner Pro
         </h1>
 
-        {/* search place */}
-        <div className="relative flex-1 sm:flex-none sm:w-72">
+        <div className="relative hidden min-w-0 flex-1 max-w-[11rem] sm:block md:max-w-xs lg:w-72">
           <Search
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden
@@ -50,7 +48,7 @@ export function HeaderOnlyLayout() {
         </div>
       </header>
 
-      <main className="min-h-0 flex-1 overflow-y-auto bg-background p-4 sm:p-6">
+      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-background p-4 sm:p-6 md:p-8">
         <Outlet />
       </main>
     </div>

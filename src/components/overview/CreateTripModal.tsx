@@ -53,7 +53,7 @@ export function CreateTripDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="max-h-[90dvh] w-[calc(100vw-2rem)] max-w-xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             Create New Trip
@@ -81,8 +81,8 @@ export function CreateTripDialog({
             />
           </div>
 
-          <div className="flex gap-4">
-            <div className="flex flex-col gap-1.5 flex-1">
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
               <Label>Start Date</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -108,7 +108,7 @@ export function CreateTripDialog({
               </Popover>
             </div>
 
-            <div className="flex flex-col gap-1.5 flex-1">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
               <Label>End Date</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -137,11 +137,17 @@ export function CreateTripDialog({
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 mt-4">
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+        <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
+          <Button
+            variant="ghost"
+            className="w-full sm:w-auto"
+            onClick={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
-          <Button onClick={handleCreate}>Create Trip</Button>
+          <Button className="w-full sm:w-auto" onClick={handleCreate}>
+            Create Trip
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
