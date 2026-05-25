@@ -36,14 +36,9 @@ export function createDefaultPackingCategories(): PackingCategory[] {
       iconName: "Shirt",
       color: "#10b981",
       items: [
-        {
-          id: "c1",
-          name: "Linen Shirts (x3)",
-          quantity: 3,
-          unit: "pcs",
-          required: true,
-          packed: false,
-        },
+        { id: 'c1', name: 'Linen Shirts (x2)', quantity: 2, unit: 'pcs', required: true, packed: true },
+        { id: 'c2', name: 'Swimwear', quantity: 2, unit: 'pcs', required: false, packed: true },
+        { id: 'c3', name: 'Walking Shoes', quantity: 1, unit: 'pair', required: true, packed: false },
       ],
     },
     {
@@ -52,14 +47,8 @@ export function createDefaultPackingCategories(): PackingCategory[] {
       iconName: "Zap",
       color: "#f59e0b",
       items: [
-        {
-          id: "e1",
-          name: "Universal Adapter",
-          quantity: 1,
-          unit: "",
-          required: true,
-          packed: false,
-        },
+        { id: 'e1', name: 'Universal Adapter', quantity: 1, unit: '', required: true, packed: false },
+        { id: 'e2', name: 'Power Bank (20k mAh)', quantity: 1, unit: '', required: false, packed: false },
       ],
     },
     {
