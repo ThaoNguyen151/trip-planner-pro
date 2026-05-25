@@ -11,7 +11,7 @@ export function DisplayArea() {
     const { totalActual, totalBudget } = useActiveTripMeta();
     
     const todayDate = new Date();
-    const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     const allItin = useItineraryStore((state) => state.days);
