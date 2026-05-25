@@ -5,7 +5,7 @@ import { CreateTripDialog } from "@/components/overview/CreateTripModal";
 import { TripCard } from "@/components/overview/TripCard";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ROUTES } from "@/constants/routes";
+import { tripPath } from "@/constants/routes";
 import { createTripFromForm } from "@/lib/create-trip-from-form";
 import {
   formatTripDateRange,
@@ -50,7 +50,7 @@ export default function ListPage() {
 
   const handleOpenTrip = (tripId: string) => {
     setActiveTripId(tripId);
-    navigate(ROUTES.dashboard);
+    navigate(tripPath(tripId, "dashboard"));
   };
 
   return (

@@ -1,11 +1,13 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import {
-  ListGate,
+  LegacyTripPathRedirect,
   OverviewGate,
-  RequireActiveTrip,
   TripEntryRedirect,
+  TripIdSync,
+  TripsGate,
 } from "@/components/routing/trip-routing";
+import { ROUTES } from "@/constants/routes";
 import { AppShellLayout } from "@/layouts/AppShellLayout";
 import { HeaderOnlyLayout } from "@/layouts/HeaderOnlyLayout";
 import BudgetPage from "@/pages/budget/BudgetPage";
@@ -25,16 +27,19 @@ export const appRouter = createBrowserRouter([
         element: <HeaderOnlyLayout />,
         children: [
           { path: "overview", element: <OverviewGate /> },
-          { path: "list", element: <ListGate /> },
+          { path: "trips", element: <TripsGate /> },
+          { path: "list", element: <Navigate to={ROUTES.trips} replace /> },
         ],
       },
 
       {
+        path: "trips/:tripId",
         element: <AppShellLayout />,
         children: [
           {
-            element: <RequireActiveTrip />,
+            element: <TripIdSync />,
             children: [
+              { index: true, element: <Navigate to="dashboard" replace /> },
               { path: "dashboard", element: <DashboardPage /> },
               { path: "itinerary", element: <ItineraryPage /> },
               { path: "calendar", element: <CalendarPage /> },
@@ -44,6 +49,31 @@ export const appRouter = createBrowserRouter([
             ],
           },
         ],
+      },
+
+      {
+        path: "dashboard",
+        element: <LegacyTripPathRedirect section="dashboard" />,
+      },
+      {
+        path: "itinerary",
+        element: <LegacyTripPathRedirect section="itinerary" />,
+      },
+      {
+        path: "calendar",
+        element: <LegacyTripPathRedirect section="calendar" />,
+      },
+      {
+        path: "packing",
+        element: <LegacyTripPathRedirect section="packing" />,
+      },
+      {
+        path: "budget",
+        element: <LegacyTripPathRedirect section="budget" />,
+      },
+      {
+        path: "settings",
+        element: <LegacyTripPathRedirect section="settings" />,
       },
 
       { path: "*", element: <TripEntryRedirect /> },
