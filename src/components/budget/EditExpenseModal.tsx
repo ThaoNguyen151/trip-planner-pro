@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Plus } from "lucide-react";
 
 const editSchema = z.object({
   name: z.string().min(1, "Item name is required"),
@@ -81,16 +83,16 @@ export function EditExpenseModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-white border-none shadow-lg">
+      <DialogContent className="sm:max-w-[425px] bg-white border-none shadow-lg pl-6 [&>button]:hidden">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-slate-900">
-            Edit Expense Item
+          <DialogTitle className="text-2xl font-semibold tracking-tight text-primary">
+            Edit Item
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-4">
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-slate-700">
+            <Label className="text-sm font-semibold text-primary">
               Category
             </Label>
             <Select
@@ -118,42 +120,42 @@ export function EditExpenseModal({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-slate-700">
+            <Label className="text-sm font-semibold text-primary">
               Item Name
             </Label>
             <Input
               {...register("name")}
-              className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 text-slate-900"
+              className="border-slate-200 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1 text-slate-900"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-sm font-semibold text-slate-700">
+              <Label className="text-sm font-semibold text-primary">
                 Estimated Cost
               </Label>
               <Input
                 type="number"
                 step="0.01"
                 {...register("estimatedCost")}
-                className="border-slate-200 text-slate-900"
+                className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm font-semibold text-slate-700">
+              <Label className="text-sm font-semibold text-primary">
                 Actual Cost
               </Label>
               <Input
                 type="number"
                 step="0.01"
                 {...register("actualCost")}
-                className="border-slate-200 text-slate-900"
+                className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
             </div>
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-slate-700">
+            <Label className="text-sm font-semibold text-primary">
               Payment Status
             </Label>
             <RadioGroup
@@ -192,22 +194,23 @@ export function EditExpenseModal({
             </RadioGroup>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <DialogFooter className="bg-transparent px-4 pb-5 pt-0 border-t-0 sm:px-6 sm:pb-6">
             <Button
               type="button"
               variant="ghost"
               onClick={onClose}
-              className="flex-1 h-12 font-bold text-slate-500 hover:bg-slate-100 hover:text-slate-500 rounded-xl"
+              className="text-muted-foreground"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 h-12 font-bold bg-blue-600 hover:bg-blue-900 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-all"
+              className="font-bold bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5 transition-all"
             >
-              Save Expense
+              <Plus className="size-4" />
+              Save Changes
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

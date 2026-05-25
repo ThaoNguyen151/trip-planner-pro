@@ -27,7 +27,7 @@ export default function BudgetPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   return (
-    <div className="container mx-auto py-10 px-4">
+    <div className="container mx-auto py-10 px-4 max-w-5xl bg-slate-100">
       {/* Header */}
       <BudgetHeader totalBudget={totalBudget} />
       {/* Summary cards */}

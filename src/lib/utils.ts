@@ -7,18 +7,18 @@ export function cn(...inputs: ClassValue[]) {
 
 export const budgetUtils = {
   getStatusColor: (percent: number) => {
-    if (percent >= 100) return "text-red-700";
-    if (percent >= 80) return "text-yellow-700";
-    return "text-blue-700";
+    if (percent >= 100) return "text-destructive";
+    if (percent >= 80) return "text-orange-600";
+    return "text-secondary";
   },
   getBarColor: (percent: number) => {
-    if (percent >= 100) return "bg-red-700";
-    if (percent >= 80) return "bg-yellow-700";
-    return "bg-blue-700";
+    if (percent >= 100) return "bg-destructive";
+    if (percent >= 80) return "bg-orange-600 text-orange-600";
+    return "bg-secondary";
   },
   getBgColor: (percent: number) => {
-    if (percent <= 0) return "bg-red-700";
-    if (percent <= 20) return "bg-yellow-700";
+    if (percent <= 0) return "bg-destructive";
+    if (percent <= 20) return "bg-orange-600 text-orange-600";
     return "bg-blue-900";
   },
   formatMoney: (amount: number) => {
