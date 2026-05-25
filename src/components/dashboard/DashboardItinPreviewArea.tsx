@@ -1,12 +1,14 @@
 import type { ItineraryActivity } from "@/types";
 import DashboardItinPreviewCard from "./DashboardItinPreviewCard";
-import { Plane, Utensils, Hotel, Glasses, Clock} from "lucide-react";
+import { Plane, Utensils, Hotel, Glasses, Clock, ShoppingBag, CircleEllipsis } from "lucide-react";
 
-const iconDict = {
-    Transport: <Plane></Plane>, 
-    Lodging: <Hotel></Hotel>,
-    Sightseeing: <Glasses></Glasses>,
-    Dining: <Utensils></Utensils>
+const iconDict: Record<string, React.ReactNode> = {
+    Transport: <Plane />,
+    Lodging: <Hotel />,
+    Sightseeing: <Glasses />,
+    Dining: <Utensils />,
+    Shopping: <ShoppingBag />,
+    Other: <CircleEllipsis />,
 }
 
 interface DashboardItinPreviewAreaProps {

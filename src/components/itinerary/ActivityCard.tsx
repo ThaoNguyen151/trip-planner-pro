@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { MapPin, Clock, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn, formatStartToEndTime } from "@/lib/utils";
@@ -41,7 +42,7 @@ interface ActivityCardProps {
   onDelete?: () => void;
 }
 
-export function ActivityCard({
+export const ActivityCard = memo(function ActivityCard({
   activity,
   onEdit,
   onDelete,
@@ -97,4 +98,4 @@ export function ActivityCard({
       </Card>
     </div>
   );
-}
+});

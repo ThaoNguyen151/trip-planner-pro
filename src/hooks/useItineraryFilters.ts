@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { useItineraryStore } from "@/stores";
 import type { ItineraryDay } from "@/types";
 
@@ -21,7 +21,12 @@ export function useItineraryFilters() {
   const [filters, setFilters] = useState<ItineraryFilters>(DEFAULT_FILTERS);
 
   const dateOptions = useMemo(
-    () => ["All Dates", ...days.map((d) => d.date.replace(/^[^,]+, /, ""))],
+    () => [
+      "All Dates",
+      ...days
+        .filter((d) => d.activities.length !== 0)
+        .map((d) => d.date.replace(/^[^,]+, /, "")),
+    ],
     [days],
   );
 
@@ -45,34 +50,39 @@ export function useItineraryFilters() {
       })
       .map((d) => ({
         ...d,
-        activities: d.activities.map((a) => {
-          const activityDate = new Date(d.date);
-          activityDate.setHours(0, 0, 0, 0);
-          const overdue = a.status === "Planned" && activityDate < today;
-          return { ...a, overdue };
-        }).filter((a) => {
-          if (
-            filters.category !== "All Categories" &&
-            a.category !== filters.category
-          )
-            return false;
-          if (filters.status !== "All Status" && a.status !== filters.status)
-            return false;
-          if (
-            filters.priority !== "All Priorities" &&
-            a.priority !== filters.priority
-          )
-            return false;
-          return true;
-        }),
+        activities: d.activities
+          .map((a) => {
+            const activityDate = new Date(d.date);
+            activityDate.setHours(0, 0, 0, 0);
+            const overdue = a.status === "Planned" && activityDate < today;
+            return { ...a, overdue };
+          })
+          .filter((a) => {
+            if (
+              filters.category !== "All Categories" &&
+              a.category !== filters.category
+            )
+              return false;
+            if (filters.status !== "All Status" && a.status !== filters.status)
+              return false;
+            if (
+              filters.priority !== "All Priorities" &&
+              a.priority !== filters.priority
+            )
+              return false;
+            return true;
+          }),
       }))
       .filter((d) => d.activities.length > 0);
   }, [days, filters]);
 
-  const clearFilters = () => setFilters(DEFAULT_FILTERS);
+  const clearFilters = useCallback(() => setFilters(DEFAULT_FILTERS), []);
 
-  const updateFilter = (key: string, value: string) =>
-    setFilters((prev) => ({ ...prev, [key]: value }));
+  const updateFilter = useCallback(
+    (key: string, value: string) =>
+      setFilters((prev) => ({ ...prev, [key]: value })),
+    [],
+  );
 
   return {
     filters,
