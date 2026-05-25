@@ -170,9 +170,6 @@ docs/             # Additional notes (e.g. TRIP_ADDITIONS.md)
 - **Single active session** — One `activeTripId` at a time; opening a trip from the list while editing another tab is not a supported multi-tab scenario.
 - **Legacy stores** — `useCalendarEventsStore` still exists for seeds/compat but the calendar page uses itinerary-derived events; avoid assuming calendar store is the source of truth.
 
-## Further reading
-
-- [`docs/TRIP_ADDITIONS.md`](docs/TRIP_ADDITIONS.md) — Detailed file-level notes on the multi-trip architecture (may include Vietnamese).
 
 ## License
 
