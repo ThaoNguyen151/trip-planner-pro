@@ -78,7 +78,7 @@ export function EditExpenseModal({
         category: values.category as CategoryType,
         estimatedCost: values.estimatedCost,
         actualCost: values.actualCost,
-        paymentSTatus: values.paymentStatus,
+        paymentStatus: values.paymentStatus,
       } as Partial<Expense>);
       onClose();
     }

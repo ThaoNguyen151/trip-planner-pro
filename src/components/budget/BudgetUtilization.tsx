@@ -35,7 +35,7 @@ export function BudgetUtilization({
       <h2 className="text-lg md:text-xl font-bold text-foreground">
         Budget Utilization
       </h2>
-      <div className="flex-1 overflow-y-auto p-2 md:p-4 custom-scrollbar min-h-[300px]">
+      <div className="flex-1 flex flex-col overflow-y-auto p-2 md:p-4 custom-scrollbar min-h-[300px]">
         {utilizationData.length > 0 ? (
           utilizationData.map((item) => (
             <div
