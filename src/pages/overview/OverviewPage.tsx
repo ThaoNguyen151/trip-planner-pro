@@ -12,27 +12,27 @@ export default function OverviewPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center flex-col min-h-screen">
+    <div className="flex min-h-[calc(100dvh-3.5rem)] flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:py-12">
       <img
         src="/src/assets/EmtyStateOverview.png"
-        alt="Overview Placeholder"
-        className="w-2xl h-2xl shadow-md rounded-2xl"
+        alt="Start planning your next trip"
+        className="w-full max-w-[280px] rounded-2xl shadow-md sm:max-w-sm md:max-w-md lg:max-w-lg aspect-square object-cover"
       />
-      <div className="flex flex-col items-center">
-        <h1 className="text-2xl font-bold mt-4 text-primary-foreground">
+      <div className="mt-6 flex w-full max-w-lg flex-col items-center text-center sm:mt-8">
+        <h1 className="text-xl font-bold text-slate-900 sm:text-2xl md:text-3xl">
           Overview Coming Soon!
         </h1>
-        <h2 className="text-xl text-muted-foreground font-normal mt-4 text-center max-w-lg">
+        <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:mt-4 sm:text-base md:text-lg">
           Adventure is calling. Start planning your next journey and keep all
           your itineraries organized in one place.
-        </h2>
+        </p>
         <Button
           variant="outline"
           size="lg"
-          className="mt-6 h-12 px-8 text-base gap-2 bg-primary-foreground"
+          className="mt-6 h-11 w-full gap-2 sm:h-12 sm:w-auto sm:px-8"
           onClick={() => setOpen(true)}
         >
-          <CirclePlus className="size-5" />
+          <CirclePlus className="size-5 shrink-0" />
           Start a new trip
         </Button>
       </div>
