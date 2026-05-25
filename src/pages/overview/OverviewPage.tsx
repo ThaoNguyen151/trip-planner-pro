@@ -42,7 +42,7 @@ export default function OverviewPage() {
         onOpenChange={setOpen}
         onSubmit={(values) => {
           const id = createTripFromForm(values);
-          if (id) navigate(ROUTES.list);
+          if (id) navigate(ROUTES.trips);
         }}
       />
     </div>

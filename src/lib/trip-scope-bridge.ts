@@ -9,8 +9,8 @@ import {
   isRegistryEmpty,
   setTripFeatureData,
 } from "@/lib/trip-data-registry";
+import { itineraryDaysToCalendarEvents } from "@/lib/itinerary-to-calendar";
 import { useBudgetStore } from "@/stores/useBudgetStore";
-import { useCalendarEventsStore } from "@/stores/useCalendarEventsStore";
 import { useItineraryStore } from "@/stores/useItineraryStore";
 import { usePackingStore } from "@/stores/usePackingStore";
 import { useTripStore } from "@/stores/useTripStore";
@@ -23,11 +23,16 @@ let initialized = false;
 let isSwitching = false;
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
+function getActiveTrip(): Trip | undefined {
+  const { trips, activeTripId } = useTripStore.getState();
+  return trips.find((t) => t.id === activeTripId);
+}
+
 function captureFeatureState(): TripFeatureData {
   const budget = useBudgetStore.getState();
   const itinerary = useItineraryStore.getState();
-  const calendar = useCalendarEventsStore.getState();
   const packing = usePackingStore.getState();
+  const trip = getActiveTrip();
 
   return {
     budget: {
@@ -35,7 +40,12 @@ function captureFeatureState(): TripFeatureData {
       expenses: budget.expenses,
     },
     itinerary: { days: itinerary.days },
-    calendar: { events: calendar.events },
+    calendar: {
+      events: itineraryDaysToCalendarEvents(
+        itinerary.days,
+        trip?.startDate,
+      ),
+    },
     packing: { categories: packing.categories },
   };
 }
@@ -50,7 +60,6 @@ function applyFeatureState(data: TripFeatureData): void {
     filters: budget.filters,
   });
   useItineraryStore.setState({ days: data.itinerary.days });
-  useCalendarEventsStore.setState({ events: data.calendar.events });
   usePackingStore.setState({
     categories: data.packing.categories,
     filters: packing.filters,
@@ -179,7 +188,6 @@ export function initTripScopeBridge(): void {
 
   subscribeStore(useBudgetStore);
   subscribeStore(useItineraryStore);
-  subscribeStore(useCalendarEventsStore);
   subscribeStore(usePackingStore);
 
   const { activeTripId } = useTripStore.getState();

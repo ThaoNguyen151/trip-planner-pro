@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useParams } from "react-router-dom";
 
-import { ROUTES } from "@/constants/routes";
+import { ROUTES, tripPath, type TripSection } from "@/constants/routes";
 import OverviewPage from "@/pages/overview/OverviewPage";
 import ListPage from "@/pages/overview/List";
 import { useTripStore } from "@/stores/useTripStore";
@@ -22,10 +22,10 @@ function useTripStoreHydrated(): boolean {
 function tripsHomePath(): string {
   return useTripStore.getState().trips.length === 0
     ? ROUTES.overview
-    : ROUTES.list;
+    : ROUTES.trips;
 }
 
-/** `/` — overview when no trips, otherwise list. */
+/** `/` — overview when no trips, otherwise trips list. */
 export function TripEntryRedirect() {
   const hydrated = useTripStoreHydrated();
   if (!hydrated) return null;
@@ -38,12 +38,12 @@ export function OverviewGate() {
   const trips = useTripStore((s) => s.trips);
 
   if (!hydrated) return null;
-  if (trips.length > 0) return <Navigate to={ROUTES.list} replace />;
+  if (trips.length > 0) return <Navigate to={ROUTES.trips} replace />;
   return <OverviewPage />;
 }
 
-/** `/list` — only when at least one trip exists. */
-export function ListGate() {
+/** `/trips` — only when at least one trip exists. */
+export function TripsGate() {
   const hydrated = useTripStoreHydrated();
   const trips = useTripStore((s) => s.trips);
 
@@ -52,20 +52,49 @@ export function ListGate() {
   return <ListPage />;
 }
 
-/** App shell — requires a selected trip; data loads via trip-scope-bridge. */
-export function RequireActiveTrip() {
+/** Sync `:tripId` from URL → `activeTripId` and load trip data. */
+export function TripIdSync() {
   const hydrated = useTripStoreHydrated();
+  const { tripId } = useParams<{ tripId: string }>();
   const trips = useTripStore((s) => s.trips);
   const activeTripId = useTripStore((s) => s.activeTripId);
 
+  useEffect(() => {
+    if (!hydrated || !tripId) return;
+    const exists = trips.some((t) => t.id === tripId);
+    if (!exists) return;
+
+    if (activeTripId !== tripId) {
+      useTripStore.getState().setActiveTripId(tripId);
+    }
+  }, [hydrated, tripId, trips, activeTripId]);
+
   if (!hydrated) return null;
-  if (!activeTripId) {
+
+  if (!tripId || !trips.some((t) => t.id === tripId)) {
     return (
       <Navigate
-        to={trips.length === 0 ? ROUTES.overview : ROUTES.list}
+        to={trips.length === 0 ? ROUTES.overview : ROUTES.trips}
         replace
       />
     );
   }
+
   return <Outlet />;
+}
+
+/** Redirect old `/dashboard`, `/budget`, … URLs to `/trips/:tripId/...`. */
+export function LegacyTripPathRedirect({ section }: { section: TripSection }) {
+  const activeTripId = useTripStore.getState().activeTripId;
+  const trips = useTripStore.getState().trips;
+  const tripId = activeTripId ?? trips[trips.length - 1]?.id;
+  if (tripId) {
+    return <Navigate to={tripPath(tripId, section)} replace />;
+  }
+  return (
+    <Navigate
+      to={trips.length === 0 ? ROUTES.overview : ROUTES.trips}
+      replace
+    />
+  );
 }
