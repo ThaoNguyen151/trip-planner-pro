@@ -205,7 +205,7 @@ export function EditExpenseModal({
               </Label>
               <Input
                 type="number"
-                step="500000"
+                step="1000"
                 {...register("estimatedCost")}
                 onChange={(e) =>
                   setValue("estimatedCost", e.target.value, {
@@ -226,7 +226,7 @@ export function EditExpenseModal({
               </Label>
               <Input
                 type="number"
-                step="500000"
+                step="1000"
                 {...register("actualCost")}
                 onChange={(e) =>
                   setValue("actualCost", e.target.value, {

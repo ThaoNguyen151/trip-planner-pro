@@ -1,6 +1,9 @@
+"use client";
+
 import { budgetUtils } from "@/lib/utils";
 import type { Expense } from "@/types";
 import React from "react";
+import { useBudgetStore } from "@/stores";
 
 interface BudgetUtilizationProps {
   expenses: Expense[];
@@ -13,6 +16,8 @@ export function BudgetUtilization({
   onCategoryClick,
   selectedCategory,
 }: BudgetUtilizationProps) {
+  const totalBudget = useBudgetStore((state) => state.totalBudget || 0);
+
   const utilizationData = React.useMemo(() => {
     const groups: Record<string, { actual: number; estimated: number }> = {};
     expenses.forEach((exp) => {
@@ -27,13 +32,16 @@ export function BudgetUtilization({
     return Object.entries(groups).map(([name, values]) => {
       const percent =
         values.estimated > 0 ? (values.actual / values.estimated) * 100 : 0;
-      return { name, ...values, percent };
+      const isOverTotalBudget = values.actual > totalBudget;
+
+      return { name, ...values, percent, isOverTotalBudget };
     });
-  }, [expenses]);
+  }, [expenses, totalBudget]);
+
   return (
     <div className="flex flex-col h-full bg-white border border-border space-y-1 overflow-y-auto min-h-[350px] p-4 md:p-6 custom-scrollbar shadow-sm rounded-xl">
       <h2 className="text-lg md:text-xl font-bold text-foreground">
-        Budget Utilization
+        Category Spending Progress
       </h2>
       <div className="flex-1 flex flex-col overflow-y-auto p-2 md:p-4 custom-scrollbar min-h-[300px]">
         {utilizationData.length > 0 ? (
@@ -41,7 +49,11 @@ export function BudgetUtilization({
             <div
               key={item.name}
               onClick={() => onCategoryClick(item.name)}
-              className={`group cursor-pointer p-3 mb-1 rounded-xl transition-all duration-200 border ${selectedCategory === item.name ? "bg-blue-50 border-blue-200 shadow-sm" : "bg-transparent border-transparent hover:bg-gray-50"}`}
+              className={`group cursor-pointer p-3 mb-1 rounded-xl transition-all duration-200 border ${
+                selectedCategory === item.name
+                  ? "bg-blue-50 border-blue-200 shadow-sm"
+                  : "bg-transparent border-transparent hover:bg-gray-50"
+              }`}
             >
               <div className="flex justify-between items-end flex-wrap gap-2 mb-2">
                 <div className="flex items-center gap-2 min-w-0">
@@ -49,16 +61,23 @@ export function BudgetUtilization({
                     {item.name}
                   </span>
 
-                  {/* Tooltip */}
                   <span
-                    className={`whitespace-nowrap w-fit text-[10px] px-1.5 py-0.5 rounded-md text-white font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 ${budgetUtils.getBarColor(item.percent)}`}
+                    className={`whitespace-nowrap w-fit text-[10px] px-1.5 py-0.5 rounded-md text-white font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 ${
+                      item.isOverTotalBudget
+                        ? "bg-destructive text-white"
+                        : budgetUtils.getBarColor(item.percent)
+                    }`}
                   >
                     {item.percent.toFixed(0)}%
                   </span>
                 </div>
                 <div className="text-right lg:text-right sm:text-left ml-auto">
                   <span
-                    className={`text-xs font-bold ${budgetUtils.getStatusColor(item.percent)}`}
+                    className={`text-xs font-bold ${
+                      item.isOverTotalBudget
+                        ? "text-destructive"
+                        : budgetUtils.getStatusColor(item.percent)
+                    }`}
                   >
                     {budgetUtils.formatMoney(item.actual)}
                   </span>
@@ -69,10 +88,13 @@ export function BudgetUtilization({
                 </div>
               </div>
 
-              {/* Progress bar */}
               <div className="w-full bg-gray-100 h-2 md:h-2.5 rounded-full overflow-hidden">
                 <div
-                  className={`h-full transition-all duration-500 ease-out ${budgetUtils.getBarColor(item.percent)}`}
+                  className={`h-full transition-all duration-500 ease-out ${
+                    item.isOverTotalBudget
+                      ? "bg-destructive"
+                      : budgetUtils.getBarColor(item.percent)
+                  }`}
                   style={{ width: `${Math.min(item.percent, 100)}%` }}
                 />
               </div>
@@ -81,7 +103,7 @@ export function BudgetUtilization({
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <p className="text-center text-slate-400 italic text-sm">
-              No paid expenses to track budget utilization.
+              No paid expenses to track spending progress.
             </p>
           </div>
         )}
