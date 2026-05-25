@@ -25,6 +25,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
+import { getBudgetAlertStatus } from "@/stores";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "../ui/input";
@@ -66,6 +69,7 @@ interface AddExpenseModalProps {
 }
 
 export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
+  const storeState = useBudgetStore();
   const addExpenses = useBudgetStore((state) => state.addExpenses);
 
   const form = useForm<FormInput>({
@@ -130,6 +134,25 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
     });
     onClose();
   };
+  const watchedItems = form.watch("items") || [];
+  const incomingEstimated = watchedItems.reduce(
+    (sum, item) => sum + (Number(item?.estimatedCost) || 0),
+    0,
+  );
+  const incomingActual = watchedItems.reduce(
+    (sum, item) => sum + (Number(item?.actualCost) || 0),
+    0,
+  );
+  const {
+    isOverBudget,
+    isEstimatedOver,
+    isActualOver,
+    estimatedPercent,
+    actualPercent,
+  } = getBudgetAlertStatus(storeState, {
+    newEstimated: incomingEstimated,
+    newActual: incomingActual,
+  });
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto no-scrollbar p-0 rounded-[18px] border-none shadow-2xl bg-white [&>button]:hidden">
@@ -340,6 +363,34 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                 </Button>
               </div>
             </div>
+
+            {/* Alert */}
+            {isOverBudget && (
+              <div className="px-8 pb-4">
+                <Alert
+                  variant="destructive"
+                  className="bg-red-50 border-red-200 text-red-950 animate-in fade-in-50"
+                >
+                  <AlertTriangle className="h-4 w-4 text-destructive" />
+                  <AlertTitle className="font-bold text-destructive">
+                    Critical Alert!
+                  </AlertTitle>
+                  <AlertDescription className="text-xs text-red-800 font-medium space-y-1">
+                    {isEstimatedOver && (
+                      <p>
+                        • Total estimated cost is {estimatedPercent}% over
+                        budget.
+                      </p>
+                    )}
+                    {isActualOver && (
+                      <p>
+                        • Total actual cost is {actualPercent}% over budget.
+                      </p>
+                    )}
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
 
             {/* Sticky footer */}
             <DialogFooter className="bg-transparent px-4 pb-5 pt-0 border-t-0 sm:px-6 sm:pb-6">
