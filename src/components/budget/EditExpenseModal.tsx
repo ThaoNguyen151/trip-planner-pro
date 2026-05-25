@@ -1,3 +1,5 @@
+"use client";
+
 import { useBudgetStore } from "@/stores";
 import type { CategoryType, Expense, PaymentStatus } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,20 +24,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Plus } from "lucide-react";
 import { getBudgetAlertStatus } from "@/stores";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Plus } from "lucide-react";
 
-const editSchema = z.object({
-  name: z.string().min(1, "Item name is required"),
-  category: z.string().min(3, "Category is required"),
-  estimatedCost: z.coerce.number().min(0, "Cost must be larger than 0"),
-  actualCost: z.coerce.number().min(0),
-  paymentStatus: z.enum(["Paid", "Unpaid"]),
-});
+const editSchema = z
+  .object({
+    name: z.string().min(1, "Item name is required"),
+    category: z.string().min(3, "Category is required"),
+    estimatedCost: z
+      .union([z.string(), z.number()])
+      .transform((val) =>
+        val === "" || val === undefined || val === null ? 0 : Number(val),
+      )
+      .pipe(z.number().min(1000, "Estimated cost is required")),
+    actualCost: z
+      .union([z.string(), z.number()])
+      .transform((val) =>
+        val === "" || val === undefined || val === null ? 0 : Number(val),
+      ),
+    paymentStatus: z.enum(["Paid", "Unpaid"]),
+  })
+  .superRefine((data, ctx) => {
+    if (data.paymentStatus === "Paid" && data.actualCost < 1000) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Actual cost is required",
+        path: ["actualCost"],
+      });
+    }
+  });
 
 type EditInput = z.input<typeof editSchema>;
+type EditOutput = z.output<typeof editSchema>;
 
 interface EditExpenseModalProps {
   isOpen: boolean;
@@ -53,11 +74,17 @@ export function EditExpenseModal({
     state.expenses.find((e) => e.id === expenseId),
   );
   const updateExpense = useBudgetStore((state) => state.updateExpense);
-  const { register, handleSubmit, reset, setValue, watch } = useForm<EditInput>(
-    {
-      resolver: zodResolver(editSchema),
-    },
-  );
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<EditInput>({
+    resolver: zodResolver(editSchema),
+  });
 
   useEffect(() => {
     if (expense && isOpen) {
@@ -72,20 +99,24 @@ export function EditExpenseModal({
   }, [expense, isOpen, reset]);
 
   const onSubmit: SubmitHandler<EditInput> = (values) => {
+    const data = values as EditOutput;
     if (expenseId) {
       updateExpense(expenseId, {
-        name: values.name,
-        category: values.category as CategoryType,
-        estimatedCost: values.estimatedCost,
-        actualCost: values.actualCost,
-        paymentStatus: values.paymentStatus,
+        name: data.name,
+        category: data.category as CategoryType,
+        estimatedCost: data.estimatedCost,
+        actualCost: data.actualCost,
+        paymentStatus: data.paymentStatus,
       } as Partial<Expense>);
       onClose();
     }
   };
+
   if (!expense) return null;
-  const watchedEstimated = watch("estimatedCost") || 0;
-  const watchedActual = watch("actualCost") || 0;
+
+  const watchedEstimated = watch("estimatedCost");
+  const watchedActual = watch("actualCost");
+
   const {
     isOverBudget,
     isEstimatedOver,
@@ -95,8 +126,14 @@ export function EditExpenseModal({
   } = getBudgetAlertStatus(
     storeState,
     {
-      newEstimated: Number(watchedEstimated),
-      newActual: Number(watchedActual),
+      newEstimated:
+        watchedEstimated === "" || watchedEstimated === undefined
+          ? 0
+          : Number(watchedEstimated),
+      newActual:
+        watchedActual === "" || watchedActual === undefined
+          ? 0
+          : Number(watchedActual),
     },
     expenseId,
   );
@@ -117,7 +154,9 @@ export function EditExpenseModal({
             </Label>
             <Select
               value={watch("category")}
-              onValueChange={(val) => setValue("category", val)}
+              onValueChange={(val) =>
+                setValue("category", val, { shouldValidate: true })
+              }
             >
               <SelectTrigger className="border-slate-200 text-slate-900">
                 <SelectValue placeholder="Select Category" />
@@ -137,6 +176,11 @@ export function EditExpenseModal({
                 ))}
               </SelectContent>
             </Select>
+            {errors.category && (
+              <p className="text-sm font-medium text-destructive">
+                {errors.category.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -147,6 +191,11 @@ export function EditExpenseModal({
               {...register("name")}
               className="border-slate-200 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1 text-slate-900"
             />
+            {errors.name && (
+              <p className="text-sm font-medium text-destructive">
+                {errors.name.message}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -156,10 +205,20 @@ export function EditExpenseModal({
               </Label>
               <Input
                 type="number"
-                step="0.01"
+                step="1000"
                 {...register("estimatedCost")}
+                onChange={(e) =>
+                  setValue("estimatedCost", e.target.value, {
+                    shouldValidate: true,
+                  })
+                }
                 className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
+              {errors.estimatedCost && (
+                <p className="text-sm font-medium text-destructive">
+                  {errors.estimatedCost.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-primary">
@@ -167,10 +226,20 @@ export function EditExpenseModal({
               </Label>
               <Input
                 type="number"
-                step="0.01"
+                step="1000"
                 {...register("actualCost")}
+                onChange={(e) =>
+                  setValue("actualCost", e.target.value, {
+                    shouldValidate: true,
+                  })
+                }
                 className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
+              {errors.actualCost && (
+                <p className="text-sm font-medium text-destructive">
+                  {errors.actualCost.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -181,7 +250,7 @@ export function EditExpenseModal({
             <RadioGroup
               value={watch("paymentStatus")}
               onValueChange={(val: PaymentStatus) =>
-                setValue("paymentStatus", val)
+                setValue("paymentStatus", val, { shouldValidate: true })
               }
               className="flex gap-20"
             >
@@ -214,7 +283,6 @@ export function EditExpenseModal({
             </RadioGroup>
           </div>
 
-          {/* Alert */}
           {isOverBudget && (
             <Alert
               variant="destructive"

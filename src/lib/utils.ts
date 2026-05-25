@@ -22,9 +22,9 @@ export const budgetUtils = {
     return "bg-blue-900";
   },
   formatMoney: (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("vi-VN", {
       style: "currency",
-      currency: "USD",
+      currency: "VND",
     }).format(amount);
   },
 };
