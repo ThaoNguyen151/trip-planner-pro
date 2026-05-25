@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 import { FileText, Shirt, Zap, Pill, SprayCan, Package } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import type { PackingFilters, PackingStore, PackingCategory } from '@/types/package'
 import { STORAGE_KEYS } from '@/constants/storage-keys'
 
@@ -26,7 +26,7 @@ const DEFAULT_CATEGORIES = [
     name: 'Documents',
     icon: FileText,
     iconName: 'FileText',
-    color: '#7072e5',
+    color: '#6c6ee5',
     items: [
       { id: 'd1', name: 'Passport / ID card', quantity: 1, unit: '', required: true, packed: false },
       { id: 'd2', name: 'Flight E-Tickets', quantity: 2, unit: '', required: true, packed: false },
@@ -37,7 +37,7 @@ const DEFAULT_CATEGORIES = [
     name: 'Clothes',
     icon: Shirt,
     iconName: 'Shirt',
-    color: '#6894d4',
+    color: '#597bc1',
     items: [
       { id: 'c1', name: 'Linen Shirts (x3)', quantity: 3, unit: 'pcs', required: true, packed: true },
       { id: 'c2', name: 'Swimwear', quantity: 2, unit: 'pcs', required: false, packed: true },
@@ -49,7 +49,7 @@ const DEFAULT_CATEGORIES = [
     name: 'Electronics',
     icon: Zap,
     iconName: 'Zap',
-    color: '#debf8b',
+    color: '#9a92d3',
     items: [
       { id: 'e1', name: 'Universal Adapter', quantity: 1, unit: '', required: true, packed: false },
       { id: 'e2', name: 'Power Bank (20k mAh)', quantity: 1, unit: '', required: false, packed: false },
@@ -60,7 +60,7 @@ const DEFAULT_CATEGORIES = [
     name: 'Medicines',
     icon: Pill,
     iconName: 'Pill',
-    color: '#a265df',
+    color: '#cb82ec',
     items: [
       { id: 'm1', name: 'Ibuprofen', quantity: 20, unit: 'tabs', required: false, packed: false },
       { id: 'm2', name: 'Sunscreen SPF 50', quantity: 1, unit: 'bottle', required: false, packed: false },
@@ -71,7 +71,7 @@ const DEFAULT_CATEGORIES = [
     name: 'Personal',
     icon: SprayCan,
     iconName: 'SprayCan',
-    color: '#decd93',
+    color: '#e8a268',
     items: [
       { id: 'p1', name: 'Toothbrush', quantity: 1, unit: '', required: true, packed: false },
     ],
@@ -81,7 +81,7 @@ const DEFAULT_CATEGORIES = [
     name: 'Others',
     icon: Package,
     iconName: 'Package',
-    color: '#628ac3',
+    color: '#6b93ca',
     items: [],
   },
 ]
@@ -145,14 +145,12 @@ export const usePackingStore = create<PackingStore>()(
     }),
     {
       name: STORAGE_KEYS.PACKING_LIST,
-      // Strip icon function before saving to localStorage
       partialize: (state) => ({
         ...state,
-        categories: state.categories.map((cat) => 
+        categories: state.categories.map((cat) =>
           Object.fromEntries(Object.entries(cat).filter(([key]) => key !== 'icon'))
-          ),
-        }),
-      // Restore icon function from iconName when loading from localStorage
+        ),
+      }),
       merge: (persistedState: unknown, currentState) => ({
         ...currentState,
         ...(persistedState as object),

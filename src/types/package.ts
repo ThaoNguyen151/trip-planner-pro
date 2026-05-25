@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react"
+
 export interface PackingItem {
   id: string
   name: string
@@ -12,7 +13,6 @@ export interface PackingCategory {
   id: string
   name: string
   icon: LucideIcon
-  iconName: string
   color: string
   items: PackingItem[]
 }
