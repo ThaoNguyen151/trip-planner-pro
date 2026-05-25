@@ -156,7 +156,7 @@ export function EditExpenseModal({
               </Label>
               <Input
                 type="number"
-                step="0.01"
+                step="500000"
                 {...register("estimatedCost")}
                 className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />
@@ -167,7 +167,7 @@ export function EditExpenseModal({
               </Label>
               <Input
                 type="number"
-                step="0.01"
+                step="500000"
                 {...register("actualCost")}
                 className="border-slate-200 text-slate-900 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
               />

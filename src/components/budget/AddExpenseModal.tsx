@@ -263,8 +263,8 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                             <FormControl>
                               <Input
                                 type="number"
-                                step="0.01"
-                                placeholder="$0.00"
+                                step="500000"
+                                placeholder="0đ"
                                 className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                                 {...field}
                               />
@@ -283,8 +283,8 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                             <FormControl>
                               <Input
                                 type="number"
-                                step="0.01"
-                                placeholder="$0.00"
+                                step="500000"
+                                placeholder="0đ"
                                 className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                                 {...field}
                                 onChange={(e) => field.onChange(e.target.value)}
