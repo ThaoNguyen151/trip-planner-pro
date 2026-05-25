@@ -5,18 +5,26 @@ import { ProgressCard } from "./ProgressCard";
 import TaskAlertCard from "./TaskAlertCard";
 import { useActiveTripMeta } from "@/hooks/useActiveTripMeta";
 import { useItineraryStore} from "@/stores/useItineraryStore";
+import { useBudgetStore } from "@/stores";
 
 export function DisplayArea() {
     const { totalActual, totalBudget } = useActiveTripMeta();
+    
     const todayDate = new Date();
+    const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     const allItin = useItineraryStore((state) => state.days);
     const itinActivities = allItin.map((day) => day.activities).flat();
     const completedActivity = itinActivities.filter((item) => item.status === "Completed");
+    const todayActivity = allItin.filter((days) => days.date === `${weekDays[todayDate.getDay()]}, ${monthNames[todayDate.getMonth()]} ${todayDate.getDate()}, ${todayDate.getFullYear()}`)
+    const overdueActivity = itinActivities.filter((item) => item.overdue && item.overdue === true)
 
     const allPacking = usePackingStore((state) => state.categories);
     const packingItems = allPacking.map((category) => category.items).flat();
     const packedItems = packingItems.filter((item) => item.packed === true);
+
+    const unpaidItems = useBudgetStore((state) => state.expenses).filter((item) => item.paymentStatus === "Unpaid")
 
     return (
         <div>
@@ -33,12 +41,12 @@ export function DisplayArea() {
             </div>
             <div className="lg:gap-[5%] flex flex-col lg:flex-row w-full gap-5">
                 <div className="lg:w-[65%] w-full">
-                    <DashboardItinPreviewArea today={todayDate} itinToday={[]}></DashboardItinPreviewArea>
+                    <DashboardItinPreviewArea today={todayDate} itinToday={todayActivity.length > 0 ? todayActivity[0].activities : []}></DashboardItinPreviewArea>
                 </div>
                 <div className="lg:w-3/10">
                     <div className="flex flex-col gap-5">
                         <BudgetPreviewCard></BudgetPreviewCard>
-                        <TaskAlertCard numOverdue={5} numUnpaid={1}></TaskAlertCard>
+                        <TaskAlertCard numOverdue={overdueActivity.length} numUnpaid={unpaidItems.length}></TaskAlertCard>
                     </div>
                 </div>
             </div>
