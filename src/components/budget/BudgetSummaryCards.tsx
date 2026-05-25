@@ -27,7 +27,7 @@ export function BudgetSummaryCards() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
       {/* Card 1: Total Estimated */}
-      <div className="flex flex-col h-full bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col h-full bg-white p-4 md:p-6 rounded-xl shadow-sm border border-border">
         <div className="flex justify-between items-start mb-2 md:mb-4">
           <span className="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
             Total Estimated
@@ -55,7 +55,7 @@ export function BudgetSummaryCards() {
       </div>
 
       {/* Card 2: Total Actual */}
-      <div className="flex flex-col h-full bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col h-full bg-white p-4 md:p-6 rounded-xl shadow-sm border border-border">
         <div className="flex justify-between items-start mb-2 md:mb-4">
           <span className="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
             Total Actual
@@ -84,7 +84,7 @@ export function BudgetSummaryCards() {
 
       {/* Card 3: Remaining Balance */}
       <div
-        className={`${budgetUtils.getBgColor(savingPercent)} p-4 md:p-6 rounded-xl shadow-sm text-white border border-gray-100 transition-colors duration-300 sm:col-span-2 lg:col-span-1 flex flex-col justify-center min-h-[140px] md:min-h-0`}
+        className={`${budgetUtils.getBgColor(savingPercent)} p-4 md:p-6 rounded-xl shadow-sm text-white border border-border transition-colors duration-300 sm:col-span-2 lg:col-span-1 flex flex-col justify-center min-h-[140px] md:min-h-0`}
       >
         <div className="flex justify-between items-start mb-2 md:mb-4">
           <span className="text-[10px] md:text-xs font-bold opacity-70 uppercase tracking-wider">

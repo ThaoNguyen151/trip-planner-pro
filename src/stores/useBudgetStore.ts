@@ -54,3 +54,45 @@ export const useBudgetStore = create<BudgetStore>()(
     },
   ),
 );
+
+export const getBudgetAlertStatus = (
+  state: { expenses: Expense[]; totalBudget: number },
+  payload: { newEstimated: number; newActual: number },
+  excludeExpenseId: string | null = null,
+) => {
+  const currentExpenses = state.expenses.filter(
+    (exp) => exp.id !== excludeExpenseId,
+  );
+
+  const currentTotalEstimated = currentExpenses.reduce(
+    (sum, exp) => sum + (exp.estimatedCost ?? 0),
+    0,
+  );
+  const currentTotalActual = currentExpenses.reduce(
+    (sum, exp) => sum + (exp.actualCost ?? 0),
+    0,
+  );
+
+  const finalPredictedEstimated = currentTotalEstimated + payload.newEstimated;
+  const finalPredictedActual = currentTotalActual + payload.newActual;
+
+  const estimatedPercent =
+    state.totalBudget > 0
+      ? (finalPredictedEstimated / state.totalBudget) * 100
+      : 0;
+  const actualPercent =
+    state.totalBudget > 0
+      ? (finalPredictedActual / state.totalBudget) * 100
+      : 0;
+
+  const isEstimatedOver = estimatedPercent >= 100;
+  const isActualOver = actualPercent >= 100;
+
+  return {
+    isOverBudget: isEstimatedOver || isActualOver,
+    isEstimatedOver,
+    isActualOver,
+    estimatedPercent: Math.round(estimatedPercent),
+    actualPercent: Math.round(actualPercent),
+  };
+};

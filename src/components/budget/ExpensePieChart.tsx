@@ -85,9 +85,9 @@ export function ExpensePieChart({
   }, [expenses, selectedCategory]);
   const totalActual = chartData.reduce((sum, item) => sum + item.value, 0);
   return (
-    <div className="rounded-xl border shadow-sm h-full flex flex-col p-4 md:p-6">
+    <div className="rounded-xl border shadow-sm h-full flex flex-col p-4 md:p-6 bg-white">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg md:text-xl font-bold text-slate-900">
+        <h2 className="text-lg md:text-xl font-bold text-foreground">
           {selectedCategory
             ? `${selectedCategory} Breakdown`
             : "Total Spending Structure"}
@@ -96,7 +96,7 @@ export function ExpensePieChart({
           <Button
             onClick={onReset}
             variant="ghost"
-            className="text-[10px] md:text-xs text-blue-600 hover:underline h-8 px-2"
+            className="text-[10px] md:text-xs text-foreground hover:underline h-8 px-2"
           >
             View All
           </Button>
@@ -153,7 +153,7 @@ export function ExpensePieChart({
                 iconType="circle"
                 iconSize={8}
                 formatter={(value) => (
-                  <span className="text-[11px] text-slate-600 font-medium">
+                  <span className="text-[11px] text-foreground font-medium">
                     {value.length > 12 ? `${value.substring(0, 12)}...` : value}
                   </span>
                 )}

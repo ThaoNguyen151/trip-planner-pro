@@ -25,6 +25,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
+import { getBudgetAlertStatus } from "@/stores";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "../ui/input";
@@ -66,6 +69,7 @@ interface AddExpenseModalProps {
 }
 
 export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
+  const storeState = useBudgetStore();
   const addExpenses = useBudgetStore((state) => state.addExpenses);
 
   const form = useForm<FormInput>({
@@ -130,9 +134,28 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
     });
     onClose();
   };
+  const watchedItems = form.watch("items") || [];
+  const incomingEstimated = watchedItems.reduce(
+    (sum, item) => sum + (Number(item?.estimatedCost) || 0),
+    0,
+  );
+  const incomingActual = watchedItems.reduce(
+    (sum, item) => sum + (Number(item?.actualCost) || 0),
+    0,
+  );
+  const {
+    isOverBudget,
+    isEstimatedOver,
+    isActualOver,
+    estimatedPercent,
+    actualPercent,
+  } = getBudgetAlertStatus(storeState, {
+    newEstimated: incomingEstimated,
+    newActual: incomingActual,
+  });
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto no-scrollbar p-0 rounded-[24px] border-none shadow-2xl bg-white">
+      <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto no-scrollbar p-0 rounded-[18px] border-none shadow-2xl bg-white [&>button]:hidden">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -140,7 +163,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
           >
             <div className="p-8">
               <DialogHeader className="mb-6">
-                <DialogTitle className="text-2xl font-bold text-slate-900">
+                <DialogTitle className="text-2xl font-semibold tracking-tight text-primary">
                   {fields.length > 1 ? "Add New Expenses" : "Add New Expense"}
                 </DialogTitle>
                 {fields.length > 1 && (
@@ -155,14 +178,14 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                   <div key={field.id} className="space-y-4 relative">
                     {fields.length > 1 && (
                       <div className="flex items-center justify-between bg-slate-50 px-3 py-1.5 rounded-md border border-slate-100">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        <span className="text-[10px] font-black text-primary/70 uppercase tracking-widest">
                           Item #{index + 1}
                         </span>
                         {index > 0 && (
                           <button
                             type="button"
                             onClick={() => remove(index)}
-                            className="text-slate-400 hover:text-red-500 transition-colors"
+                            className="text-slate-400 hover:text-destructive transition-colors"
                           >
                             <X className="h-4 w-4" />
                           </button>
@@ -176,7 +199,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       name={`items.${index}.category` as const}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-bold text-slate-700">
+                          <FormLabel className="font-semibold text-primary">
                             Category
                           </FormLabel>
                           <Select
@@ -212,13 +235,13 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       name={`items.${index}.name`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-bold text-slate-700">
+                          <FormLabel className="font-semibold text-primary">
                             Item Name
                           </FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Airport Transfer"
-                              className="h-12 bg-slate-50/50"
+                              className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                               {...field}
                             />
                           </FormControl>
@@ -234,7 +257,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                         name={`items.${index}.estimatedCost`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="font-bold text-slate-700">
+                            <FormLabel className="font-semibold text-primary">
                               Estimated Cost
                             </FormLabel>
                             <FormControl>
@@ -242,7 +265,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                                 type="number"
                                 step="0.01"
                                 placeholder="$0.00"
-                                className="h-12 bg-slate-50/50"
+                                className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                                 {...field}
                               />
                             </FormControl>
@@ -254,7 +277,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                         name={`items.${index}.actualCost`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="font-bold text-slate-700">
+                            <FormLabel className="font-semibold text-primary">
                               Actual Cost
                             </FormLabel>
                             <FormControl>
@@ -262,7 +285,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                                 type="number"
                                 step="0.01"
                                 placeholder="$0.00"
-                                className="h-12 bg-slate-50/50"
+                                className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                                 {...field}
                                 onChange={(e) => field.onChange(e.target.value)}
                               />
@@ -333,7 +356,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       paymentStatus: "Paid",
                     })
                   }
-                  className="w-full py-8 border-dashed border-2 border-blue-200 bg-white text-slate-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition-all gap-2"
+                  className="w-full py-8 border-dashed border-2 border-border/70 bg-background text-slate-500 hover:text-primary hover:bg-primary/20 hover:border-border transition-all gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   Add Another Expense
@@ -341,21 +364,50 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
               </div>
             </div>
 
+            {/* Alert */}
+            {isOverBudget && (
+              <div className="px-8 pb-4">
+                <Alert
+                  variant="destructive"
+                  className="bg-red-50 border-red-200 text-red-950 animate-in fade-in-50"
+                >
+                  <AlertTriangle className="h-4 w-4 text-destructive" />
+                  <AlertTitle className="font-bold text-destructive">
+                    Critical Alert!
+                  </AlertTitle>
+                  <AlertDescription className="text-xs text-red-800 font-medium space-y-1">
+                    {isEstimatedOver && (
+                      <p>
+                        • Total estimated cost is {estimatedPercent}% over
+                        budget.
+                      </p>
+                    )}
+                    {isActualOver && (
+                      <p>
+                        • Total actual cost is {actualPercent}% over budget.
+                      </p>
+                    )}
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+
             {/* Sticky footer */}
-            <DialogFooter className="bg-slate-50 p-8 flex flex-row gap-4 border-t rounded-b-3xl">
+            <DialogFooter className="bg-transparent px-4 pb-5 pt-0 border-t-0 sm:px-6 sm:pb-6">
               <Button
                 type="button"
                 variant="ghost"
                 onClick={onClose}
-                className="flex-1 h-12 font-bold text-slate-500 hover:bg-slate-100 rounded-xl"
+                className="text-muted-foreground"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="flex-1 h-12 font-bold bg-blue-600 hover:bg-blue-900 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-all"
+                className="font-bold bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5 transition-all"
               >
-                {fields.length > 1 ? "Save All Expenses" : "Save Expense"}
+                <Plus className="size-4" />
+                {fields.length > 1 ? "Add Expenses" : "Add Expense"}
               </Button>
             </DialogFooter>
           </form>

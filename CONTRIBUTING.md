@@ -1,15 +1,15 @@
-# Đóng góp & quy ước làm việc
+# Contributions & Workflow Conventions
 
-Tài liệu ngắn về **cấu trúc dự án**, **lệnh chạy**, và **cách đặt commit** để mọi người thống nhất khi làm việc chung.
+A short document covering the **project structure**, **run commands**, and **commit naming** to ensure team alignment.
 
 ---
 
-## Yêu cầu môi trường
+## Environment Requirements
 
-- **Node.js** (khuyến nghị phiên bản tương thích với `package.json` / CI)
-- **npm** (dự án dùng `npm` để cài đặt và chạy script)
+- **Node.js** (recommended version compatible with `package.json` / CI)
+- **npm** (the project uses `npm` for installing dependencies and running scripts)
 
-Cài dependency:
+Installing dependencies:
 
 ```bash
 npm install
@@ -17,105 +17,105 @@ npm install
 
 ---
 
-## Cấu trúc thư mục (tóm tắt)
+## Directory Structure (Summary)
 
 ```text
 trip-planner-pro/
-├── .github/workflows/     # CI (lint + build) khi push/PR
+├── .github/workflows/     # CI (lint + build) on push/PR
 ├── .husky/                # Git hooks (pre-commit, commit-msg)
-├── commitlint.config.mjs  # Quy tắc kiểm tra nội dung commit
-├── public/                # Tài nguyên tĩnh (favicon, …)
-├── scripts/husky/         # Hook chạy bằng Node (lint-staged, commitlint)
-├── server/                # `static.mjs` — phục vụ bản build `dist/` (không phải API)
+├── commitlint.config.mjs  # Rules for validating commit messages
+├── public/                # Static assets (favicon, …)
+├── scripts/husky/         # Node-driven hooks (lint-staged, commitlint)
+├── server/                # `static.mjs` — serves the `dist/` build (not an API)
 ├── src/
-│   ├── assets/            # Hình, SVG, …
-│   ├── components/ui/     # Thành phần shadcn/ui (ví dụ Button)
-│   ├── constants/         # Hằng số (routes, storage keys, …)
-│   ├── hooks/             # Hook React (ví dụ bọc store)
-│   ├── layouts/           # Layout chung (App shell: sidebar + header)
-│   ├── lib/               # Tiện ích (vd: `cn()`)
-│   ├── pages/             # Từng trang theo route (dashboard, itinerary, …)
-│   ├── routes/            # Cấu hình `react-router` (`createBrowserRouter`)
+│   ├── assets/            # Images, SVGs, …
+│   ├── components/ui/     # shadcn/ui components (e.g., Button)
+│   ├── constants/         # Constants (routes, storage keys, …)
+│   ├── hooks/             # React hooks (e.g., store wrappers)
+│   ├── layouts/           # Shared layouts (App shell: sidebar + header)
+│   ├── lib/               # Utilities (e.g., `cn()`)
+│   ├── pages/             # Route-based pages (dashboard, itinerary, …)
+│   ├── routes/            # `react-router` configuration (`createBrowserRouter`)
 │   ├── stores/            # Zustand + persist (localStorage)
-│   ├── types/             # Kiểu TypeScript dùng chung
+│   ├── types/             # Shared TypeScript types
 │   ├── App.tsx            # Root: `RouterProvider`
-│   ├── main.tsx           # Entry + import CSS
-│   └── index.css          # Tailwind + theme shadcn
+│   ├── main.tsx           # Entry + CSS imports
+│   └── index.css          # Tailwind + shadcn theme
 ├── vite.config.ts         # Alias `@` → `src/`
 ├── tsconfig.*.json
 └── eslint.config.js
 ```
 
-**Ghi chú nghiệp vụ:** đây là **frontend-only**; dữ liệu người dùng có thể lưu cục bộ qua **Zustand + `localStorage`** (không backend/DB trong repo).
+**Business Note:** This is a **frontend-only** project; user data can be stored locally via **Zustand + `localStorage`** (no backend/DB in this repo).
 
 ---
 
-## Alias import
+## Import Aliases
 
-Trong code ưu tiên import theo alias:
+In the codebase, prefer importing via aliases:
 
 ```ts
 import { Button } from "@/components/ui/button";
 ```
 
-Alias `@/*` trỏ tới thư mục `src/` (cấu hình trong `tsconfig` và `vite.config.ts`).
+The `@/*` alias points to the `src/` directory (configured in `tsconfig` and `vite.config.ts`).
 
 ---
 
-## Lệnh thường dùng
+## Common Commands
 
-| Lệnh              | Mô tả                                                                               |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| `npm run dev`     | Chạy dev server (Vite + HMR)                                                        |
-| `npm run build`   | Kiểm tra TypeScript + build production ra `dist/`                                   |
-| `npm run lint`    | Chạy ESLint toàn project                                                            |
-| `npm run preview` | Xem thử bản build bằng `vite preview`                                               |
-| `npm start`       | Phục vụ thư mục `dist/` bằng Node (`server/static.mjs`) — cần `npm run build` trước |
+| Command           | Description                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| `npm run dev`     | Runs the dev server (Vite + HMR)                                                                 |
+| `npm run build`   | Runs TypeScript checks + builds the production app into `dist/`                                  |
+| `npm run lint`    | Runs ESLint across the entire project                                                            |
+| `npm run preview` | Previews the build locally using `vite preview`                                                  |
+| `npm start`       | Serves the `dist/` directory using Node (`server/static.mjs`) — requires a prior `npm run build` |
 
 ---
 
 ## Git hooks (Husky)
 
-Sau `npm install`, script `prepare` đăng ký **Husky**. Hai hook chính:
+After running `npm install`, the `prepare` script automatically registers **Husky**. Two main hooks are utilized:
 
-1. **`pre-commit`** — chạy **lint-staged**: chỉ với file `.ts` / `.tsx` đang stage, chạy `eslint --fix` (logic nằm trong `scripts/husky/pre-commit.mjs`).
-2. **`commit-msg`** — chạy **commitlint** (Conventional Commits), file `scripts/husky/commit-msg.mjs`.
+1. **`pre-commit`** — triggers **lint-staged**: runs `eslint --fix` only on staged `.ts` / `.tsx` files (logic resides in `scripts/husky/pre-commit.mjs`).
+2. **`commit-msg`** — triggers **commitlint** (Conventional Commits), driven by `scripts/husky/commit-msg.mjs`.
 
-Nếu cần bỏ qua hook (chỉ dùng khi thật sự cần, ví dụ hotfix tạm):
+If you absolutely need to bypass the hooks (only when strictly necessary, e.g., a temporary hotfix):
 
 ```bash
 git commit --no-verify -m "..."
 ```
 
-Không nên lạm dụng; **CI** (`.github/workflows/ci.yml`) vẫn chạy lint và build.
+Do not abuse this option; the **CI** workflow (`.github/workflows/ci.yml`) will still enforce linting and building.
 
 ---
 
-## Cách đặt commit (bắt buộc theo Conventional Commits)
+## Commit Naming Conventions (Mandatory via Conventional Commits)
 
-Nội dung commit phải theo dạng:
+Commit messages must strictly follow the format below:
 
 ```text
-<type>: <mô tả ngắn>
+<type>: <short description>
 ```
 
-**Một số `type` thường dùng**
+**Commonly Used `type` values**
 
-| type       | Khi nào dùng                |
-| ---------- | --------------------------- |
-| `feat`     | Thêm tính năng              |
-| `fix`      | Sửa lỗi                     |
-| `docs`     | Chỉ tài liệu                |
-| `style`    | Format, UI không đổi logic  |
-| `refactor` | Refactor, không đổi hành vi |
-| `test`     | Thêm/sửa test               |
-| `chore`    | Công cụ, config, dependency |
-| `perf`     | Cải thiện hiệu năng         |
-| `build`    | Build, bundler              |
-| `ci`       | CI/CD                       |
-| `revert`   | Revert commit trước         |
+| Type       | When to Use                                 |
+| ---------- | ------------------------------------------- |
+| `feat`     | A new feature                               |
+| `fix`      | A bug fix                                   |
+| `docs`     | Documentation changes only                  |
+| `style`    | Format, UI tweaks with no logic changes     |
+| `refactor` | Code restructuring with no behavior changes |
+| `test`     | Adding or fixing tests                      |
+| `chore`    | Tooling, configs, or dependency updates     |
+| `perf`     | Code changes that improve performance       |
+| `build`    | Build system or bundler changes             |
+| `ci`       | CI/CD configuration changes                 |
+| `revert`   | Reverting a previous commit                 |
 
-**Ví dụ hợp lệ**
+**Valid Examples**
 
 ```text
 feat: add itinerary page layout
@@ -124,7 +124,7 @@ chore: update eslint config
 docs: add contributing guide
 ```
 
-**Ví dụ không hợp lệ** (commitlint sẽ từ chối):
+**Invalid Examples** (will be rejected by commitlint):
 
 ```text
 updated stuff
@@ -132,18 +132,18 @@ fix bug
 WIP
 ```
 
-Có thể thêm scope tùy chọn:
+You can optionally include a specific scope:
 
 ```text
 feat(ui): add budget card component
 fix(router): redirect unknown paths to dashboard
 ```
 
-Chi tiết quy tắc nằm trong `commitlint.config.mjs` (mở rộng `@commitlint/config-conventional`).
+Detailed rules are defined in `commitlint.config.mjs` (extending `@commitlint/config-conventional`).
 
 ---
 
-## Kiểm tra commit message trên máy
+## Testing Commit Messages Locally
 
 ```bash
 echo "feat: test message" | npx commitlint
@@ -151,9 +151,9 @@ echo "feat: test message" | npx commitlint
 
 ---
 
-## Pull request
+## Pull Requests
 
-- Ưu tiên nhánh rõ ràng, commit message chuẩn như trên.
-- Đảm bảo `npm run lint` và `npm run build` chạy thành công trước khi mở PR (trùng với CI).
+- Prioritize clean, branch-specific work with compliant commit messages as outlined above.
+- Ensure that both `npm run lint` and `npm run build` run successfully before opening a PR (aligning with the CI checks).
 
-Nếu thắc mắc về cấu trúc hoặc hook, mở issue / trao đổi trong nhóm để thống nhất cách làm.
+If you have any questions regarding the structure or hooks, please open an issue or bring it up in the team chat to ensure consensus.
