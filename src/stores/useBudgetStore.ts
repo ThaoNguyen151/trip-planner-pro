@@ -3,54 +3,58 @@ import { useTripStore } from "@/stores/useTripStore";
 import type { BudgetStore, Expense } from "@/types/budget";
 
 export const useBudgetStore = create<BudgetStore>()((set) => ({
-      totalBudget: 12000,
-      expenses: [
-        {
-          id: "1",
-          category: "Shopping",
-          name: "Buy Gucci bag",
-          estimatedCost: 1500,
-          actualCost: 1200,
-          paymentStatus: "Paid",
-        },
-        {
-          id: "2",
-          category: "Food",
-          name: "Matcha",
-          estimatedCost: 1500,
-          actualCost: 1200,
-          paymentStatus: "Paid",
-        },
-      ],
-      addExpenses: (newExpenses: Expense[]) =>
-        set((state) => ({ expenses: [...state.expenses, ...newExpenses] })),
-      updateExpense: (id, updatedFields) =>
-        set((state) => ({
-          expenses: state.expenses.map((exp) =>
-            exp.id === id ? { ...exp, ...updatedFields } : exp,
-          ),
-        })),
-      deleteExpense: (id) =>
-        set((state) => ({
-          expenses: state.expenses.filter((exp) => exp.id !== id),
-        })),
-      setTotalBudget: (amount) => {
-        set({ totalBudget: amount });
-        const tripId = useTripStore.getState().activeTripId;
-        if (tripId) {
-          useTripStore.setState((s) => ({
-            trips: s.trips.map((t) =>
-              t.id === tripId ? { ...t, budget: amount } : t,
-            ),
-          }));
-        }
-      },
-      filters: {
-        category: "All",
-        status: "All",
-      },
-      setFilters: (newFilters) =>
-        set((state) => ({ filters: { ...state.filters, ...newFilters } })),
+  totalBudget: 12000,
+  expenses: [
+    {
+      id: "1",
+      category: "Shopping",
+      name: "Buy Gucci bag",
+      estimatedCost: 1500,
+      actualCost: 1200,
+      paymentStatus: "Paid",
+    },
+    {
+      id: "2",
+      category: "Food",
+      name: "Matcha",
+      estimatedCost: 1500,
+      actualCost: 1200,
+      paymentStatus: "Paid",
+    },
+  ],
+  addExpenses: (newExpenses: Expense[]) =>
+    set((state) => ({ expenses: [...state.expenses, ...newExpenses] })),
+  updateExpense: (id, updatedFields) =>
+    set((state) => ({
+      expenses: state.expenses.map((exp) =>
+        exp.id === id ? { ...exp, ...updatedFields } : exp,
+      ),
+    })),
+  deleteExpense: (id) =>
+    set((state) => ({
+      expenses: state.expenses.filter((exp) => exp.id !== id),
+    })),
+  clearAllExpenses: () =>
+    set(() => ({
+      expenses: [],
+    })),
+  setTotalBudget: (amount) => {
+    set({ totalBudget: amount });
+    const tripId = useTripStore.getState().activeTripId;
+    if (tripId) {
+      useTripStore.setState((s) => ({
+        trips: s.trips.map((t) =>
+          t.id === tripId ? { ...t, budget: amount } : t,
+        ),
+      }));
+    }
+  },
+  filters: {
+    category: "All",
+    status: "All",
+  },
+  setFilters: (newFilters) =>
+    set((state) => ({ filters: { ...state.filters, ...newFilters } })),
 }));
 
 export const getBudgetAlertStatus = (
