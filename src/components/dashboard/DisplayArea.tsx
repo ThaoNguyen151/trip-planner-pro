@@ -2,9 +2,11 @@ import BudgetPreviewCard from "./BudgetPreviewCard";
 import DashboardItinPreviewArea from "./DashboardItinPreviewArea";
 import { ProgressCard } from "./ProgressCard";
 import TaskAlertCard from "./TaskAlertCard";
+import { useActiveTripMeta } from "@/hooks/useActiveTripMeta";
 
 
 export function DisplayArea() {
+    const { totalActual, totalBudget } = useActiveTripMeta();
     return (
         <div>
             <div className="lg:gap-[5%] flex min-[450px]:flex-row flex-col pt-5 pb-5 w-full flex-wrap gap-10 items-center justify-center">
@@ -15,7 +17,7 @@ export function DisplayArea() {
                     <ProgressCard name="packing" past={68} total={100}></ProgressCard>
                 </div>
                 <div className="lg:w-3/10 w-50">
-                    <ProgressCard name="budget" past={4200} total={12000}></ProgressCard>
+                    <ProgressCard name="budget" past={totalActual} total={totalBudget}></ProgressCard>
                 </div>
             </div>
             <div className="lg:gap-[5%] flex flex-col lg:flex-row w-full gap-5">

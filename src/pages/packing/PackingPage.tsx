@@ -3,6 +3,7 @@ import { SlidersHorizontal, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import FilterDropdown from "../../components/package/FilterDropdown"
 import CategoryCard from "../../components/package/CategoryCard"
+import { ActiveTripHeader } from "@/components/shared/ActiveTripHeader"
 import { usePackingStore } from "@/stores/usePackingStore"
 
 export default function PackingPage() {
@@ -39,23 +40,19 @@ export default function PackingPage() {
  
   return (
     <div className="mx-auto max-w-5xl space-y-5">
-      {/* Page header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-900">Da Nang Family Trip</h1>
-          <p className="mt-0.5 text-xs text-slate-400">
-            4 Travellers · 7 Days · Dec 19 – Dec 25
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs"
-          onClick={unpackAll}
-        >
-          Unpack All
-        </Button>
-      </div>
+      <ActiveTripHeader
+        variant="packing"
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs"
+            onClick={unpackAll}
+          >
+            Unpack All
+          </Button>
+        }
+      />
  
       {/* Progress */}
       <div className="rounded-xl border border-slate-200/80 bg-white p-4">

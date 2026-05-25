@@ -2,27 +2,14 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { FilterBar, DaySection, AddItemModal } from "@/components/itinerary";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { ActiveTripHeader } from "@/components/shared/ActiveTripHeader";
+import { useActiveTripMeta } from "@/hooks/useActiveTripMeta";
 import { useItineraryFilters } from "@/hooks/useItineraryFilters";
 import { useItineraryStore } from "@/stores";
 import type { ItineraryActivity } from "@/types";
 
-const MOCK_TRIP = {
-  title: "Da Nang Family Trip",
-  startDate: "2026-06-10",
-  endDate: "2026-06-17",
-} as const;
-
-function formatTripDateRange(start: string, end: string) {
-  const fmt = (d: string) =>
-    new Date(d + "T00:00:00").toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  return `${fmt(start)} - ${fmt(end)}`;
-}
-
 export default function ItineraryPage() {
+  const { startDate, endDate } = useActiveTripMeta();
   const [addOpen, setAddOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<{
     activity: ItineraryActivity;
@@ -67,24 +54,19 @@ export default function ItineraryPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 rounded-xl bg-slate-100 px-2 py-4 sm:px-4 sm:gap-5 md:px-6 md:py-6 md:gap-6">
-      {/* Header */}
-      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-4xl">
-            {MOCK_TRIP.title}
-          </h2>
-          <p className="mt-1 text-base text-muted-foreground">
-            {formatTripDateRange(MOCK_TRIP.startDate, MOCK_TRIP.endDate)}
-          </p>
-        </div>
-        <button
-          onClick={() => setAddOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 self-start md:self-auto"
-        >
-          <Plus className="size-4" />
-          Add Item
-        </button>
-      </section>
+      <ActiveTripHeader
+        variant="page"
+        action={
+          <button
+            type="button"
+            onClick={() => setAddOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 self-start md:self-auto"
+          >
+            <Plus className="size-4" />
+            Add Item
+          </button>
+        }
+      />
 
       {/* Filter bar */}
       <FilterBar
@@ -127,8 +109,8 @@ export default function ItineraryPage() {
         onOpenChange={handleModalClose}
         editingActivity={editingItem?.activity}
         editingDay={editingItem?.day}
-        minDate={MOCK_TRIP.startDate}
-        maxDate={MOCK_TRIP.endDate}
+        minDate={startDate || undefined}
+        maxDate={endDate || undefined}
       />
 
       <ConfirmDialog
