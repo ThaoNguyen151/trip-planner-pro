@@ -1,10 +1,7 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { BudgetStore, Expense } from "@/types/budget";
 
-export const useBudgetStore = create<BudgetStore>()(
-  persist(
-    (set) => ({
+export const useBudgetStore = create<BudgetStore>()((set) => ({
       totalBudget: 12000,
       expenses: [
         {
@@ -43,17 +40,7 @@ export const useBudgetStore = create<BudgetStore>()(
       },
       setFilters: (newFilters) =>
         set((state) => ({ filters: { ...state.filters, ...newFilters } })),
-    }),
-    {
-      name: "budget-storage",
-      version: 1,
-      partialize: (state) => ({
-        expenses: state.expenses,
-        totalBudget: state.totalBudget,
-      }),
-    },
-  ),
-);
+}));
 
 export const getBudgetAlertStatus = (
   state: { expenses: Expense[]; totalBudget: number },

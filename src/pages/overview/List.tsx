@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
 import { CreateTripDialog } from "@/components/overview/CreateTripModal";
-import { TripCard, type Trip } from "@/components/overview/TripCard";
-import { ROUTES } from "@/constants/routes";
+import { TripCard } from "@/components/overview/TripCard";
+import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ROUTES } from "@/constants/routes";
+import { createTripFromForm } from "@/lib/create-trip-from-form";
+import {
+  formatTripDateRange,
+  getTripListProgress,
+} from "@/lib/trip-display";
+import { useTripPlanner } from "@/hooks/useTripPlanner";
+import { useTripStore } from "@/stores/useTripStore";
 
 export function ToggleGroupSpacing() {
   return (
@@ -32,54 +39,22 @@ export function ToggleGroupSpacing() {
   );
 }
 
-const MOCK_TRIPS: Trip[] = [
-  {
-    id: 1,
-    name: "Tokyo Tech Tour",
-    dateRange: "Dec 01 - Dec 10, 2024",
-    progress: 90,
-  },
-  {
-    id: 2,
-    name: "Tokyo Tech Tour",
-    dateRange: "Dec 01 - Dec 10, 2024",
-    progress: 90,
-  },
-  {
-    id: 3,
-    name: "Tokyo Tech Tour",
-    dateRange: "Dec 01 - Dec 10, 2024",
-    progress: 90,
-  },
-  {
-    id: 4,
-    name: "Parisian Spring",
-    dateRange: "Apr 15 - Apr 22, 2025",
-    progress: 15,
-  },
-];
-
 export default function ListPage() {
   const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
-  const [trips, setTrips] = useState<Trip[]>(() => {
-    const savedTrips = localStorage.getItem("trips");
-
-    return savedTrips ? JSON.parse(savedTrips) : MOCK_TRIPS;
-  });
+  const { trips, setActiveTripId, setTripImage } = useTripPlanner();
 
   useEffect(() => {
-    localStorage.setItem("trips", JSON.stringify(trips));
-  }, [trips]);
+    useTripStore.getState().setActiveTripId(null);
+  }, []);
 
-  const handleImageChange = (id: number, image: string) => {
-    setTrips((prev) => prev.map((t) => (t.id === id ? { ...t, image } : t)));
+  const handleOpenTrip = (tripId: string) => {
+    setActiveTripId(tripId);
+    navigate(ROUTES.dashboard);
   };
 
   return (
     <div className="max-w-full min-h-screen flex flex-col ">
-      {/* Header row */}
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-primary-foreground">
@@ -124,23 +99,39 @@ export default function ListPage() {
         </div>
       </div>
 
-      {/* Trip grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {trips.map((trip) => (
-          <TripCard
-            key={trip.id}
-            trip={trip}
-            onImageChange={handleImageChange}
-          />
-        ))}
-      </div>
+      {trips.length === 0 ? (
+        <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white/60 py-16 text-center">
+          <p className="text-lg font-medium text-primary-foreground">
+            No trips yet
+          </p>
+          <p className="mt-2 max-w-md text-muted-foreground">
+            Create your first trip to start planning itinerary, budget, calendar,
+            and packing in one place.
+          </p>
+          <Button className="mt-6" onClick={() => setOpen(true)}>
+            Create trip
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {trips.map((trip) => (
+            <TripCard
+              key={trip.id}
+              trip={trip}
+              dateRange={formatTripDateRange(trip.startDate, trip.endDate)}
+              progress={getTripListProgress(trip)}
+              onOpen={handleOpenTrip}
+              onImageChange={(id, image) => setTripImage(id, image)}
+            />
+          ))}
+        </div>
+      )}
 
       <CreateTripDialog
         open={open}
         onOpenChange={setOpen}
         onSubmit={(values) => {
-          console.log(values);
-          navigate(ROUTES.list);
+          createTripFromForm(values);
         }}
       />
     </div>

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { ItineraryActivity, ItineraryDay, ItineraryStore } from "@/types/itinerary";
 
 let nextId = 1;
@@ -267,9 +266,7 @@ function createInitialDays(): ItineraryDay[] {
   ];
 }
 
-export const useItineraryStore = create<ItineraryStore>()(
-  persist(
-    (set) => ({
+export const useItineraryStore = create<ItineraryStore>()((set) => ({
       days: createInitialDays(),
 
       addActivity: (day, date, activity) =>
@@ -347,12 +344,4 @@ export const useItineraryStore = create<ItineraryStore>()(
               : d,
           ),
         })),
-
-    }),
-    {
-      name: "itinerary-storage",
-      version: 1,
-      migrate: () => ({ days: createInitialDays() }),
-    },
-  ),
-);
+}));

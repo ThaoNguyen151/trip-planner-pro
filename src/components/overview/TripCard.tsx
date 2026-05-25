@@ -9,34 +9,36 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import type { Trip } from "@/types/trip";
 
 const STOCK_IMAGES = [
-  "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400", // Tokyo
-  "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400", // Paris
-  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=400", // Mountains
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400", // Beach
-  "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=400", // Italy
-  "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=400", // London
-  "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400", // Dubai
-  "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400", // Bali
+  "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400",
+  "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400",
+  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=400",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
+  "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=400",
+  "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=400",
+  "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400",
+  "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400",
 ];
 
 const DEFAULT_IMAGE = STOCK_IMAGES[0];
 
-export interface Trip {
-  id: number;
-  name: string;
-  dateRange: string;
-  progress: number;
-  image?: string;
-}
-
 interface TripCardProps {
   trip: Trip;
-  onImageChange?: (id: number, image: string) => void;
+  dateRange: string;
+  progress: number;
+  onOpen?: (id: string) => void;
+  onImageChange?: (id: string, image: string) => void;
 }
 
-export function TripCard({ trip, onImageChange }: TripCardProps) {
+export function TripCard({
+  trip,
+  dateRange,
+  progress,
+  onOpen,
+  onImageChange,
+}: TripCardProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const handleSelectImage = (url: string) => {
@@ -46,17 +48,23 @@ export function TripCard({ trip, onImageChange }: TripCardProps) {
 
   return (
     <>
-      <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <button
+        type="button"
+        onClick={() => onOpen?.(trip.id)}
+        className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow text-left w-full"
+      >
         <div
           className="relative group w-full h-40 cursor-pointer"
-          onClick={() => setPickerOpen(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setPickerOpen(true);
+          }}
         >
           <img
             src={trip.image ?? DEFAULT_IMAGE}
-            alt={trip.name}
+            alt={trip.title}
             className="w-full h-full object-cover"
           />
-          {/* Overlay khi hover */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <div className="flex items-center gap-2 text-white text-sm font-medium">
               <ImageIcon className="size-4" />
@@ -66,23 +74,20 @@ export function TripCard({ trip, onImageChange }: TripCardProps) {
         </div>
 
         <div className="p-4">
-          <h2 className="font-semibold text-primary-foreground">{trip.name}</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {trip.dateRange}
-          </p>
+          <h2 className="font-semibold text-primary-foreground">{trip.title}</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{dateRange}</p>
           <div className="mt-4">
             <p className="text-sm text-primary-foreground font-medium mb-1.5">
-              {trip.progress}% planned
+              {progress}% planned
             </p>
             <Progress
-              value={trip.progress}
+              value={progress}
               className="h-1.5 bg-muted-foreground [&>div]:bg-primary-foreground"
             />
           </div>
         </div>
-      </div>
+      </button>
 
-      {/* Image picker dialog */}
       <Dialog open={pickerOpen} onOpenChange={setPickerOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
@@ -92,6 +97,7 @@ export function TripCard({ trip, onImageChange }: TripCardProps) {
             {STOCK_IMAGES.map((url) => (
               <button
                 key={url}
+                type="button"
                 onClick={() => handleSelectImage(url)}
                 className={cn(
                   "rounded-lg overflow-hidden border-2 transition-all hover:scale-105",
