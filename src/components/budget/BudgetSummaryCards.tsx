@@ -16,13 +16,13 @@ export function BudgetSummaryCards() {
     (sum, expense) => sum + (expense.actualCost ?? 0),
     0,
   );
-  const remainingBalance = totalEstimated - totalActual;
+  const remainingBalance = totalBudget - totalActual;
   const estimatedPercent =
     totalBudget > 0 ? (totalEstimated / totalBudget) * 100 : 0;
   const actualPercent =
-    totalEstimated > 0 ? (totalActual / totalEstimated) * 100 : 0;
+    totalEstimated > 0 ? (totalActual / totalBudget) * 100 : 0;
   const savingPercent =
-    totalEstimated > 0 ? (remainingBalance / totalEstimated) * 100 : 100;
+    totalEstimated > 0 ? (remainingBalance / totalBudget) * 100 : 100;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
@@ -78,7 +78,7 @@ export function BudgetSummaryCards() {
         <p
           className={`text-[10px] md:text-xs font-medium ${budgetUtils.getStatusColor(actualPercent)}`}
         >
-          {actualPercent.toFixed(0)}% of estimated costs paid
+          {actualPercent.toFixed(0)}% of total budget used
         </p>
       </div>
 
@@ -101,8 +101,8 @@ export function BudgetSummaryCards() {
           {totalEstimated === 0
             ? "No estimation data yet"
             : remainingBalance >= 0
-              ? `${savingPercent.toFixed(0)}% saved from estimation`
-              : `${Math.abs(savingPercent).toFixed(0)}% over estimation`}
+              ? `${savingPercent.toFixed(0)}% left in budget`
+              : `${Math.abs(savingPercent).toFixed(0)}% over budget`}
         </p>
       </div>
     </div>
