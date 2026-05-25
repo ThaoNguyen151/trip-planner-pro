@@ -125,7 +125,7 @@ export default function CategoryCard({ category }: { category: PackingCategory }
         {/* Empty state */}
         {expanded && total === 0 && (
           <div className="px-4 pb-4 pt-1 text-center">
-            <p className="text-xs text-slate-400">No items yet.</p>
+            {/* <p className="text-xs text-slate-400">No items yet.</p> */}
             <Button
               variant="ghost"
               size="sm"

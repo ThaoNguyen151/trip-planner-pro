@@ -70,8 +70,8 @@ export function ActiveTripHeader({
     return (
       <div className={cn("flex items-start justify-between gap-3", className)}>
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
-          <p className="mt-0.5 text-xs text-slate-400">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-4xl">{title}</h1>
+          <p className="text-muted-foreground ">
             {[
               dateRange,
               dayCount > 0 ? `${dayCount} days` : null,
