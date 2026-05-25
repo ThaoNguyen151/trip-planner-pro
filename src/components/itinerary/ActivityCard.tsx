@@ -1,6 +1,6 @@
 import { MapPin, Clock, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, formatStartToEndTime } from "@/lib/utils";
 import { ActionMenu } from "@/components/shared/ActionMenu";
 import type { ItineraryActivity } from "@/types";
 
@@ -52,10 +52,10 @@ export function ActivityCard({
       <Card className="gap-3 p-4">
         {activity.overdue && (
           <div className="flex items-center gap-3">
-            <Badge className="border-red-600 bg-red-600 text-white">
+            <Badge className="border-destructive bg-destructive text-destructive-foreground">
               Overdue
             </Badge>
-            <span className="flex items-center gap-1 text-[10px] font-bold uppercase text-red-600">
+            <span className="flex items-center gap-1 text-[10px] font-bold uppercase text-destructive/40">
               <AlertTriangle className="size-3.5" />
               Action Required
             </span>
@@ -71,12 +71,15 @@ export function ActivityCard({
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <MapPin className="size-4 shrink-0 text-slate-400" />
-              <span className="truncate">{activity.location}</span>
+              <MapPin className="size-4 shrink-0 text-foreground" />
+              <span className="truncate text-foreground/90">
+                {activity.location}
+              </span>
             </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="size-4 shrink-0 text-slate-400" />
-              {activity.startTime} - {activity.endTime}
+            <span className="flex items-center gap-1.5 text-foreground/90">
+              <Clock className="size-4 shrink-0 text-foreground" />
+              {/* {activity.startTime} - {activity.endTime} */}
+              {formatStartToEndTime(activity.startTime, activity.endTime)}
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">

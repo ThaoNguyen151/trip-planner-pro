@@ -53,7 +53,8 @@ export default function ItineraryPage() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 rounded-xl bg-slate-100 px-2 py-4 sm:px-4 sm:gap-5 md:px-6 md:py-6 md:gap-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 rounded-xl bg-muted/40 px-2 py-4 sm:px-4 sm:gap-5 md:px-6 md:py-6 md:gap-6">
+      {/* Header */}
       <ActiveTripHeader
         variant="page"
         action={

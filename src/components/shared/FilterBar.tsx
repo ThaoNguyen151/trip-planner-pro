@@ -16,9 +16,9 @@ export function FilterBar({
   hasActiveFilters,
 }: FilterBarProps) {
   return (
-    <Card className="flex flex-row flex-nowrap items-end gap-3 overflow-x-auto p-3 md:flex-wrap md:gap-4 md:p-4 border-border shadow-sm w-full sm:w-auto bg-white">
+    <Card className="flex flex-row flex-nowrap items-end gap-3 overflow-x-auto p-3 md:flex-wrap md:gap-4 md:p-4 border-border shadow-sm w-full sm:w-auto bg-card">
       {children}
-      <div className="mx-1 hidden h-8 w-px self-end bg-slate-200 md:block" />
+      <div className="mx-1 hidden h-8 w-px self-end bg-border md:block" />
       <Button
         variant="ghost"
         onClick={onClear}

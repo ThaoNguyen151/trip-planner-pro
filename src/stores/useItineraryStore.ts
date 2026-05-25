@@ -34,6 +34,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Lodging",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -44,6 +45,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -60,6 +62,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -76,6 +79,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -86,6 +90,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -96,6 +101,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -106,6 +112,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -122,6 +129,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -132,6 +140,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -142,6 +151,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
       ],
     },
@@ -158,6 +168,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -168,6 +179,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -178,6 +190,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
       ],
     },
@@ -194,6 +207,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Transport",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -204,6 +218,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -214,6 +229,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -224,6 +240,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Transport",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -240,6 +257,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -250,6 +268,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -260,6 +279,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Transport",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
       ],
     },

@@ -16,21 +16,18 @@ export function ActiveTripHeader({
   className,
   action,
 }: ActiveTripHeaderProps) {
-  const {
-    title,
-    dateRange,
-    dayCount,
-    totalBudget,
-  } = useActiveTripMeta();
+  const { title, dateRange, dayCount, totalBudget } = useActiveTripMeta();
 
   if (variant === "budget") {
     const excursionLabel =
       dayCount > 0 ? `${dayCount}-day excursion` : "excursion";
 
     return (
-      <div className={cn("mb-6 md:mb-10 flex flex-col gap-2 text-left", className)}>
+      <div
+        className={cn("mb-6 md:mb-10 flex flex-col gap-2 text-left", className)}
+      >
         <div className="flex items-center gap-2 mb-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-blue-700" />
+          <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
           <span className="text-[12px] md:text-sm font-semibold uppercase tracking-wider text-foreground">
             Total Budget: {budgetUtils.formatMoney(totalBudget)}
           </span>
@@ -39,9 +36,9 @@ export function ActiveTripHeader({
           {title}
         </h1>
         {dateRange ? (
-          <p className="text-slate-500 text-sm md:text-base">{dateRange}</p>
+          <p className="text-foreground text-sm md:text-base">{dateRange}</p>
         ) : null}
-        <p className="text-slate-500 text-sm md:text-base">
+        <p className="text-foreground text-sm md:text-base">
           Comprehensive budget tracking for the {excursionLabel}
         </p>
       </div>
@@ -69,16 +66,15 @@ export function ActiveTripHeader({
 
   if (variant === "packing") {
     return (
-      <div
-        className={cn(
-          "flex items-start justify-between gap-3",
-          className,
-        )}
-      >
+      <div className={cn("flex items-start justify-between gap-3", className)}>
         <div>
           <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
           <p className="mt-0.5 text-xs text-slate-400">
-            {[dateRange, dayCount > 0 ? `${dayCount} days` : null, totalBudget > 0 ? budgetUtils.formatMoney(totalBudget) : null]
+            {[
+              dateRange,
+              dayCount > 0 ? `${dayCount} days` : null,
+              totalBudget > 0 ? budgetUtils.formatMoney(totalBudget) : null,
+            ]
               .filter(Boolean)
               .join(" · ")}
           </p>
