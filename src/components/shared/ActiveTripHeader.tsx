@@ -32,7 +32,7 @@ export function ActiveTripHeader({
             Total Budget: {budgetUtils.formatMoney(totalBudget)}
           </span>
         </div>
-        <h1 className="text-2xl md:text-4xl font-bold mb-2 tracking-tight text-foreground">
+        <h1 className="text-2xl md:text-4xl font-semibold mb-2 tracking-tight text-foreground">
           {title}
         </h1>
         {dateRange ? (
@@ -48,7 +48,9 @@ export function ActiveTripHeader({
   if (variant === "dashboard") {
     return (
       <div className={className}>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-4xl">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-4xl">
+          {title}
+        </h1>
         {dateRange ? (
           <div className="flex flex-row items-center space-x-1.5 pt-0.5">
             <Calendar className="w-3 h-3" aria-hidden />
@@ -97,7 +99,7 @@ export function ActiveTripHeader({
         </h2>
         {dateRange ? (
           <p className="mt-1 text-base text-muted-foreground">{dateRange}</p>
-        ) : null} 
+        ) : null}
       </div>
       {action}
     </div>
