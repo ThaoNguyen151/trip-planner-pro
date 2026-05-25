@@ -2,7 +2,7 @@ import { addDays, parseISO } from "date-fns";
 
 import { toDateKey } from "@/lib/calendar-dates";
 import type { CalendarEvent, CalendarEventKind } from "@/types/calendar";
-import { colorForCalendarKind } from "@/types/calendar";
+import { colorForActivityStatus } from "@/types/calendar";
 import type {
   ActivityCategory,
   ItineraryActivity,
@@ -56,15 +56,18 @@ function activityToCalendarEvent(
   dateKey: string,
 ): CalendarEvent {
   const kind = categoryToKind(activity.category);
-  const subtitleParts = [activity.location, activity.status].filter(Boolean);
 
   return {
     id: activity.id,
     dateKey,
     title: activity.title,
     kind,
-    color: colorForCalendarKind(kind),
-    subtitle: subtitleParts.length > 0 ? subtitleParts.join(" · ") : undefined,
+    category: activity.category,
+    priority: activity.priority,
+    status: activity.status,
+    location: activity.location?.trim() || undefined,
+    overdue: activity.overdue,
+    color: colorForActivityStatus(activity.status),
     time: activity.startTime,
   };
 }

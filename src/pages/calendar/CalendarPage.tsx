@@ -104,7 +104,7 @@ export default function CalendarPage() {
 
       {selectedDateKey ? (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-slate-900/45 p-4 md:hidden"
+          className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/30 p-4 backdrop-blur-sm md:hidden"
           role="presentation"
           onClick={closeDayPanel}
         >

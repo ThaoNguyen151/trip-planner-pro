@@ -97,12 +97,7 @@ export function ActiveTripHeader({
         </h2>
         {dateRange ? (
           <p className="mt-1 text-base text-muted-foreground">{dateRange}</p>
-        ) : null}
-        {totalBudget > 0 ? (
-          <p className="mt-1 text-sm text-muted-foreground">
-            Budget {budgetUtils.formatMoney(totalBudget)}
-          </p>
-        ) : null}
+        ) : null} 
       </div>
       {action}
     </div>

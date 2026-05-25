@@ -2,12 +2,24 @@ import { create } from 'zustand'
 
 import { seedCalendarEvents } from '@/lib/calendar-seed'
 import type { CalendarEvent, CalendarEventKind } from '@/types/calendar'
-import { colorForCalendarKind } from '@/types/calendar'
+import {
+  colorForActivityStatus,
+  colorForCalendarKind,
+} from '@/types/calendar'
+import type {
+  ActivityCategory,
+  ActivityPriority,
+  ActivityStatus,
+} from '@/types/itinerary'
 
 type NewEventInput = {
   dateKey: string
   title: string
   kind: CalendarEventKind
+  category?: ActivityCategory
+  priority?: ActivityPriority
+  status?: ActivityStatus
+  location?: string
   subtitle?: string
   time?: string
 }
@@ -31,7 +43,8 @@ export const useCalendarEventsStore = create<CalendarEventsState>()((set) => ({
       addEvent: (input) => {
         const title = input.title.trim()
         if (!title || !input.dateKey.trim()) return
-        const color = colorForCalendarKind(input.kind)
+        const status = input.status ?? 'Planned'
+        const color = colorForActivityStatus(status)
         set((s) => ({
           events: [
             ...s.events,
@@ -40,6 +53,10 @@ export const useCalendarEventsStore = create<CalendarEventsState>()((set) => ({
               dateKey: input.dateKey.trim(),
               title,
               kind: input.kind,
+              category: input.category ?? 'Other',
+              priority: input.priority ?? 'Medium',
+              status,
+              location: input.location?.trim() || input.subtitle?.trim() || undefined,
               color,
               subtitle: input.subtitle?.trim() || undefined,
               time: input.time?.trim() || undefined,
@@ -52,7 +69,9 @@ export const useCalendarEventsStore = create<CalendarEventsState>()((set) => ({
           events: s.events.map((e) => {
             if (e.id !== id) return e
             const next = { ...e, ...patch }
-            if (patch.kind !== undefined && patch.color === undefined) {
+            if (patch.status !== undefined && patch.color === undefined) {
+              next.color = colorForActivityStatus(patch.status)
+            } else if (patch.kind !== undefined && patch.color === undefined && patch.status === undefined) {
               next.color = colorForCalendarKind(patch.kind)
             }
             return next

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Plus, MapPin } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Loader2, LocateFixed, Plus, MapPin } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { getCurrentLocationLabel } from "@/lib/geolocation";
 import { cn } from "@/lib/utils";
 import { useItineraryStore } from "@/stores";
 import {
@@ -100,6 +101,13 @@ export function AddItemModal({
   });
 
   const isEditing = !!editingActivity;
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const locateRequestRef = useRef(0);
+
+  useEffect(() => {
+    if (!open) locateRequestRef.current += 1;
+  }, [open]);
 
   useEffect(() => {
     if (open) {
@@ -120,6 +128,28 @@ export function AddItemModal({
       }
     }
   }, [open, editingActivity, editingDay, days, form]);
+
+  async function handleUseCurrentLocation() {
+    const requestId = ++locateRequestRef.current;
+    setLocationError(null);
+    setLocating(true);
+    try {
+      const label = await getCurrentLocationLabel();
+      if (requestId !== locateRequestRef.current) return;
+      form.setValue("location", label, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+      form.clearErrors("location");
+    } catch (err) {
+      if (requestId !== locateRequestRef.current) return;
+      const message =
+        err instanceof Error ? err.message : "Unable to get current location.";
+      setLocationError(message);
+    } finally {
+      if (requestId === locateRequestRef.current) setLocating(false);
+    }
+  }
 
   const onSubmit: SubmitHandler<FormValues> = (values) => {
     const [y, m, d] = values.date.split("-").map(Number);
@@ -338,15 +368,47 @@ export function AddItemModal({
                       Location
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <MapPin className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/60" />
-                        <input
-                          {...field}
-                          placeholder="Enter address"
-                          className="h-11 w-full rounded-lg border border-input bg-white pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary"
-                        />
+                      <div className="flex gap-2">
+                        <div className="relative min-w-0 flex-1">
+                          <MapPin className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/60" />
+                          <input
+                            {...field}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              setLocationError(null);
+                            }}
+                            placeholder="Enter address"
+                            className="h-11 w-full rounded-lg border border-input bg-white pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary"
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="h-11 shrink-0 gap-1.5 px-3"
+                          disabled={locating}
+                          aria-label="Use current location"
+                          title="Use current location"
+                          onClick={handleUseCurrentLocation}
+                        >
+                          {locating ? (
+                            <Loader2
+                              className="size-4 animate-spin"
+                              aria-hidden
+                            />
+                          ) : (
+                            <LocateFixed className="size-4" aria-hidden />
+                          )}
+                          <span className="hidden sm:inline">
+                            {locating ? "Locating…" : "Current"}
+                          </span>
+                        </Button>
                       </div>
                     </FormControl>
+                    {locationError ? (
+                      <p className="text-xs text-destructive" role="alert">
+                        {locationError}
+                      </p>
+                    ) : null}
                     <FormMessage />
                   </FormItem>
                 )}

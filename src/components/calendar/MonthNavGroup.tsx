@@ -31,7 +31,7 @@ export function MonthNavGroup({
       <button
         type="button"
         className={cn(
-          "inline-flex items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60",
+          "inline-flex items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           iconBtn,
         )}
         aria-label="Previous month"
@@ -43,10 +43,7 @@ export function MonthNavGroup({
         type="button"
         variant="outline"
         size="sm"
-        className={cn(
-          "rounded-md border-slate-200/90 bg-white font-medium text-slate-700 shadow-sm hover:bg-slate-50",
-          compact ? "h-8 px-3 text-xs" : "h-9 px-4 text-sm",
-        )}
+        className={cn(compact ? "h-8 px-3 text-xs" : "h-9 px-4 text-sm")}
         onClick={onToday}
       >
         Today
@@ -54,7 +51,7 @@ export function MonthNavGroup({
       <button
         type="button"
         className={cn(
-          "inline-flex items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60",
+          "inline-flex items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           iconBtn,
         )}
         aria-label="Next month"
