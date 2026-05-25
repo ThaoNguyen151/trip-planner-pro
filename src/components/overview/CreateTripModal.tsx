@@ -42,8 +42,12 @@ export function CreateTripDialog({
   const [endDate, setEndDate] = useState<Date | undefined>();
 
   const handleCreate = () => {
+    if (!tripName.trim() || !startDate || !endDate) return;
     onSubmit?.({ tripName, tripBudget, startDate, endDate });
-    console.log({ tripName, tripBudget, startDate, endDate });
+    setTripName("");
+    setTripBudget("");
+    setStartDate(undefined);
+    setEndDate(undefined);
     onOpenChange(false);
   };
 

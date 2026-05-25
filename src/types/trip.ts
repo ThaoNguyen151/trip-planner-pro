@@ -5,4 +5,5 @@ export type Trip = {
   budget: number;
   startDate: string;
   endDate: string;
+  image?: string;
 };
