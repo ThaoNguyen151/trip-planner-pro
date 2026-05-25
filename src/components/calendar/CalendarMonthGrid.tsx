@@ -1,3 +1,4 @@
+import { eventChipClassForStatus } from "@/components/calendar/calendar-display-utils";
 import { addDays, startOfMonth, toDateKey } from "@/lib/calendar-dates";
 import { cn } from "@/lib/utils";
 import type { CalendarEvent } from "@/types/calendar";
@@ -29,17 +30,17 @@ export function CalendarMonthGrid({
   const maxEventsInCell = compactGrid ? 2 : 3;
 
   return (
-    <article className="min-w-0 flex-1 overflow-hidden rounded-lg border border-slate-200 bg-white sm:rounded-xl">
-      <div className="grid grid-cols-7 divide-x divide-slate-200 border-b border-slate-200 bg-slate-50 text-center text-[9px] font-semibold uppercase tracking-wide text-black sm:text-[11px]">
+    <article className="min-w-0 flex-1 overflow-hidden rounded-lg border border-border bg-card sm:rounded-xl">
+      <div className="grid grid-cols-7 divide-x divide-border border-b border-border bg-muted text-center text-[9px] font-semibold uppercase tracking-wide text-foreground sm:text-[11px]">
         {WEEKDAYS_SUN_FIRST.map((d, i) => (
-          <div key={d} className="bg-slate-200 py-2 md:py-3">
+          <div key={d} className="bg-muted py-2 md:py-3">
             <span className="md:hidden">{WEEKDAY_SHORT[i]}</span>
             <span className="hidden md:inline">{d}</span>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 divide-x divide-y divide-slate-200">
+      <div className="grid grid-cols-7 divide-x divide-y divide-border">
         {daysGrid.map((d) => {
           const inMonth = d.getMonth() === month.getMonth();
           const key = toDateKey(d);
@@ -55,10 +56,10 @@ export function CalendarMonthGrid({
               aria-pressed={isSelected}
               aria-label={`${key}, ${dayEvents.length} activities`}
               className={cn(
-                "cursor-pointer p-1 outline-none transition-[box-shadow] focus-visible:ring-2 focus-visible:ring-sky-400/60 sm:p-1.5",
+                "cursor-pointer p-1 outline-none transition-[box-shadow] focus-visible:ring-2 focus-visible:ring-ring sm:p-1.5",
                 compactGrid ? "min-h-[68px]" : "min-h-[82px]",
-                inMonth ? "bg-white" : "bg-slate-100",
-                isSelected && "shadow-[inset_0_0_0_2px] shadow-sky-400",
+                inMonth ? "bg-card" : "bg-muted/40",
+                isSelected && "shadow-[inset_0_0_0_2px] shadow-primary",
               )}
               onClick={() => onSelectDateKey(key)}
               onKeyDown={(ev) => {
@@ -73,13 +74,13 @@ export function CalendarMonthGrid({
                   className={cn(
                     "font-semibold tabular-nums",
                     compactGrid ? "text-[11px]" : "text-xs",
-                    inMonth ? "text-slate-900" : "text-slate-400",
+                    inMonth ? "text-foreground" : "text-muted-foreground",
                   )}
                 >
                   {d.getDate()}
                 </div>
                 {dayEvents.length > 0 ? (
-                  <div className="hidden text-[10px] font-medium text-slate-500 sm:block">
+                  <div className="hidden text-[10px] font-medium text-muted-foreground sm:block">
                     {dayEvents.length} item{dayEvents.length > 1 ? "s" : ""}
                   </div>
                 ) : null}
@@ -97,24 +98,15 @@ export function CalendarMonthGrid({
                     className={cn(
                       "w-full truncate rounded-md px-1 py-px text-left font-semibold sm:px-2 sm:py-0.5",
                       compactGrid ? "text-[9px]" : "text-[10px]",
-                      e.color === "sky" &&
-                        "bg-sky-50 text-sky-900 ring-1 ring-sky-100",
-                      e.color === "violet" &&
-                        "bg-violet-50 text-violet-900 ring-1 ring-violet-100",
-                      e.color === "amber" &&
-                        "bg-amber-50 text-amber-950 ring-1 ring-amber-100",
-                      e.color === "emerald" &&
-                        "bg-emerald-50 text-emerald-900 ring-1 ring-emerald-100",
-                      e.color === "stone" &&
-                        "bg-slate-100 text-slate-700 ring-1 ring-slate-200/80",
+                      eventChipClassForStatus(e.status),
                     )}
-                    title={e.title}
+                    title={`${e.title} · ${e.category} · ${e.priority} · ${e.status}`}
                   >
                     {e.title}
                   </div>
                 ))}
                 {dayEvents.length > max ? (
-                  <div className="text-[10px] font-medium text-slate-500">
+                  <div className="text-[10px] font-medium text-muted-foreground">
                     +{dayEvents.length - max} more
                   </div>
                 ) : null}
