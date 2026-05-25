@@ -32,7 +32,8 @@ export function BudgetUtilization({
     return Object.entries(groups).map(([name, values]) => {
       const percent =
         values.estimated > 0 ? (values.actual / values.estimated) * 100 : 0;
-      const isOverTotalBudget = values.actual > totalBudget;
+      const isOverTotalBudget =
+        values.actual > totalBudget || values.estimated > totalBudget;
 
       return { name, ...values, percent, isOverTotalBudget };
     });

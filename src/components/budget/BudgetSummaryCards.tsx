@@ -1,6 +1,7 @@
 import { useBudgetStore } from "@/stores";
 import { ChartColumn, ScrollText, Wallet } from "lucide-react";
 import { budgetUtils } from "@/lib/utils";
+import { useMemo } from "react";
 
 export function BudgetSummaryCards() {
   const { totalBudget, expenses } = useBudgetStore();
@@ -8,21 +9,39 @@ export function BudgetSummaryCards() {
   {
     /* Calculations */
   }
-  const totalEstimated = expenses.reduce(
-    (sum, expense) => sum + (expense.estimatedCost ?? 0),
-    0,
-  );
-  const totalActual = expenses.reduce(
-    (sum, expense) => sum + (expense.actualCost ?? 0),
-    0,
-  );
-  const remainingBalance = totalBudget - totalActual;
-  const estimatedPercent =
-    totalBudget > 0 ? (totalEstimated / totalBudget) * 100 : 0;
-  const actualPercent =
-    totalEstimated > 0 ? (totalActual / totalBudget) * 100 : 0;
-  const savingPercent =
-    totalEstimated > 0 ? (remainingBalance / totalBudget) * 100 : 100;
+  const {
+    totalEstimated,
+    totalActual,
+    remainingBalance,
+    estimatedPercent,
+    actualPercent,
+    savingPercent,
+  } = useMemo(() => {
+    const totalEstimated = expenses.reduce(
+      (sum, expense) => sum + (expense.estimatedCost ?? 0),
+      0,
+    );
+    const totalActual = expenses.reduce(
+      (sum, expense) => sum + (expense.actualCost ?? 0),
+      0,
+    );
+    const remainingBalance = totalBudget - totalActual;
+    const estimatedPercent =
+      totalBudget > 0 ? (totalEstimated / totalBudget) * 100 : 0;
+    const actualPercent =
+      totalBudget > 0 ? (totalActual / totalBudget) * 100 : 0;
+    const savingPercent =
+      totalBudget > 0 ? (remainingBalance / totalBudget) * 100 : 100;
+
+    return {
+      totalEstimated,
+      totalActual,
+      remainingBalance,
+      estimatedPercent,
+      actualPercent,
+      savingPercent,
+    };
+  }, [expenses, totalBudget]);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
@@ -98,7 +117,7 @@ export function BudgetSummaryCards() {
           {budgetUtils.formatMoney(remainingBalance)}
         </div>
         <p className="text-[10px] md:text-xs font-medium opacity-70">
-          {totalEstimated === 0
+          {expenses.length === 0
             ? "No estimation data yet"
             : remainingBalance >= 0
               ? `${savingPercent.toFixed(0)}% left in budget`
