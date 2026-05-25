@@ -1,7 +1,6 @@
 "use client";
 
 import * as z from "zod";
-
 import {
   Dialog,
   DialogContent,
@@ -38,7 +37,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, X } from "lucide-react";
 import { useEffect } from "react";
 
-// Zod validation schema
+const formatDisplayMoney = (value: string | number | undefined): string => {
+  if (value === undefined || value === null || value === "") return "";
+  const numericString = String(value).replace(/\D/g, "");
+  if (!numericString) return "";
+  return new Intl.NumberFormat("de-DE").format(Number(numericString));
+};
+
+const parseDisplayMoney = (value: string): number => {
+  const rawValue = value.replace(/\./g, "");
+  return rawValue === "" ? 0 : Number(rawValue);
+};
+
 const expenseItemSchema = z
   .object({
     category: z.string().min(1, "Category is required"),
@@ -46,13 +56,17 @@ const expenseItemSchema = z
     estimatedCost: z
       .union([z.string(), z.number()])
       .transform((val) =>
-        val === "" || val === undefined || val === null ? 0 : Number(val),
+        val === "" || val === undefined || val === null
+          ? 0
+          : Number(String(val).replace(/\./g, "")),
       )
       .pipe(z.number().min(1000, "Estimated cost is required")),
     actualCost: z
       .union([z.string(), z.number()])
       .transform((val) =>
-        val === "" || val === undefined || val === null ? 0 : Number(val),
+        val === "" || val === undefined || val === null
+          ? 0
+          : Number(String(val).replace(/\./g, "")),
       ),
     paymentStatus: z.enum(["Unpaid", "Paid"]).default("Paid"),
   })
@@ -122,11 +136,11 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
     const data = values as FormOutput;
     const formattedExpenses: Expense[] = data.items.map((item) => ({
       ...item,
-      id: crypto.randomUUID() as string,
+      id: crypto.randomUUID(),
       category: item.category as CategoryType,
       estimatedCost: item.estimatedCost,
       actualCost: item.actualCost,
-      paymentStatus: item.paymentStatus as "Paid" | "Unpaid",
+      paymentStatus: item.paymentStatus,
     }));
 
     addExpenses(formattedExpenses);
@@ -144,15 +158,23 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
     });
     onClose();
   };
+
   const watchedItems = form.watch("items") || [];
-  const incomingEstimated = watchedItems.reduce(
-    (sum, item) => sum + (Number(item?.estimatedCost) || 0),
-    0,
-  );
-  const incomingActual = watchedItems.reduce(
-    (sum, item) => sum + (Number(item?.actualCost) || 0),
-    0,
-  );
+
+  const incomingEstimated = watchedItems.reduce((sum, item) => {
+    const val = item?.estimatedCost;
+    const num =
+      typeof val === "string" ? parseDisplayMoney(val) : Number(val || 0);
+    return sum + num;
+  }, 0);
+
+  const incomingActual = watchedItems.reduce((sum, item) => {
+    const val = item?.actualCost;
+    const num =
+      typeof val === "string" ? parseDisplayMoney(val) : Number(val || 0);
+    return sum + num;
+  }, 0);
+
   const {
     isOverBudget,
     isEstimatedOver,
@@ -163,6 +185,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
     newEstimated: incomingEstimated,
     newActual: incomingActual,
   });
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto no-scrollbar p-0 rounded-[18px] border-none shadow-2xl bg-white [&>button]:hidden">
@@ -203,18 +226,17 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       </div>
                     )}
 
-                    {/* Category */}
                     <FormField
                       control={form.control}
-                      name={`items.${index}.category` as const}
-                      render={({ field }) => (
+                      name={`items.${index}.category`}
+                      render={({ field: selectField }) => (
                         <FormItem>
                           <FormLabel className="font-semibold text-primary">
                             Category
                           </FormLabel>
                           <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            onValueChange={selectField.onChange}
+                            defaultValue={selectField.value}
                           >
                             <FormControl>
                               <SelectTrigger className="h-12 bg-slate-50/50 text-slate-900">
@@ -239,11 +261,10 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       )}
                     />
 
-                    {/* Item name */}
                     <FormField
                       control={form.control}
                       name={`items.${index}.name`}
-                      render={({ field }) => (
+                      render={({ field: nameField }) => (
                         <FormItem>
                           <FormLabel className="font-semibold text-primary">
                             Item Name
@@ -252,7 +273,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                             <Input
                               placeholder="Airport Transfer"
                               className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
-                              {...field}
+                              {...nameField}
                             />
                           </FormControl>
                           <FormMessage />
@@ -260,25 +281,25 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       )}
                     />
 
-                    {/* Costs */}
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name={`items.${index}.estimatedCost`}
-                        render={({ field }) => (
+                        render={({ field: estField }) => (
                           <FormItem>
                             <FormLabel className="font-semibold text-primary">
                               Estimated Cost
                             </FormLabel>
                             <FormControl>
                               <Input
-                                type="number"
-                                step="500000"
+                                type="text"
                                 placeholder="0đ"
                                 className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
-                                {...field}
-                                value={field.value ?? ""}
-                                onChange={(e) => field.onChange(e.target.value)}
+                                value={formatDisplayMoney(estField.value)}
+                                onChange={(e) => {
+                                  const raw = parseDisplayMoney(e.target.value);
+                                  estField.onChange(raw === 0 ? "" : raw);
+                                }}
                               />
                             </FormControl>
                             <FormMessage />
@@ -288,19 +309,21 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       <FormField
                         control={form.control}
                         name={`items.${index}.actualCost`}
-                        render={({ field }) => (
+                        render={({ field: actField }) => (
                           <FormItem>
                             <FormLabel className="font-semibold text-primary">
                               Actual Cost
                             </FormLabel>
                             <FormControl>
                               <Input
-                                type="number"
-                                step="500000"
+                                type="text"
                                 placeholder="0đ"
                                 className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
-                                {...field}
-                                onChange={(e) => field.onChange(e.target.value)}
+                                value={formatDisplayMoney(actField.value)}
+                                onChange={(e) => {
+                                  const raw = parseDisplayMoney(e.target.value);
+                                  actField.onChange(raw === 0 ? "" : raw);
+                                }}
                               />
                             </FormControl>
                             <FormMessage />
@@ -309,19 +332,18 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       />
                     </div>
 
-                    {/* Status */}
                     <FormField
                       control={form.control}
                       name={`items.${index}.paymentStatus`}
-                      render={({ field }) => (
+                      render={({ field: statusField }) => (
                         <FormItem className="space-y-3">
                           <FormLabel className="font-bold text-slate-700">
                             Payment Status
                           </FormLabel>
                           <FormControl>
                             <RadioGroup
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
+                              onValueChange={statusField.onChange}
+                              defaultValue={statusField.value}
                               className="flex gap-20"
                             >
                               <div className="flex items-center space-x-2">
@@ -356,7 +378,6 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                   </div>
                 ))}
 
-                {/* Add Another Button */}
                 <Button
                   type="button"
                   variant="outline"
@@ -377,7 +398,6 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
               </div>
             </div>
 
-            {/* Alert */}
             {isOverBudget && (
               <div className="px-8 pb-4">
                 <Alert
@@ -405,7 +425,6 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
               </div>
             )}
 
-            {/* Sticky footer */}
             <DialogFooter className="bg-transparent px-4 pb-5 pt-0 border-t-0 sm:px-6 sm:pb-6">
               <Button
                 type="button"
