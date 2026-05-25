@@ -9,8 +9,6 @@ import {
   LayoutDashboard,
   Map,
   Package,
-  PanelLeftClose,
-  PanelLeftOpen,
   Search,
   Settings,
   UserCircle,
@@ -122,9 +120,17 @@ export function AppShellLayout() {
             }
           >
             {sidebarCollapsed ? (
-              <PanelLeftOpen className="size-5" aria-hidden />
+              <img
+                src="/public/paper-plane-dark-left.png"
+                className="size-5"
+                aria-hidden
+              />
             ) : (
-              <PanelLeftClose className="size-5" aria-hidden />
+              <img
+                src="/public/paper-plane-dark-right.png"
+                className="size-5"
+                aria-hidden
+              />
             )}
           </Button>
         </div>
