@@ -10,6 +10,7 @@ import {
   setTripFeatureData,
 } from "@/lib/trip-data-registry";
 import { itineraryDaysToCalendarEvents } from "@/lib/itinerary-to-calendar";
+import { normalizePackingCategories } from "@/lib/packing-icons";
 import { useBudgetStore } from "@/stores/useBudgetStore";
 import { useItineraryStore } from "@/stores/useItineraryStore";
 import { usePackingStore } from "@/stores/usePackingStore";
@@ -61,7 +62,7 @@ function applyFeatureState(data: TripFeatureData): void {
   });
   useItineraryStore.setState({ days: data.itinerary.days });
   usePackingStore.setState({
-    categories: data.packing.categories,
+    categories: normalizePackingCategories(data.packing.categories),
     filters: packing.filters,
   });
 }

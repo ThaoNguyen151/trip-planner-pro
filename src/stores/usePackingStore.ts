@@ -1,18 +1,8 @@
-import { FileText, Shirt, Zap, Pill, SprayCan, Package } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { normalizePackingCategories } from '@/lib/packing-icons'
 import type { PackingFilters, PackingStore, PackingCategory } from '@/types/package'
 import { STORAGE_KEYS } from '@/constants/storage-keys'
-
-const ICON_MAP: Record<string, LucideIcon> = {
-  FileText,
-  Shirt,
-  Zap,
-  Pill,
-  SprayCan,
-  Package,
-}
 
 const DEFAULT_FILTERS: PackingFilters = {
   category: 'All Categories',
@@ -20,11 +10,10 @@ const DEFAULT_FILTERS: PackingFilters = {
   priority: 'All Priorities',
 }
 
-const DEFAULT_CATEGORIES = [
+const DEFAULT_CATEGORIES: PackingCategory[] = [
   {
     id: 'documents',
     name: 'Documents',
-    icon: FileText,
     iconName: 'FileText',
     color: '#6c6ee5',
     items: [
@@ -35,7 +24,6 @@ const DEFAULT_CATEGORIES = [
   {
     id: 'clothes',
     name: 'Clothes',
-    icon: Shirt,
     iconName: 'Shirt',
     color: '#597bc1',
     items: [
@@ -47,7 +35,6 @@ const DEFAULT_CATEGORIES = [
   {
     id: 'electronics',
     name: 'Electronics',
-    icon: Zap,
     iconName: 'Zap',
     color: '#9a92d3',
     items: [
@@ -58,7 +45,6 @@ const DEFAULT_CATEGORIES = [
   {
     id: 'medicines',
     name: 'Medicines',
-    icon: Pill,
     iconName: 'Pill',
     color: '#cb82ec',
     items: [
@@ -69,7 +55,6 @@ const DEFAULT_CATEGORIES = [
   {
     id: 'personal',
     name: 'Personal',
-    icon: SprayCan,
     iconName: 'SprayCan',
     color: '#e8a268',
     items: [
@@ -79,7 +64,6 @@ const DEFAULT_CATEGORIES = [
   {
     id: 'others',
     name: 'Others',
-    icon: Package,
     iconName: 'Package',
     color: '#6b93ca',
     items: [],
@@ -146,19 +130,22 @@ export const usePackingStore = create<PackingStore>()(
     {
       name: STORAGE_KEYS.PACKING_LIST,
       partialize: (state) => ({
-        ...state,
-        categories: state.categories.map((cat) =>
-          Object.fromEntries(Object.entries(cat).filter(([key]) => key !== 'icon'))
-        ),
+        filters: state.filters,
+        categories: state.categories,
       }),
-      merge: (persistedState: unknown, currentState) => ({
-        ...currentState,
-        ...(persistedState as object),
-        categories: (persistedState as { categories: (Omit<PackingCategory, 'icon'> & { iconName: string })[] }).categories.map((cat) => ({
-          ...cat,
-          icon: ICON_MAP[cat.iconName] ?? Package,
-        })),
-      }),
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as {
+          categories?: PackingCategory[];
+          filters?: PackingFilters;
+        };
+        return {
+          ...currentState,
+          filters: persisted.filters ?? currentState.filters,
+          categories: normalizePackingCategories(
+            persisted.categories ?? currentState.categories,
+          ),
+        };
+      },
     },
   ),
 )
