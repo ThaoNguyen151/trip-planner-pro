@@ -37,10 +37,11 @@ function to12Hour(time: string) {
   return { formatted: `${h12}:${minute}`, period } as const;
 }
 
-export const formatStartToEndTime = (startTime: string, endTime: string) => {
+export const formatStartToEndTime = (startTime: string, endTime?: string) => {
   const start = to12Hour(startTime);
-  const end = to12Hour(endTime);
+  if (!endTime) return `${start.formatted} ${start.period}`;
 
+  const end = to12Hour(endTime);
   if (start.period === end.period) {
     return `${start.formatted} - ${end.formatted} ${start.period}`;
   }

@@ -188,7 +188,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto no-scrollbar p-0 rounded-[18px] border-none shadow-2xl bg-white [&>button]:hidden">
+      <DialogContent className="max-w-[500px] max-h-[90vh] overflow-y-auto no-scrollbar p-0 rounded-[18px] border-none shadow-2xl bg-card [&>button]:hidden">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -239,7 +239,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                             defaultValue={selectField.value}
                           >
                             <FormControl>
-                              <SelectTrigger className="h-12 bg-slate-50/50 text-slate-900">
+                              <SelectTrigger className="h-12 bg-card text-foreground">
                                 <SelectValue placeholder="Select Category" />
                               </SelectTrigger>
                             </FormControl>
@@ -272,7 +272,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                           <FormControl>
                             <Input
                               placeholder="Airport Transfer"
-                              className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
+                              className="h-12 text-foreground bg-card focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                               {...nameField}
                             />
                           </FormControl>
@@ -294,7 +294,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                               <Input
                                 type="text"
                                 placeholder="0đ"
-                                className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
+                                className="h-12 bg-card text-foreground focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                                 value={formatDisplayMoney(estField.value)}
                                 onChange={(e) => {
                                   const raw = parseDisplayMoney(e.target.value);
@@ -318,7 +318,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                               <Input
                                 type="text"
                                 placeholder="0đ"
-                                className="h-12 bg-slate-50/50 focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
+                                className="h-12 bg-card text-foreground focus-visible:border-primary focus-visible:ring-primary focus-visible:ring-1"
                                 value={formatDisplayMoney(actField.value)}
                                 onChange={(e) => {
                                   const raw = parseDisplayMoney(e.target.value);
@@ -337,7 +337,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       name={`items.${index}.paymentStatus`}
                       render={({ field: statusField }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="font-bold text-slate-700">
+                          <FormLabel className="font-bold text-primary bg-card">
                             Payment Status
                           </FormLabel>
                           <FormControl>
@@ -353,7 +353,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                                 />
                                 <label
                                   htmlFor={`unpaid-${index}`}
-                                  className="text-sm font-medium text-slate-600 cursor-pointer"
+                                  className="text-sm font-medium text-foreground cursor-pointer"
                                 >
                                   Unpaid
                                 </label>
@@ -365,7 +365,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                                 />
                                 <label
                                   htmlFor={`paid-${index}`}
-                                  className="text-sm font-medium text-slate-600 cursor-pointer"
+                                  className="text-sm font-medium text-foreground cursor-pointer"
                                 >
                                   Paid
                                 </label>
@@ -390,7 +390,7 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
                       paymentStatus: "Paid",
                     })
                   }
-                  className="w-full py-8 border-dashed border-2 border-border/70 bg-background text-slate-500 hover:text-primary hover:bg-primary/20 hover:border-border transition-all gap-2"
+                  className="w-full py-8 border-dashed border-2 border-border/70 bg-card text-foreground hover:text-primary hover:bg-primary/20 hover:border-border transition-all gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   Add Another Expense
