@@ -1,6 +1,19 @@
 import { FileText, Shirt, Zap, Pill, SprayCan, Package } from 'lucide-react'
 import { create } from 'zustand'
-import type { PackingFilters, PackingStore } from '@/types/package'
+import { persist } from 'zustand/middleware'
+import { FileText, Shirt, Zap, Pill, SprayCan, Package } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import type { PackingFilters, PackingStore, PackingCategory } from '@/types/package'
+import { STORAGE_KEYS } from '@/constants/storage-keys'
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  FileText,
+  Shirt,
+  Zap,
+  Pill,
+  SprayCan,
+  Package,
+}
 
 const DEFAULT_FILTERS: PackingFilters = {
   category: 'All Categories',
@@ -70,56 +83,81 @@ export const usePackingStore = create<PackingStore>((set) => ({
     },
   ],
 
-  filters: DEFAULT_FILTERS,
+export const usePackingStore = create<PackingStore>()(
+  persist(
+    (set) => ({
+      categories: DEFAULT_CATEGORIES,
+      filters: DEFAULT_FILTERS,
 
-  setFilter: (key, value) =>
-    set((s) => ({ filters: { ...s.filters, [key]: value } })),
+      setFilter: (key, value) =>
+        set((s) => ({ filters: { ...s.filters, [key]: value } })),
 
-  clearFilters: () => set({ filters: DEFAULT_FILTERS }),
+      clearFilters: () => set({ filters: DEFAULT_FILTERS }),
 
-  togglePacked: (categoryId, itemId) =>
-    set((s) => ({
-      categories: s.categories.map((cat) =>
-        cat.id === categoryId
-          ? {
-              ...cat,
-              items: cat.items.map((item) =>
-                item.id === itemId ? { ...item, packed: !item.packed } : item,
-              ),
-            }
-          : cat,
-      ),
-    })),
+      togglePacked: (categoryId, itemId) =>
+        set((s) => ({
+          categories: s.categories.map((cat) =>
+            cat.id === categoryId
+              ? {
+                  ...cat,
+                  items: cat.items.map((item) =>
+                    item.id === itemId ? { ...item, packed: !item.packed } : item,
+                  ),
+                }
+              : cat,
+          ),
+        })),
 
-  addItem: (categoryId, itemData) =>
-    set((s) => ({
-      categories: s.categories.map((cat) =>
-        cat.id === categoryId
-          ? {
-              ...cat,
-              items: [
-                ...cat.items,
-                { id: `${categoryId}-${Date.now()}`, packed: false, ...itemData },
-              ],
-            }
-          : cat,
-      ),
-    })),
+      addItem: (categoryId, itemData) =>
+        set((s) => ({
+          categories: s.categories.map((cat) =>
+            cat.id === categoryId
+              ? {
+                  ...cat,
+                  items: [
+                    ...cat.items,
+                    { id: `${categoryId}-${Date.now()}`, packed: false, ...itemData },
+                  ],
+                }
+              : cat,
+          ),
+        })),
 
-  deleteItem: (categoryId, itemId) =>
-    set((s) => ({
-      categories: s.categories.map((cat) =>
-        cat.id === categoryId
-          ? { ...cat, items: cat.items.filter((item) => item.id !== itemId) }
-          : cat,
-      ),
-    })),
+      deleteItem: (categoryId, itemId) =>
+        set((s) => ({
+          categories: s.categories.map((cat) =>
+            cat.id === categoryId
+              ? { ...cat, items: cat.items.filter((item) => item.id !== itemId) }
+              : cat,
+          ),
+        })),
 
-  unpackAll: () =>
-    set((s) => ({
-      categories: s.categories.map((cat) => ({
-        ...cat,
-        items: cat.items.map((item) => ({ ...item, packed: false })),
-      })),
-    })),
-}))
+      unpackAll: () =>
+        set((s) => ({
+          categories: s.categories.map((cat) => ({
+            ...cat,
+            items: cat.items.map((item) => ({ ...item, packed: false })),
+          })),
+        })),
+    }),
+    {
+      name: STORAGE_KEYS.PACKING_LIST,
+      // Strip icon function before saving to localStorage
+      partialize: (state) => ({
+        ...state,
+        categories: state.categories.map((cat) => 
+          Object.fromEntries(Object.entries(cat).filter(([key]) => key !== 'icon'))
+          ),
+        }),
+      // Restore icon function from iconName when loading from localStorage
+      merge: (persistedState: unknown, currentState) => ({
+        ...currentState,
+        ...(persistedState as object),
+        categories: (persistedState as { categories: (Omit<PackingCategory, 'icon'> & { iconName: string })[] }).categories.map((cat) => ({
+          ...cat,
+          icon: ICON_MAP[cat.iconName] ?? Package,
+        })),
+      }),
+    },
+  ),
+)
