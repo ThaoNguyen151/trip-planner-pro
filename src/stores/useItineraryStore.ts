@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { ItineraryActivity, ItineraryDay, ItineraryStore } from "@/types/itinerary";
 
 let nextId = 1;
@@ -35,6 +34,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Lodging",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -45,6 +45,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -61,6 +62,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -77,6 +79,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -87,6 +90,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -97,6 +101,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -107,6 +112,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -123,6 +129,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -133,6 +140,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -143,6 +151,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
       ],
     },
@@ -159,6 +168,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -169,6 +179,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -179,6 +190,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
       ],
     },
@@ -195,6 +207,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Transport",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -205,6 +218,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -215,6 +229,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Low",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -225,6 +240,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Transport",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
@@ -241,6 +257,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Sightseeing",
           priority: "Medium",
           status: "Planned",
+        overdue: false,
         },
         {
           id: genId(),
@@ -251,6 +268,7 @@ function createInitialDays(): ItineraryDay[] {
           category: "Dining",
           priority: "Medium",
           status: "Confirmed",
+        overdue: false,
         },
         {
           id: genId(),
@@ -261,15 +279,14 @@ function createInitialDays(): ItineraryDay[] {
           category: "Transport",
           priority: "High",
           status: "Planned",
+        overdue: false,
         },
       ],
     },
   ];
 }
 
-export const useItineraryStore = create<ItineraryStore>()(
-  persist(
-    (set) => ({
+export const useItineraryStore = create<ItineraryStore>()((set) => ({
       days: createInitialDays(),
 
       addActivity: (day, date, activity) =>
@@ -347,12 +364,4 @@ export const useItineraryStore = create<ItineraryStore>()(
               : d,
           ),
         })),
-
-    }),
-    {
-      name: "itinerary-storage",
-      version: 1,
-      migrate: () => ({ days: createInitialDays() }),
-    },
-  ),
-);
+}));

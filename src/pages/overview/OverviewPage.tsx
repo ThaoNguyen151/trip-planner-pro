@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { CirclePlus } from "lucide-react";
-import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+
 import { CreateTripDialog } from "@/components/overview/CreateTripModal";
+import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
+import { createTripFromForm } from "@/lib/create-trip-from-form";
 
 export default function OverviewPage() {
   const [open, setOpen] = useState(false);
@@ -39,8 +41,8 @@ export default function OverviewPage() {
         open={open}
         onOpenChange={setOpen}
         onSubmit={(values) => {
-          console.log(values);
-          navigate(ROUTES.list);
+          const id = createTripFromForm(values);
+          if (id) navigate(ROUTES.trips);
         }}
       />
     </div>

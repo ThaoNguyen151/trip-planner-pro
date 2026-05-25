@@ -1,10 +1,23 @@
 export const ROUTES = {
-  dashboard: '/dashboard',
-  itinerary: '/itinerary',
-  calendar: '/calendar',
-  packing: '/packing',
-  budget: '/budget',
-  settings: '/settings',
   overview: "/overview",
-  list: "/list",
-} as const
+  trips: "/trips",
+} as const;
+
+export const TRIP_SECTIONS = [
+  "dashboard",
+  "itinerary",
+  "calendar",
+  "packing",
+  "budget",
+  "settings",
+] as const;
+
+export type TripSection = (typeof TRIP_SECTIONS)[number];
+
+export function tripPath(tripId: string, section: TripSection = "dashboard") {
+  return `/trips/${tripId}/${section}`;
+}
+
+export function isTripSection(value: string): value is TripSection {
+  return (TRIP_SECTIONS as readonly string[]).includes(value);
+}

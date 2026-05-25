@@ -10,7 +10,7 @@ export interface PackingItem {
 export interface PackingCategory {
   id: string
   name: string
-  emoji: string
+  iconName: string
   color: string
   items: PackingItem[]
 }

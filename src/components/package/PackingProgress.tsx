@@ -1,5 +1,3 @@
-
-
 interface PackingProgressProps {
   totalItems: number
   packedItems: number

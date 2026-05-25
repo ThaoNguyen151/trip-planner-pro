@@ -1,5 +1,12 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
+import {
+  LegacyTripPathRedirect,
+  OverviewGate,
+  TripEntryRedirect,
+  TripIdSync,
+  TripsGate,
+} from "@/components/routing/trip-routing";
 import { ROUTES } from "@/constants/routes";
 import { AppShellLayout } from "@/layouts/AppShellLayout";
 import { HeaderOnlyLayout } from "@/layouts/HeaderOnlyLayout";
@@ -9,39 +16,67 @@ import DashboardPage from "@/pages/dashboard/DashboardPage";
 import ItineraryPage from "@/pages/itinerary/ItineraryPage";
 import PackingPage from "@/pages/packing/PackingPage";
 import SettingsPage from "@/pages/settings/SettingsPage";
-import OverviewPage from "@/pages/overview/OverviewPage";
-import ListPage from "@/pages/overview/List";
 
 export const appRouter = createBrowserRouter([
   {
     path: "/",
     children: [
-      // { index: true, element: <Navigate to={ROUTES.dashboard} replace /> };
-      { index: true, element: <Navigate to={ROUTES.overview} replace /> },
+      { index: true, element: <TripEntryRedirect /> },
 
-      //HEADER ONLY LAYOUT
       {
         element: <HeaderOnlyLayout />,
         children: [
-          { path: "overview", element: <OverviewPage /> },
-          { path: "list", element: <ListPage /> },
+          { path: "overview", element: <OverviewGate /> },
+          { path: "trips", element: <TripsGate /> },
+          { path: "list", element: <Navigate to={ROUTES.trips} replace /> },
         ],
       },
 
-      //APP SHELL LAYOUT
       {
+        path: "trips/:tripId",
         element: <AppShellLayout />,
         children: [
-          { path: "dashboard", element: <DashboardPage /> },
-          { path: "itinerary", element: <ItineraryPage /> },
-          { path: "calendar", element: <CalendarPage /> },
-          { path: "packing", element: <PackingPage /> },
-          { path: "budget", element: <BudgetPage /> },
-          { path: "settings", element: <SettingsPage /> },
+          {
+            element: <TripIdSync />,
+            children: [
+              { index: true, element: <Navigate to="dashboard" replace /> },
+              { path: "dashboard", element: <DashboardPage /> },
+              { path: "itinerary", element: <ItineraryPage /> },
+              { path: "calendar", element: <CalendarPage /> },
+              { path: "packing", element: <PackingPage /> },
+              { path: "budget", element: <BudgetPage /> },
+              { path: "settings", element: <SettingsPage /> },
+            ],
+          },
         ],
       },
 
-      { path: "*", element: <Navigate to={ROUTES.dashboard} replace /> },
+      {
+        path: "dashboard",
+        element: <LegacyTripPathRedirect section="dashboard" />,
+      },
+      {
+        path: "itinerary",
+        element: <LegacyTripPathRedirect section="itinerary" />,
+      },
+      {
+        path: "calendar",
+        element: <LegacyTripPathRedirect section="calendar" />,
+      },
+      {
+        path: "packing",
+        element: <LegacyTripPathRedirect section="packing" />,
+      },
+      {
+        path: "budget",
+        element: <LegacyTripPathRedirect section="budget" />,
+      },
+      {
+        path: "settings",
+        element: <LegacyTripPathRedirect section="settings" />,
+      },
+
+      { path: "*", element: <TripEntryRedirect /> },
     ],
   },
 ]);

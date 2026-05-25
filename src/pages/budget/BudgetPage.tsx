@@ -11,7 +11,6 @@ import React, { useState } from "react";
 import { AddExpenseModal } from "@/components/budget/AddExpenseModal";
 
 export default function BudgetPage() {
-  const totalBudget = useBudgetStore((state) => state.totalBudget);
   const expenses = useBudgetStore((state) => state.expenses);
   const filters = useBudgetStore((state) => state.filters);
   const displayExpenses = React.useMemo(() => {
@@ -27,9 +26,9 @@ export default function BudgetPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   return (
-    <div className="container mx-auto py-10 px-4">
+    <div className="container mx-auto py-10 px-4 max-w-5xl bg-muted/40 rounded-xl">
       {/* Header */}
-      <BudgetHeader totalBudget={totalBudget} />
+      <BudgetHeader />
       {/* Summary cards */}
       <BudgetSummaryCards />
       {/* Title, filter bar and add expense button */}
