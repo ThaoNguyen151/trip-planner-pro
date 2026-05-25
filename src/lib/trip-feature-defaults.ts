@@ -3,13 +3,14 @@ import { seedCalendarEvents } from "@/lib/calendar-seed";
 import type { Trip } from "@/types/trip";
 import type { TripFeatureData } from "@/types/trip-data";
 import type { PackingCategory } from "@/types/package";
+import { Shirt, SprayCan } from "lucide-react";
 
 export function createDefaultPackingCategories(): PackingCategory[] {
   return [
     {
       id: "documents",
       name: "Documents",
-      emoji: "📄",
+      icon: Shirt,
       color: "#6366f1",
       items: [
         {
@@ -33,7 +34,7 @@ export function createDefaultPackingCategories(): PackingCategory[] {
     {
       id: "clothes",
       name: "Clothes",
-      emoji: "👕",
+      icon: Shirt,
       color: "#10b981",
       items: [
         {
@@ -49,7 +50,7 @@ export function createDefaultPackingCategories(): PackingCategory[] {
     {
       id: "electronics",
       name: "Electronics",
-      emoji: "🔌",
+      icon: SprayCan,
       color: "#f59e0b",
       items: [
         {
@@ -65,7 +66,7 @@ export function createDefaultPackingCategories(): PackingCategory[] {
     {
       id: "others",
       name: "Others",
-      emoji: "📦",
+      icon: SprayCan,
       color: "#64748b",
       items: [],
     },
