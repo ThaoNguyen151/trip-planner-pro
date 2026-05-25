@@ -21,14 +21,12 @@ export interface ItineraryActivity {
 export interface ItineraryDay {
   day: number
   date: string
-  collapsed: boolean
   activities: ItineraryActivity[]
 }
 
 export interface ItineraryStore {
   days: ItineraryDay[]
-  addActivity: (day: number, activity: Omit<ItineraryActivity, "id">) => void
-  updateActivity: (day: number, activityId: string, updates: Partial<ItineraryActivity>) => void
+  addActivity: (day: number, date: string, activity: Omit<ItineraryActivity, "id">) => void
+  updateActivity: (day: number, activityId: string, updates: Partial<ItineraryActivity>, date?: string) => void
   deleteActivity: (day: number, activityId: string) => void
-  toggleCollapse: (day: number) => void
 }

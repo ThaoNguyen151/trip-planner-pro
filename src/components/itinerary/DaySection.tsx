@@ -1,16 +1,16 @@
+import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useItineraryStore } from "@/stores";
 import { ActivityCard } from "@/components/itinerary/ActivityCard";
 import type { ItineraryActivity } from "@/types";
 
 function DayDot({ day, active }: { day: number; active: boolean }) {
   return (
-    <div className="absolute -left-14 top-0 z-10 flex flex-col items-center">
+    <div className="absolute -left-12 top-0 z-10 flex flex-col items-center md:-left-14">
       <div
         className={cn(
-          "flex size-12 items-center justify-center rounded-full text-lg font-bold text-white shadow-lg",
-          active ? "bg-blue-700" : "bg-blue-300",
+          "flex size-10 items-center justify-center rounded-full text-base font-bold text-white shadow-lg md:size-12 md:text-lg",
+          active ? "bg-primary" : "bg-primary/40",
         )}
       >
         {day}
@@ -22,8 +22,8 @@ function DayDot({ day, active }: { day: number; active: boolean }) {
 interface DaySectionProps {
   day: number;
   date: string;
-  collapsed: boolean;
   activities: ItineraryActivity[];
+  forceExpand?: boolean;
   onEditActivity?: (activity: ItineraryActivity, day: number) => void;
   onDeleteActivity?: (day: number, activityId: string) => void;
 }
@@ -31,21 +31,22 @@ interface DaySectionProps {
 export function DaySection({
   day,
   date,
-  collapsed,
   activities,
+  forceExpand = false,
   onEditActivity,
   onDeleteActivity,
 }: DaySectionProps) {
-  const toggleCollapse = useItineraryStore((s) => s.toggleCollapse);
+  const [collapsed, setCollapsed] = useState(false);
+  const expanded = forceExpand || !collapsed;
 
   return (
-    <div className="relative mb-12">
-      <DayDot day={day} active={!collapsed} />
+    <div className="relative mb-8 md:mb-12">
+      <DayDot day={day} active={expanded} />
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-lg font-bold text-foreground">{date}</h3>
+        <h3 className="min-w-0 truncate text-base font-bold text-foreground md:text-lg">{date}</h3>
         <button
-          onClick={() => toggleCollapse(day)}
-          className="rounded p-1 text-muted-foreground transition-colors hover:bg-muted"
+          onClick={() => setCollapsed((prev) => !prev)}
+          className="shrink-0 rounded p-1.5 text-muted-foreground transition-colors hover:bg-muted"
         >
           {collapsed ? (
             <ChevronDown className="size-5" />
@@ -54,7 +55,7 @@ export function DaySection({
           )}
         </button>
       </div>
-      {!collapsed && (
+      {expanded && (
         <div className="space-y-3">
           {activities.map((activity) => (
             <ActivityCard
