@@ -46,11 +46,11 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
     setIsEditModalOpen(true);
   };
   return (
-    <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-md border bg-card shadow-sm overflow-hidden">
       <div className="max-h-[400px] md:max-h-[250px] overflow-auto custom-scrollbar">
         <Table className="border-separate border-spacing-0">
           <TableHeader className="relative">
-            <TableRow className="bg-slate-100">
+            <TableRow className="">
               <TableHead className="font-bold text-foreground sticky top-0">
                 <div className="flex items-center gap-4">
                   <div className="w-8 md:w-10 shrink-0" />
@@ -138,7 +138,7 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
                     {/* Payment status */}
                     <TableCell>
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${expense.paymentStatus === "Paid" ? "bg-blue-100 text-secondary" : "bg-slate-100 text-slate-600"}`}
+                        className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${expense.paymentStatus === "Paid" ? "bg-secondary/10 text-secondary" : "bg-muted text-muted-foreground"}`}
                       >
                         {expense.paymentStatus}
                       </span>

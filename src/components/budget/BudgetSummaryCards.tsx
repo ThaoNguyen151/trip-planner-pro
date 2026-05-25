@@ -27,12 +27,12 @@ export function BudgetSummaryCards() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
       {/* Card 1: Total Estimated */}
-      <div className="flex flex-col h-full bg-white p-4 md:p-6 rounded-xl shadow-sm border border-border">
+      <div className="flex flex-col h-full bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border">
         <div className="flex justify-between items-start mb-2 md:mb-4">
-          <span className="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
+          <span className="text-[10px] md:text-xs font-bold text-foreground uppercase tracking-wider">
             Total Estimated
           </span>
-          <span className="text-slate-900 p-2 bg-slate-50 rounded-lg">
+          <span className="text-foreground p-2 bg-card rounded-lg">
             <ChartColumn className="w-4 h-4" />
           </span>
         </div>
@@ -55,12 +55,12 @@ export function BudgetSummaryCards() {
       </div>
 
       {/* Card 2: Total Actual */}
-      <div className="flex flex-col h-full bg-white p-4 md:p-6 rounded-xl shadow-sm border border-border">
+      <div className="flex flex-col h-full bg-card p-4 md:p-6 rounded-xl shadow-sm border border-border">
         <div className="flex justify-between items-start mb-2 md:mb-4">
-          <span className="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">
+          <span className="text-[10px] md:text-xs font-bold text-foreground uppercase tracking-wider">
             Total Actual
           </span>
-          <span className="text-slate-900 p-2 bg-slate-50 rounded-lg">
+          <span className="text-foreground p-2 bg-card rounded-lg">
             <ScrollText className="w-4 h-4" />
           </span>
         </div>
@@ -87,7 +87,7 @@ export function BudgetSummaryCards() {
         className={`${budgetUtils.getBgColor(savingPercent)} p-4 md:p-6 rounded-xl shadow-sm text-white border border-border transition-colors duration-300 sm:col-span-2 lg:col-span-1 flex flex-col justify-center min-h-[140px] md:min-h-0`}
       >
         <div className="flex justify-between items-start mb-2 md:mb-4">
-          <span className="text-[10px] md:text-xs font-bold opacity-70 uppercase tracking-wider">
+          <span className="text-[10px] md:text-xs font-bold opacity-70 text-primary-foreground uppercase tracking-wider">
             Remaining Balance
           </span>
           <span className="p-2 bg-white/20 rounded-lg">

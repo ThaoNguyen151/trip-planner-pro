@@ -39,7 +39,7 @@ export function BudgetUtilization({
   }, [expenses, totalBudget]);
 
   return (
-    <div className="flex flex-col h-full bg-white border border-border space-y-1 overflow-y-auto min-h-[350px] p-4 md:p-6 custom-scrollbar shadow-sm rounded-xl">
+    <div className="flex flex-col h-full bg-card border border-border space-y-1 overflow-y-auto min-h-[350px] p-4 md:p-6 custom-scrollbar shadow-sm rounded-xl">
       <h2 className="text-lg md:text-xl font-bold text-foreground">
         Category Spending Progress
       </h2>
@@ -51,8 +51,8 @@ export function BudgetUtilization({
               onClick={() => onCategoryClick(item.name)}
               className={`group cursor-pointer p-3 mb-1 rounded-xl transition-all duration-200 border ${
                 selectedCategory === item.name
-                  ? "bg-blue-50 border-blue-200 shadow-sm"
-                  : "bg-transparent border-transparent hover:bg-gray-50"
+                  ? "bg-primary/10 border-primary/30 shadow-sm"
+                  : "bg-transparent border-transparent hover:bg-muted"
               }`}
             >
               <div className="flex justify-between items-end flex-wrap gap-2 mb-2">
@@ -81,7 +81,7 @@ export function BudgetUtilization({
                   >
                     {budgetUtils.formatMoney(item.actual)}
                   </span>
-                  <span className="text-xs text-gray-400 font-medium">
+                  <span className="text-xs text-muted-foreground font-medium">
                     {" "}
                     / {budgetUtils.formatMoney(item.estimated)}
                   </span>
@@ -102,7 +102,7 @@ export function BudgetUtilization({
           ))
         ) : (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-center text-slate-400 italic text-sm">
+            <p className="text-center text-muted-foreground italic text-sm">
               No paid expenses to track spending progress.
             </p>
           </div>

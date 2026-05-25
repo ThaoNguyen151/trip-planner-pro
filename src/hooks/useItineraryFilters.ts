@@ -34,6 +34,9 @@ export function useItineraryFilters() {
   );
 
   const filteredDays = useMemo<ItineraryDay[]>(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     return days
       .filter((d) => {
         if (filters.date === "All Dates") return true;
@@ -42,7 +45,12 @@ export function useItineraryFilters() {
       })
       .map((d) => ({
         ...d,
-        activities: d.activities.filter((a) => {
+        activities: d.activities.map((a) => {
+          const activityDate = new Date(d.date);
+          activityDate.setHours(0, 0, 0, 0);
+          const overdue = a.status === "Planned" && activityDate < today;
+          return { ...a, overdue };
+        }).filter((a) => {
           if (
             filters.category !== "All Categories" &&
             a.category !== filters.category

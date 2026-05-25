@@ -50,15 +50,14 @@ const renderCustomizedLabel = (props: unknown) => {
     <text
       x={x}
       y={y}
-      fill="#374151"
       textAnchor={isRightSide ? "start" : "end"}
       dominantBaseline="central"
-      className="text-[10px] font-semibold"
+      className="fill-foreground text-[10px] font-semibold"
     >
       <tspan x={x} dy="-0.2em">
         {name}
       </tspan>
-      <tspan x={x} dy="1.2em" className="fill-slate-700 font-bold text-[9px]">
+      <tspan x={x} dy="1.2em" className="fill-foreground font-bold text-[9px]">
         ({budgetUtils.formatMoney(value)})
       </tspan>
     </text>
@@ -97,7 +96,7 @@ export function ExpensePieChart({
   const totalActual = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="rounded-xl border shadow-sm h-full flex flex-col p-4 md:p-6 bg-white min-h-[400px]">
+    <div className="rounded-xl border shadow-sm h-full flex flex-col p-4 md:p-6 bg-card min-h-[400px]">
       <div className="flex justify-between items-center mb-4 shrink-0">
         <h2 className="text-lg md:text-xl font-bold text-foreground">
           {selectedCategory
@@ -127,7 +126,7 @@ export function ExpensePieChart({
                 outerRadius="70%"
                 dataKey="value"
                 label={renderCustomizedLabel}
-                labelLine={{ stroke: "#cbd5e1", strokeWidth: 1 }}
+                labelLine={{ stroke: "var(--border)", strokeWidth: 1 }}
               >
                 {chartData.map((_, index) => (
                   <Cell
@@ -146,14 +145,14 @@ export function ExpensePieChart({
                 <tspan
                   x="50%"
                   dy="-0.5em"
-                  className="fill-gray-400 text-[10px] font-medium uppercase tracking-widest"
+                  className="fill-muted-foreground text-[10px] font-medium uppercase tracking-widest"
                 >
                   Total Actual
                 </tspan>
                 <tspan
                   x="50%"
                   dy="1.5em"
-                  className="fill-slate-700 text-sm font-bold"
+                  className="fill-foreground text-sm font-bold"
                 >
                   {budgetUtils.formatMoney(totalActual)}
                 </tspan>
@@ -185,7 +184,7 @@ export function ExpensePieChart({
                 y="50%"
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className="fill-slate-400 text-sm italic"
+                className="fill-muted-foreground text-sm italic"
               >
                 No paid expenses to track spending structure.
               </text>

@@ -151,6 +151,7 @@ export function AddItemModal({
         category: values.category as ActivityCategory,
         priority: values.priority as ActivityPriority,
         status: values.status as ActivityStatus,
+        overdue: false,
       });
     }
 
