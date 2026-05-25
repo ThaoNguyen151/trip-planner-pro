@@ -3,6 +3,8 @@ export const ACTIVITY_CATEGORIES = [
   "Lodging",
   "Dining",
   "Sightseeing",
+  "Shopping",
+  "Other",
 ] as const;
 export const ACTIVITY_PRIORITIES = ["High", "Medium", "Low"] as const;
 export const ACTIVITY_STATUSES = ["Planned", "Confirmed", "Completed"] as const;

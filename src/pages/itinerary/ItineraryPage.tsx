@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Plus } from "lucide-react";
 import { FilterBar, DaySection, AddItemModal } from "@/components/itinerary";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
@@ -29,14 +29,20 @@ export default function ItineraryPage() {
     updateFilter,
   } = useItineraryFilters();
 
-  const handleEditActivity = (activity: ItineraryActivity, day: number) => {
-    setEditingItem({ activity, day });
-    setAddOpen(true);
-  };
+  const handleEditActivity = useCallback(
+    (activity: ItineraryActivity, day: number) => {
+      setEditingItem({ activity, day });
+      setAddOpen(true);
+    },
+    [],
+  );
 
-  const handleDeleteActivity = (day: number, activityId: string) => {
-    setDeleteTarget({ day, activityId });
-  };
+  const handleDeleteActivity = useCallback(
+    (day: number, activityId: string) => {
+      setDeleteTarget({ day, activityId });
+    },
+    [],
+  );
 
   const handleConfirmDelete = () => {
     if (deleteTarget) {
