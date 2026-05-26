@@ -10,7 +10,7 @@ export function HeaderOnlyLayout() {
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col">
       <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border bg-card px-3 sm:px-6">
-        <h1 className="min-w-0 flex-1 truncate text-base font-semibold tracking-tight text-foreground sm:text-xl md:text-2xl">
+        <h1 className="min-w-0 flex-1 truncate text-base font-semibold tracking-tight text-primary sm:text-xl md:text-2xl">
           Trip Planner Pro
         </h1>
 

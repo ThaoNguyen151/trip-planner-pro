@@ -8,19 +8,26 @@ import { PackingCategoryIcon } from "@/lib/packing-icons";
 import { usePackingStore } from "@/stores/usePackingStore";
 import type { PackingCategory } from "@/types/package";
 
-export default function CategoryCard({ category }: { category: PackingCategory }) {
-  const togglePacked = usePackingStore((s) => s.togglePacked)
-  const [addOpen, setAddOpen] = useState(false)
-  const [deleteTarget, setDeleteTarget] = useState<{ categoryId: string; itemId: string } | null>(null)
-  const [expanded, setExpanded] = useState(true)
- 
-  const total = category.items.length
-  const packed = category.items.filter((i) => i.packed).length
-  const pct = total === 0 ? 0 : Math.round((packed / total) * 100)
- 
+export default function CategoryCard({
+  category,
+}: {
+  category: PackingCategory;
+}) {
+  const togglePacked = usePackingStore((s) => s.togglePacked);
+  const [addOpen, setAddOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    categoryId: string;
+    itemId: string;
+  } | null>(null);
+  const [expanded, setExpanded] = useState(true);
+
+  const total = category.items.length;
+  const packed = category.items.filter((i) => i.packed).length;
+  const pct = total === 0 ? 0 : Math.round((packed / total) * 100);
+
   return (
     <>
-      <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white">
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
         {/* Header */}
         <div
           className="flex cursor-pointer items-center justify-between px-4 py-3"
@@ -32,88 +39,116 @@ export default function CategoryCard({ category }: { category: PackingCategory }
               size={18}
               color={category.color}
             />
-            <span className="text-sm font-semibold text-slate-700">{category.name}</span>
+            <span className="text-sm font-semibold text-foreground">
+              {category.name}
+            </span>
             {total > 0 && (
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-muted-foreground">
                 {packed}/{total}
               </span>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400">{pct}% Done</span>
+            <span className="text-xs text-muted-foreground">{pct}% Done</span>
             <Button
               variant="ghost"
               size="icon-sm"
-              className="text-sky-600 hover:bg-sky-50"
-              onClick={(e) => { e.stopPropagation(); setAddOpen(true) }}
+              className="text-primary hover:bg-primary/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                setAddOpen(true);
+              }}
             >
               <Plus className="size-3.5" />
             </Button>
             <ChevronDown
-              className={cn('size-4 text-slate-300 transition-transform', expanded && 'rotate-180')}
+              className={cn(
+                "size-4 text-muted-foreground/50 transition-transform",
+                expanded && "rotate-180",
+              )}
             />
           </div>
         </div>
- 
+
         {/* Progress bar */}
         {total > 0 && (
-          <div className="mx-4 mb-1 h-1 overflow-hidden rounded-full bg-slate-100">
+          <div className="mx-4 mb-1 h-1 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{ width: `${pct}%`, backgroundColor: category.color }}
             />
           </div>
         )}
- 
+
         {/* Items */}
         {expanded && total > 0 && (
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-muted/50">
             {category.items.map((item) => (
               <div
                 key={item.id}
                 className={cn(
-                  'group flex items-center justify-between px-4 py-2.5 transition-colors hover:bg-slate-50/70',
-                  item.packed && 'opacity-60',
+                  "group flex items-center justify-between px-4 py-2.5 transition-colors hover:bg-muted/70",
+                  item.packed && "opacity-60",
                 )}
               >
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => togglePacked(category.id, item.id)}
                     className={cn(
-                      'flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all',
+                      "flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all",
                       item.packed
-                        ? 'border-sky-500 bg-sky-500'
-                        : 'border-slate-300 hover:border-sky-400',
+                        ? "border-primary bg-primary"
+                        : "border-muted-foreground/30 hover:border-primary/60",
                     )}
                   >
                     {item.packed && (
-                      <svg className="size-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="size-2.5 text-primary-foreground"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     )}
                   </button>
                   <div>
-                    <p className={cn('text-xs font-medium text-slate-700', item.packed && 'text-slate-400 line-through')}>
+                    <p
+                      className={cn(
+                        "text-xs font-medium text-foreground",
+                        item.packed && "text-muted-foreground line-through",
+                      )}
+                    >
                       {item.name}
                     </p>
                     {item.required && !item.packed && (
-                      <span className="rounded-full bg-red-50 px-1.5 py-0.5 text-[9px] font-semibold text-red-500">
+                      <span className="rounded-full bg-destructive/10 px-1.5 py-0.5 text-[9px] font-semibold text-destructive">
                         REQUIRED
                       </span>
                     )}
                     {item.packed && (
-                      <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-600">
+                      <span className="rounded-full bg-secondary/10 px-1.5 py-0.5 text-[9px] font-semibold text-secondary">
                         PACKED
                       </span>
                     )}
                   </div>
                 </div>
- 
+
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="sm:opacity-0 opacity-80  text-red-400 hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
-                  onClick={() => setDeleteTarget({ categoryId: category.id, itemId: item.id })}
+                  className="sm:opacity-0 opacity-80 text-destructive/70 hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                  onClick={() =>
+                    setDeleteTarget({
+                      categoryId: category.id,
+                      itemId: item.id,
+                    })
+                  }
                 >
                   <Trash2 className="size-3.5" />
                 </Button>
@@ -121,7 +156,7 @@ export default function CategoryCard({ category }: { category: PackingCategory }
             ))}
           </div>
         )}
- 
+
         {/* Empty state */}
         {expanded && total === 0 && (
           <div className="px-4 pb-4 pt-1 text-center">
@@ -129,7 +164,7 @@ export default function CategoryCard({ category }: { category: PackingCategory }
             <Button
               variant="ghost"
               size="sm"
-              className="mt-1 text-xs text-sky-600 hover:bg-sky-50"
+              className="mt-1 text-xs text-primary hover:bg-primary/10"
               onClick={() => setAddOpen(true)}
             >
               <Plus className="size-3" /> Add first item
@@ -137,7 +172,7 @@ export default function CategoryCard({ category }: { category: PackingCategory }
           </div>
         )}
       </div>
- 
+
       {addOpen && (
         <AddItemModal
           categoryId={category.id}
@@ -153,5 +188,5 @@ export default function CategoryCard({ category }: { category: PackingCategory }
         />
       )}
     </>
-  )
+  );
 }
