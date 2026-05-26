@@ -29,32 +29,32 @@ export default function AddItemModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-        <h3 className="text-sm font-semibold text-slate-800">Add New Item</h3>
-        <p className="mt-0.5 text-xs text-slate-400">
+      <div className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-2xl">
+        <h3 className="text-sm font-semibold text-foreground">Add New Item</h3>
+        <p className="mt-0.5 text-xs text-muted-foreground">
           Add a new item to{" "}
-          <span className="font-medium text-sky-600">{categoryName}</span>.
+          <span className="font-medium text-primary">{categoryName}</span>.
         </p>
 
         <div className="mt-4 space-y-3">
           <div>
-            <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Item name
             </label>
             <input
               placeholder="Linen Shirt"
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700 outline-none ring-sky-500/30 focus-visible:ring-2"
+              className="w-full rounded-lg border border-border px-3 py-2 text-xs text-foreground outline-none ring-ring/30 focus-visible:ring-2"
             />
           </div>
 
           <div className="flex gap-2">
             <div className="flex-1">
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">
+              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Quantity
               </label>
-              <div className="flex items-center overflow-hidden rounded-lg border border-slate-200">
+              <div className="flex items-center overflow-hidden rounded-lg border border-border">
                 <button
                   onClick={() =>
                     setForm((f) => ({
@@ -62,7 +62,7 @@ export default function AddItemModal({
                       quantity: Math.max(1, f.quantity - 1),
                     }))
                   }
-                  className="px-2.5 py-2 text-slate-400 hover:bg-slate-50"
+                  className="px-2.5 py-2 text-muted-foreground hover:bg-muted"
                 >
                   −
                 </button>
@@ -83,14 +83,14 @@ export default function AddItemModal({
                       setForm((f) => ({ ...f, quantity: 1 }));
                     }
                   }}
-                  className="flex-1 w-0 text-center text-xs text-slate-700 outline-none appearance-none [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden [-moz-appearance:textfield]"
+                  className="flex-1 w-0 text-center text-xs text-foreground outline-none appearance-none [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden [-moz-appearance:textfield]"
                 />
-                  
+
                 <button
                   onClick={() =>
                     setForm((f) => ({ ...f, quantity: f.quantity + 1 }))
                   }
-                  className="px-2.5 py-2 text-slate-400 hover:bg-slate-50"
+                  className="px-2.5 py-2 text-muted-foreground hover:bg-muted"
                 >
                   +
                 </button>
@@ -103,7 +103,7 @@ export default function AddItemModal({
               onClick={() => setForm((f) => ({ ...f, required: !f.required }))}
               className={cn(
                 "relative h-5 w-9 rounded-full transition-colors",
-                form.required ? "bg-sky-500" : "bg-slate-200",
+                form.required ? "bg-primary" : "bg-muted",
               )}
             >
               <span
@@ -113,7 +113,7 @@ export default function AddItemModal({
                 )}
               />
             </button>
-            <label className="text-xs text-slate-500">Mark as required</label>
+            <label className="text-xs text-muted-foreground">Mark as required</label>
           </div>
         </div>
 
@@ -128,7 +128,7 @@ export default function AddItemModal({
           </Button>
           <Button
             size="sm"
-            className="flex-1 bg-sky-600 hover:bg-sky-700"
+            className="flex-1 bg-primary hover:bg-primary/90"
             onClick={handleSubmit}
           >
             Add Item

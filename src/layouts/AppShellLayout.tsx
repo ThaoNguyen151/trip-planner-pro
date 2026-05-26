@@ -176,7 +176,7 @@ export function AppShellLayout() {
           {tripId ? (
             <NavLink
               to={tripPath(tripId, "dashboard")}
-              className="min-w-0 truncate text-sm font-semibold tracking-tight text-foreground md:hidden"
+              className="min-w-0 truncate text-sm font-semibold tracking-tight text-primary md:hidden"
             >
               Trip Planner Pro
             </NavLink>
