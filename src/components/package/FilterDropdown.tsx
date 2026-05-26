@@ -21,12 +21,12 @@ export default function FilterDropdown({ options, value, onChange }: FilterDropd
           size="sm"
           className={cn(
             'gap-1.5 text-xs font-normal',
-            isFiltered && 'border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100',
+            isFiltered && 'border-primary/30 bg-primary/10 text-primary hover:bg-primary/20',
           )}
         >
           {value}
-          {isFiltered && <span className="size-1.5 rounded-full bg-sky-500" />}
-          <ChevronDown className="size-3 text-slate-400" />
+          {isFiltered && <span className="size-1.5 rounded-full bg-primary" />}
+          <ChevronDown className="size-3 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
@@ -35,7 +35,7 @@ export default function FilterDropdown({ options, value, onChange }: FilterDropd
             {i === 1 && <DropdownMenuSeparator key={`sep-${opt}`} />}
             <DropdownMenuItem
               key={opt}
-              className={cn(value === opt && 'font-medium text-sky-700')}
+              className={cn(value === opt && 'font-medium text-primary')}
               onSelect={() => onChange(opt)}
             >
               {opt}

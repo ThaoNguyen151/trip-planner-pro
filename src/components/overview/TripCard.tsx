@@ -54,7 +54,7 @@ export function TripCard({
 
   return (
     <>
-      <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white text-left shadow-sm transition-shadow hover:shadow-md">
+      <div className="w-full overflow-hidden rounded-2xl border border-boder bg-card text-left shadow-sm transition-shadow hover:shadow-md">
         <button
           type="button"
           className="group relative block h-36 w-full cursor-pointer sm:h-40 md:h-44"
@@ -79,12 +79,10 @@ export function TripCard({
           onClick={() => onOpen?.(trip.id)}
           className="w-full p-4 text-left"
         >
-          <h2 className="text-base font-semibold text-slate-900">
-            {displayTitle}
-          </h2>
-          <p className="mt-0.5 text-sm text-slate-500">{dateRange}</p>
+          <h2 className="text-base font-semibold foreground">{displayTitle}</h2>
+          <p className="mt-0.5 text-sm text-foreground">{dateRange}</p>
           <div className="mt-4">
-            <p className="mb-1.5 text-sm font-medium text-slate-700">
+            <p className="mb-1.5 text-sm font-medium text-primary">
               {progress}% planned
             </p>
             <Progress
@@ -95,12 +93,12 @@ export function TripCard({
         </button>
 
         {onResetData ? (
-          <div className="border-t border-slate-100 px-4 pb-4 pt-0">
+          <div className="border-t border-border px-4 pb-4 pt-0 flex justify-center">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="mt-3 w-full gap-1.5 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+              className="mt-3 gap-1.5 border-red-200 text-destructive hover:bg-destructive/50 hover:text-destructive"
               onClick={() => onResetData(trip.id)}
             >
               <RotateCcw className="size-3.5" aria-hidden />

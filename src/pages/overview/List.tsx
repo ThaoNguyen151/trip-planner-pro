@@ -35,21 +35,21 @@ export default function ListPage() {
     <div className="mx-auto flex w-full max-w-7xl flex-col">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 md:flex-row md:items-start md:justify-between md:gap-6">
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+          <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">
             My Trips
           </h1>
-          <p className="mt-1 text-sm text-slate-600 sm:text-base md:text-lg">
+          <p className="mt-1 text-sm text-foreground/70 sm:text-base md:text-lg">
             Manage your upcoming adventures and past memories.
           </p>
         </div>
 
         <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center md:w-auto md:justify-end">
-        <ToggleGroup
-          type="single"
-          size="default"
-          defaultValue="upcoming"
-          className="w-full justify-center rounded-full bg-transparent sm:w-auto md:h-10"
-        >
+          <ToggleGroup
+            type="single"
+            size="default"
+            defaultValue="upcoming"
+            className="w-full justify-center rounded-full bg-transparent sm:w-auto md:h-10"
+          >
             <ToggleGroupItem
               value="upcoming"
               aria-label="Toggle upcoming"
@@ -65,12 +65,7 @@ export default function ListPage() {
               Past
             </ToggleGroupItem>
           </ToggleGroup>
-          <Button
-            variant="outline"
-            size="lg"
-            className="h-11 w-full gap-2 sm:h-12 sm:w-auto sm:px-6"
-            onClick={() => setOpen(true)}
-          >
+          <Button variant="outline" size="lg" onClick={() => setOpen(true)}>
             <Plus className="h-4 w-4" />
             Add Trip
           </Button>
@@ -86,7 +81,10 @@ export default function ListPage() {
             Create your first trip to start planning itinerary, budget,
             calendar, and packing in one place.
           </p>
-          <Button className="mt-6 w-full sm:w-auto" onClick={() => setOpen(true)}>
+          <Button
+            className="mt-6 w-full sm:w-auto"
+            onClick={() => setOpen(true)}
+          >
             Create trip
           </Button>
         </div>
