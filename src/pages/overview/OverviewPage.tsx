@@ -6,6 +6,7 @@ import { CreateTripDialog } from "@/components/overview/CreateTripModal";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { createTripFromForm } from "@/lib/create-trip-from-form";
+import emptyStateOverviewImg from "@/assets/EmtyStateOverview.png";
 
 export default function OverviewPage() {
   const [open, setOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function OverviewPage() {
   return (
     <div className="flex min-h-[calc(100dvh-3.5rem)] flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:py-12">
       <img
-        src="/src/assets/EmtyStateOverview.png"
+        src={emptyStateOverviewImg}
         alt="Start planning your next trip"
         className="w-full max-w-[280px] rounded-2xl shadow-md sm:max-w-sm md:max-w-md lg:max-w-lg aspect-square object-cover"
       />
